@@ -1,0 +1,38 @@
+
+1. git clone
+------------------------------------------------------------------------------------------------------>
+   git clone https://github.com/daydaygit/flrelse-v2.git
+   Cloning into 'flrelse-v2'...
+   remote: Counting objects: 6, done.
+   remote: Compressing objects: 100% (5/5), done.
+   remote: Total 6 (delta 0), reused 0 (delta 0), pack-reused 0
+   Unpacking objects: 100% (6/6), done.
+
+2. mv file
+------------------------------------------------------------------------------------------------------>
+   $ gsc
+     # On branch master
+        deleted:    LICENSE
+        deleted:    README.md
+     # Untracked files:
+        misc/
+
+   $ git rm LICENSE README.md
+     rm 'LICENSE'
+     rm 'README.md'
+
+   $ gsc
+     # On branch master
+       deleted:    LICENSE
+       deleted:    README.md
+     # Untracked files:
+       misc/
+
+   $ git add misc/
+   $ gsc
+     # On branch master
+       renamed:    LICENSE -> misc/LICENSE
+       new file:   misc/Note
+       renamed:    README.md -> misc/README.md
+
+
