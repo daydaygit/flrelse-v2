@@ -38,12 +38,12 @@
 
 unsigned yaffs_trace_mask=0;
 
-#define MAX_OBJECTS 10000
+#define MAX_OBJECTS 1000000
 
 // Adjust these to match your NAND LAYOUT:
-#define chunkSize 2048
-#define spareSize 64
-#define pagesPerBlock 64
+#define chunkSize   4096
+#define spareSize   128
+#define pagesPerBlock  128
 
 
 
@@ -184,6 +184,8 @@ static int write_chunk(u8 *data, u32 id, u32 chunk_id, u32 n_bytes)
 	struct yaffs_packed_tags2 pt;
 	char spareData[spareSize];
 
+       //  printf("*********oob struct size = %d\n", sizeof(pt));
+
 	if (write(outFile,data,chunkSize) != chunkSize)
 		fatal("write");
 
@@ -208,7 +210,10 @@ static int write_chunk(u8 *data, u32 id, u32 chunk_id, u32 n_bytes)
 	nPages++;
 
 	memset(&pt, 0, sizeof(pt));
-	yaffs_pack_tags2(&pt,&t,1);
+
+        //dg change for 8bit ECC  yaffs2 burn
+	//yaffs_pack_tags2(&pt,&t,1);
+        yaffs_pack_tags2(&pt,&t,0);
 
 	memset(spareData, 0xff, sizeof(spareData));
 	shuffle_oob(spareData, &pt);
@@ -503,11 +508,10 @@ static int process_directory(int parent, const char *path)
 
 }
 
-
 int main(int argc, char *argv[])
 {
 	struct stat stats;
-	
+
 	printf("mkyaffs2image: image building tool for YAFFS2 built "__DATE__"\n");
 	
 	if(argc < 3)
@@ -546,8 +550,8 @@ int main(int argc, char *argv[])
 	}
 	
 	printf("Processing directory %s into image file %s\n",argv[1],argv[2]);
+
 	process_directory(YAFFS_OBJECTID_ROOT,argv[1]);
-	
 	pad_image();
 
 	close(outFile);
