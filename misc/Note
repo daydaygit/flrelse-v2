@@ -35,4 +35,28 @@
        new file:   misc/Note
        renamed:    README.md -> misc/README.md
 
+3. commit uboot
+------------------------------------------------------------------------------------------------------>
+
+4.1 commit linux-3.0.1/yaffs2
+------------------------------------------------------------------------------------------------------>
+  mv flrelse-v2/linux-3.0.1/yaffs2$ ivm .git/config  flrelse-v2/linux-3.0.1/yaffs2$ ivm .git/config_flrelease
+  cp flrelse-v2/linux-3.0.1/yaffs2$ cp ../../.git/config ./.git/config -i
+     cat flrelse-v2/linux-3.0.1/yaffs2
+           ...
+           url = https://github.com/daydaygit/flrelse-v2.git
+           ...
+ git add linux-3.0.1/yaffs2/... -f
+ git commit -m xxx
+ git pull
+ git push
+
+ git clone https://github.com/daydaygit/flrelse-v2.git AND find the commited file exist in root path that is wrong
+ mkdir linux-3.0.1/yaffs2
+ mv the lasted file into linux-3.0.1/yaffs2
+ git rm xxx
+ git add linux-3.0.1/yaffs2
+ git commit -m xxx
+ git pull
+ git push
 
