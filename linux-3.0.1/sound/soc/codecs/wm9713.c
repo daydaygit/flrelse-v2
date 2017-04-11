@@ -1205,6 +1205,8 @@ static int wm9713_soc_probe(struct snd_soc_codec *codec)
 	struct wm9713_priv *wm9713;
 	int ret = 0, reg;
 
+	printk(KERN_INFO "Enter %s. line=%d\n", __func__, __LINE__);
+
 	wm9713 = kzalloc(sizeof(struct wm9713_priv), GFP_KERNEL);
 	if (wm9713 == NULL)
 		return -ENOMEM;
@@ -1266,6 +1268,7 @@ static struct snd_soc_codec_driver soc_codec_dev_wm9713 = {
 
 static __devinit int wm9713_probe(struct platform_device *pdev)
 {
+	printk(KERN_INFO "Enter %s. line=%d\n", __func__, __LINE__);
 	return snd_soc_register_codec(&pdev->dev,
 			&soc_codec_dev_wm9713, wm9713_dai, ARRAY_SIZE(wm9713_dai));
 }
