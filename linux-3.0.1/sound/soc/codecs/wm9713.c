@@ -257,7 +257,7 @@ static int mixer_event(struct snd_soc_dapm_widget *w, struct snd_kcontrol *kcont
 	return 0;
 }
 
-/* Left Headphone Mixers */
+/* Left Headphone Mixers.  HPL_MIXER: 0x80 */
 static const struct snd_kcontrol_new wm9713_hpl_mixer_controls[] = {
 	SOC_DAPM_SINGLE("Beep Playback Switch",   HPL_MIXER, 5, 1, 0),
 	SOC_DAPM_SINGLE("Voice Playback Switch",  HPL_MIXER, 4, 1, 0),
@@ -267,7 +267,7 @@ static const struct snd_kcontrol_new wm9713_hpl_mixer_controls[] = {
 	SOC_DAPM_SINGLE("Bypass Playback Switch", HPL_MIXER, 0, 1, 0),
 };
 
-/* Right Headphone Mixers */
+/* Right Headphone Mixers   HPR_MIXER: 0x82 */
 static const struct snd_kcontrol_new wm9713_hpr_mixer_controls[] = {
 	SOC_DAPM_SINGLE("Beep Playback Switch",   HPR_MIXER, 5, 1, 0),
 	SOC_DAPM_SINGLE("Voice Playback Switch",  HPR_MIXER, 4, 1, 0),
@@ -1125,7 +1125,7 @@ static int wm9713_soc_probe(struct snd_soc_codec *codec)
 	struct wm9713_priv *wm9713;
 	int ret = 0, reg;
 
-	printk(KERN_INFO "Enter %s. line=%d\n", __func__, __LINE__);
+	printk(KERN_INFO "Enter %s\n", __func__);
 
 	wm9713 = kzalloc(sizeof(struct wm9713_priv), GFP_KERNEL);
 	if (wm9713 == NULL)
@@ -1187,7 +1187,7 @@ static struct snd_soc_codec_driver soc_codec_dev_wm9713 = {
 
 static __devinit int wm9713_probe(struct platform_device *pdev)
 {
-	printk(KERN_INFO "Enter %s. line=%d\n", __func__, __LINE__);
+	printk(KERN_INFO "Enter %s\n", __func__);
 	return snd_soc_register_codec(&pdev->dev, &soc_codec_dev_wm9713, wm9713_dai, ARRAY_SIZE(wm9713_dai));
 }
 

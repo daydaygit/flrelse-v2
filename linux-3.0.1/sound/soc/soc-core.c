@@ -1430,9 +1430,7 @@ static int soc_probe_codec(struct snd_soc_card *card,
 
 static void rtd_release(struct device *dev) {}
 
-static int soc_post_component_init(struct snd_soc_card *card,
-				   struct snd_soc_codec *codec,
-				   int num, int dailess)
+static int soc_post_component_init(struct snd_soc_card *card, struct snd_soc_codec *codec, int num, int dailess)
 {
 	struct snd_soc_dai_link *dai_link = NULL;
 	struct snd_soc_aux_dev *aux_dev = NULL;
@@ -1477,8 +1475,7 @@ static int soc_post_component_init(struct snd_soc_card *card,
 	rtd->dev.init_name = name;
 	ret = device_register(&rtd->dev);
 	if (ret < 0) {
-		dev_err(card->dev,
-			"asoc: failed to register runtime device: %d\n", ret);
+		dev_err(card->dev, "asoc: failed to register runtime device: %d\n", ret);
 		return ret;
 	}
 	rtd->dev_registered = 1;
@@ -1486,15 +1483,12 @@ static int soc_post_component_init(struct snd_soc_card *card,
 	/* add DAPM sysfs entries for this codec */
 	ret = snd_soc_dapm_sys_add(&rtd->dev);
 	if (ret < 0)
-		dev_err(codec->dev,
-			"asoc: failed to add codec dapm sysfs entries: %d\n",
-			ret);
+		dev_err(codec->dev, "asoc: failed to add codec dapm sysfs entries: %d\n", ret);
 
 	/* add codec sysfs entries */
 	ret = device_create_file(&rtd->dev, &dev_attr_codec_reg);
 	if (ret < 0)
-		dev_err(codec->dev,
-			"asoc: failed to add codec sysfs files: %d\n", ret);
+		dev_err(codec->dev, "asoc: failed to add codec sysfs files: %d\n", ret);
 
 	return 0;
 }
@@ -1508,7 +1502,7 @@ static int soc_probe_dai_link(struct snd_soc_card *card, int num)
 	struct snd_soc_dai *codec_dai = rtd->codec_dai, *cpu_dai = rtd->cpu_dai;
 	int ret;
 
-	dev_dbg(card->dev, "probe %s dai link %d\n", card->name, num);
+	dev_err(card->dev, "probe %s dai link %d\n", card->name, num);
 
 	/* config components */
 	codec_dai->codec = codec;
@@ -1719,6 +1713,8 @@ static void snd_soc_instantiate_card(struct snd_soc_card *card)
 	enum snd_soc_compress_type compress_type;
 	int ret, i;
 
+	printk(KERN_INFO "Enter %s\n", __func__);
+
 	mutex_lock(&card->mutex);
 
 	if (card->instantiated) {
@@ -1745,8 +1741,7 @@ static void snd_soc_instantiate_card(struct snd_soc_card *card)
 			codec_conf = &card->codec_conf[i];
 			if (!strcmp(codec->name, codec_conf->dev_name)) {
 				compress_type = codec_conf->compress_type;
-				if (compress_type && compress_type
-				    != codec->compress_type)
+				if (compress_type && compress_type != codec->compress_type)
 					break;
 			}
 		}
@@ -1770,11 +1765,9 @@ static void snd_soc_instantiate_card(struct snd_soc_card *card)
 	}
 
 	/* card bind complete so register a sound card */
-	ret = snd_card_create(SNDRV_DEFAULT_IDX1, SNDRV_DEFAULT_STR1,
-			card->owner, 0, &card->snd_card);
+	ret = snd_card_create(SNDRV_DEFAULT_IDX1, SNDRV_DEFAULT_STR1, card->owner, 0, &card->snd_card);
 	if (ret < 0) {
-		printk(KERN_ERR "asoc: can't create sound card for card %s\n",
-			card->name);
+		printk(KERN_ERR "asoc: can't create sound card for card %s\n", card->name);
 		mutex_unlock(&card->mutex);
 		return;
 	}
@@ -1810,10 +1803,8 @@ static void snd_soc_instantiate_card(struct snd_soc_card *card)
 		}
 	}
 
-	snprintf(card->snd_card->shortname, sizeof(card->snd_card->shortname),
-		 "%s",  card->name);
-	snprintf(card->snd_card->longname, sizeof(card->snd_card->longname),
-		 "%s", card->name);
+	snprintf(card->snd_card->shortname, sizeof(card->snd_card->shortname), "%s",  card->name);
+	snprintf(card->snd_card->longname, sizeof(card->snd_card->longname), "%s", card->name);
 
 	ret = snd_card_register(card->snd_card);
 	if (ret < 0) {
@@ -1862,6 +1853,9 @@ card_probe_error:
 static void snd_soc_instantiate_cards(void)
 {
 	struct snd_soc_card *card;
+
+	printk(KERN_INFO "Enter %s\n", __func__);
+
 	list_for_each_entry(card, &card_list, list)
 		snd_soc_instantiate_card(card);
 }
@@ -1871,6 +1865,8 @@ static int soc_probe(struct platform_device *pdev)
 {
 	struct snd_soc_card *card = platform_get_drvdata(pdev);
 	int ret = 0;
+
+	printk(KERN_INFO "Enter %s\n", __func__);
 
 	/* Bodge while we unpick instantiation */
 	card->dev = &pdev->dev;
@@ -1956,13 +1952,13 @@ static const struct dev_pm_ops soc_pm_ops = {
 
 /* ASoC platform driver */
 static struct platform_driver soc_driver = {
-	.driver		= {
-		.name		= "soc-audio",
-		.owner		= THIS_MODULE,
-		.pm		= &soc_pm_ops,
+	.driver = {
+		.name  = "soc-audio",
+		.owner = THIS_MODULE,
+		.pm    = &soc_pm_ops,
 	},
-	.probe		= soc_probe,
-	.remove		= soc_remove,
+	.probe  = soc_probe,
+	.remove = soc_remove,
 };
 
 /* create a new pcm */
@@ -3109,12 +3105,12 @@ static int snd_soc_register_card(struct snd_soc_card *card)
 {
 	int i;
 
+	printk(KERN_INFO "Enter %s. card->name=%s\n", __func__, card->name);
+
 	if (!card->name || !card->dev)
 		return -EINVAL;
 
-	card->rtd = kzalloc(sizeof(struct snd_soc_pcm_runtime) *
-			    (card->num_links + card->num_aux_devs),
-			    GFP_KERNEL);
+	card->rtd = kzalloc(sizeof(struct snd_soc_pcm_runtime) * (card->num_links + card->num_aux_devs), GFP_KERNEL);
 	if (card->rtd == NULL)
 		return -ENOMEM;
 	card->rtd_aux = &card->rtd[card->num_links];
@@ -3131,7 +3127,7 @@ static int snd_soc_register_card(struct snd_soc_card *card)
 	snd_soc_instantiate_cards();
 	mutex_unlock(&client_mutex);
 
-	dev_dbg(card->dev, "Registered card '%s'\n", card->name);
+	dev_err(card->dev, "Registered card '%s'\n", card->name);
 
 	return 0;
 }
@@ -3576,21 +3572,17 @@ static int __init snd_soc_init(void)
 #ifdef CONFIG_DEBUG_FS
 	debugfs_root = debugfs_create_dir("asoc", NULL);
 	if (IS_ERR(debugfs_root) || !debugfs_root) {
-		printk(KERN_WARNING
-		       "ASoC: Failed to create debugfs directory\n");
+		printk(KERN_WARNING "ASoC: Failed to create debugfs directory\n");
 		debugfs_root = NULL;
 	}
 
-	if (!debugfs_create_file("codecs", 0444, debugfs_root, NULL,
-				 &codec_list_fops))
+	if (!debugfs_create_file("codecs", 0444, debugfs_root, NULL, &codec_list_fops))
 		pr_warn("ASoC: Failed to create CODEC list debugfs file\n");
 
-	if (!debugfs_create_file("dais", 0444, debugfs_root, NULL,
-				 &dai_list_fops))
+	if (!debugfs_create_file("dais", 0444, debugfs_root, NULL, &dai_list_fops))
 		pr_warn("ASoC: Failed to create DAI list debugfs file\n");
 
-	if (!debugfs_create_file("platforms", 0444, debugfs_root, NULL,
-				 &platform_list_fops))
+	if (!debugfs_create_file("platforms", 0444, debugfs_root, NULL, &platform_list_fops))
 		pr_warn("ASoC: Failed to create platform list debugfs file\n");
 #endif
 

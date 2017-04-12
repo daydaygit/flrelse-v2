@@ -604,6 +604,7 @@ int snd_info_card_create(struct snd_card *card)
 		return -ENXIO;
 
 	sprintf(str, "card%i", card->number);
+	printk(KERN_INFO "Enter %s. card number=%s\n", __func__, str);
 	if ((entry = snd_info_create_module_entry(card->module, str, NULL)) == NULL)
 		return -ENOMEM;
 	entry->mode = S_IFDIR | S_IRUGO | S_IXUGO;
@@ -954,6 +955,8 @@ int snd_info_register(struct snd_info_entry * entry)
 {
 	struct proc_dir_entry *root, *p = NULL;
 
+	printk(KERN_INFO "Enter %s. create proc file. name=%s\n", __func__, entry->name);
+
 	if (snd_BUG_ON(!entry))
 		return -ENXIO;
 	root = entry->parent == NULL ? snd_proc_root : entry->parent->p;
@@ -984,10 +987,7 @@ static struct snd_info_entry *snd_info_version_entry;
 
 static void snd_info_version_read(struct snd_info_entry *entry, struct snd_info_buffer *buffer)
 {
-	snd_iprintf(buffer,
-		    "Advanced Linux Sound Architecture Driver Version "
-		    CONFIG_SND_VERSION CONFIG_SND_DATE ".\n"
-		   );
+	snd_iprintf(buffer, "Advanced Linux Sound Architecture Driver Version " CONFIG_SND_VERSION CONFIG_SND_DATE ".\n");
 }
 
 static int __init snd_info_version_init(void)

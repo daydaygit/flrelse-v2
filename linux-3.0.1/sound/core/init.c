@@ -144,12 +144,12 @@ static inline int init_info_for_card(struct snd_card *card)
  *
  *  Returns zero if successful or a negative error code.
  */
-int snd_card_create(int idx, const char *xid,
-		    struct module *module, int extra_size,
-		    struct snd_card **card_ret)
+int snd_card_create(int idx, const char *xid, struct module *module, int extra_size, struct snd_card **card_ret)
 {
 	struct snd_card *card;
 	int err, idx2;
+
+	printk(KERN_INFO "Enter %s\n", __func__);
 
 	if (snd_BUG_ON(!card_ret))
 		return -EINVAL;
@@ -193,8 +193,7 @@ int snd_card_create(int idx, const char *xid,
 		err = -ENODEV;
 	if (err < 0) {
 		mutex_unlock(&snd_card_mutex);
-		snd_printk(KERN_ERR "cannot find the slot for index %d (range 0-%i), error: %d\n",
-			 idx, snd_ecards_limit - 1, err);
+		snd_printk(KERN_ERR "cannot find the slot for index %d (range 0-%i), error: %d\n", idx, snd_ecards_limit - 1, err);
 		goto __error;
 	}
 	snd_cards_lock |= 1 << idx;		/* lock it */
@@ -648,13 +647,13 @@ int snd_card_register(struct snd_card *card)
 {
 	int err;
 
+	printk(KERN_INFO "Enter %s\n", __func__);
+
 	if (snd_BUG_ON(!card))
 		return -EINVAL;
 
 	if (!card->card_dev) {
-		card->card_dev = device_create(sound_class, card->dev,
-					       MKDEV(0, 0), card,
-					       "card%i", card->number);
+		card->card_dev = device_create(sound_class, card->dev, MKDEV(0, 0), card, "card%i", card->number);
 		if (IS_ERR(card->card_dev))
 			card->card_dev = NULL;
 	}

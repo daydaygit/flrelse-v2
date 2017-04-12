@@ -51,7 +51,7 @@ static struct snd_soc_dapm_route audio_map[] = {
 
 static int smdk6410_ac97_init(struct snd_soc_pcm_runtime *rtd) {
 	struct snd_soc_codec *codec = rtd->codec;
-    struct snd_soc_dapm_context *dapm = &codec->dapm;
+	struct snd_soc_dapm_context *dapm = &codec->dapm;
 	unsigned short val;
 
 	/* add board specific widgets */
@@ -82,7 +82,7 @@ static struct snd_soc_dai_link smdk6410_dai = {
 };
 
 static struct snd_soc_card smdk6410 = {
-	.name = "smdk6410",
+	.name = "smdk6410-wm9713",
 	.dai_link = &smdk6410_dai,
 	.num_links = 1,
 };
@@ -94,22 +94,23 @@ static int __init smdk6410_init(void)
 {
 	int ret;
 
+	printk(KERN_INFO "Enter %s\n", __func__);
+
+	/* add device wm9713 */
 	smdk6410_snd_wm9713_device = platform_device_alloc("wm9713-codec", -1);
 	if (!smdk6410_snd_wm9713_device)
 		return -ENOMEM;
-
 	ret = platform_device_add(smdk6410_snd_wm9713_device);
 	if (ret)
 		goto err1;
 
+	/* add device wm9713 */
 	smdk6410_snd_ac97_device = platform_device_alloc("soc-audio", -1);
 	if (!smdk6410_snd_ac97_device) {
 		ret = -ENOMEM;
 		goto err2;
 	}
-
 	platform_set_drvdata(smdk6410_snd_ac97_device, &smdk6410);
-
 	ret = platform_device_add(smdk6410_snd_ac97_device);
 	if (ret)
 		goto err3;
