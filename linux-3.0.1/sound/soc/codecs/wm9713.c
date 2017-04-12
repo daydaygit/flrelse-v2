@@ -979,7 +979,7 @@ static struct snd_soc_dai_ops wm9713_dai_ops_voice = {
 };
 
 static struct snd_soc_dai_driver wm9713_dai[] = {
-{
+   {
 	.name = "wm9713-hifi",
 	.ac97_control = 1,
 	.playback = {
@@ -987,42 +987,45 @@ static struct snd_soc_dai_driver wm9713_dai[] = {
 		.channels_min = 1,
 		.channels_max = 2,
 		.rates = WM9713_RATES,
-		.formats = SND_SOC_STD_AC97_FMTS,},
+		.formats = SND_SOC_STD_AC97_FMTS,
+	},
 	.capture = {
 		.stream_name = "HiFi Capture",
 		.channels_min = 1,
 		.channels_max = 2,
 		.rates = WM9713_RATES,
-		.formats = SND_SOC_STD_AC97_FMTS,},
-	.ops = &wm9713_dai_ops_hifi,
+		.formats = SND_SOC_STD_AC97_FMTS,
 	},
-	{
+	.ops = &wm9713_dai_ops_hifi,
+   }, {
 	.name = "wm9713-aux",
 	.playback = {
 		.stream_name = "Aux Playback",
 		.channels_min = 1,
 		.channels_max = 1,
 		.rates = WM9713_RATES,
-		.formats = SND_SOC_STD_AC97_FMTS,},
-	.ops = &wm9713_dai_ops_aux,
+		.formats = SND_SOC_STD_AC97_FMTS,
 	},
-	{
+	.ops = &wm9713_dai_ops_aux,
+   }, {
 	.name = "wm9713-voice",
 	.playback = {
 		.stream_name = "Voice Playback",
 		.channels_min = 1,
 		.channels_max = 1,
 		.rates = WM9713_PCM_RATES,
-		.formats = WM9713_PCM_FORMATS,},
+		.formats = WM9713_PCM_FORMATS,
+	},
 	.capture = {
 		.stream_name = "Voice Capture",
 		.channels_min = 1,
 		.channels_max = 2,
 		.rates = WM9713_PCM_RATES,
-		.formats = WM9713_PCM_FORMATS,},
+		.formats = WM9713_PCM_FORMATS,
+	},
 	.ops = &wm9713_dai_ops_voice,
 	.symmetric_rates = 1,
-	},
+   },
 };
 
 int wm9713_reset(struct snd_soc_codec *codec, int try_warm)
