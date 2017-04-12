@@ -1,0 +1,62 @@
+diff --git a/linux-3.0.1/sound/soc/codecs/wm9713.c b/linux-3.0.1/sound/soc/codecs/wm9713.c
+index dcc07c0..bd10d6e 100644
+--- a/linux-3.0.1/sound/soc/codecs/wm9713.c
++++ b/linux-3.0.1/sound/soc/codecs/wm9713.c
+@@ -257,7 +257,7 @@ static int mixer_event(struct snd_soc_dapm_widget *w, struct snd_kcontrol *kcont
+ 	return 0;
+ }
+ 
+-/* Left Headphone Mixers */
++/* Left Headphone Mixers.  HPL_MIXER: 0x80 */
+ static const struct snd_kcontrol_new wm9713_hpl_mixer_controls[] = {
+ 	SOC_DAPM_SINGLE("Beep Playback Switch",   HPL_MIXER, 5, 1, 0),
+ 	SOC_DAPM_SINGLE("Voice Playback Switch",  HPL_MIXER, 4, 1, 0),
+@@ -267,7 +267,7 @@ static const struct snd_kcontrol_new wm9713_hpl_mixer_controls[] = {
+ 	SOC_DAPM_SINGLE("Bypass Playback Switch", HPL_MIXER, 0, 1, 0),
+ };
+ 
+-/* Right Headphone Mixers */
++/* Right Headphone Mixers   HPR_MIXER: 0x82 */
+ static const struct snd_kcontrol_new wm9713_hpr_mixer_controls[] = {
+ 	SOC_DAPM_SINGLE("Beep Playback Switch",   HPR_MIXER, 5, 1, 0),
+ 	SOC_DAPM_SINGLE("Voice Playback Switch",  HPR_MIXER, 4, 1, 0),
+diff --git a/linux-3.0.1/sound/soc/samsung/smdk_wm9713.c b/linux-3.0.1/sound/soc/samsung/smdk_wm9713.c
+index de83786..cd66faf 100644
+--- a/linux-3.0.1/sound/soc/samsung/smdk_wm9713.c
++++ b/linux-3.0.1/sound/soc/samsung/smdk_wm9713.c
+@@ -51,7 +51,7 @@ static struct snd_soc_dapm_route audio_map[] = {
+ 
+ static int smdk6410_ac97_init(struct snd_soc_pcm_runtime *rtd) {
+ 	struct snd_soc_codec *codec = rtd->codec;
+-    struct snd_soc_dapm_context *dapm = &codec->dapm;
++	struct snd_soc_dapm_context *dapm = &codec->dapm;
+ 	unsigned short val;
+ 
+ 	/* add board specific widgets */
+@@ -94,22 +94,23 @@ static int __init smdk6410_init(void)
+ {
+ 	int ret;
+ 
++	printk(KERN_INFO "Enter %s. Line=%d\n", __func__, __LINE__);
++
++	/* add device wm9713 */
+ 	smdk6410_snd_wm9713_device = platform_device_alloc("wm9713-codec", -1);
+ 	if (!smdk6410_snd_wm9713_device)
+ 		return -ENOMEM;
+-
+ 	ret = platform_device_add(smdk6410_snd_wm9713_device);
+ 	if (ret)
+ 		goto err1;
+ 
++	/* add device wm9713 */
+ 	smdk6410_snd_ac97_device = platform_device_alloc("soc-audio", -1);
+ 	if (!smdk6410_snd_ac97_device) {
+ 		ret = -ENOMEM;
+ 		goto err2;
+ 	}
+-
+ 	platform_set_drvdata(smdk6410_snd_ac97_device, &smdk6410);
+-
+ 	ret = platform_device_add(smdk6410_snd_ac97_device);
+ 	if (ret)
+ 		goto err3;
