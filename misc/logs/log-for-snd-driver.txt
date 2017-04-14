@@ -1,0 +1,386 @@
+U-Boot 1.1.6 (Sep 25 2012 - 10:09:14) for SMDK6410
+
+****************************************
+**    u-boot 1.1.6                    **
+**    Updated for OK6410  TE6410 Board  **
+**    Version (2012-09-23)          **
+**    OEM: Forlinx Embedded           **
+**    Web: http://www.witech.com.cn   **
+****************************************
+
+CPU:     S3C6410 @532MHz
+         Fclk = 532MHz, Hclk = 133MHz, Pclk = 66MHz, Serial = CLKUART (SYNC Mode) 
+Board:   SMDK6410
+DRAM:    256 MB
+Flash:   0 kB
+NAND:    2048 MB 
+In:      serial
+Out:     serial
+Err:     serial
+Hit any key to stop autoboot:  1  0 
+
+NAND read: device 0 offset 0x200000, size 0x500000
+s3c-nand: 1 bit(s) error detected, corrected successfully
+ 5242880 bytes read: OK
+Boot with zImage
+
+Starting kernel ...
+
+Uncompressing Linux... done, booting the kernel.
+[    0.000000] Linux version 3.0.1 (qiu@qiu---linux) (gcc version 4.3.2 (Sourcery G++ Lite 2008q3-72) ) #445 Wed Apr 12 23:31:07 CST 2017
+[    0.000000] S3C24XX Clocks, Copyright 2004 Simtec Electronics
+[    0.000000] camera: no parent clock specified
+[    0.000000] S3C64XX: PLL settings, A=532000000, M=532000000, E=24000000
+[    0.000000] S3C64XX: HCLK2=266000000, HCLK=133000000, PCLK=66500000
+[    0.000000] mout_apll: source is fout_apll (1), rate is 532000000
+[    0.000000] mout_epll: source is epll (1), rate is 24000000
+[    0.000000] mout_mpll: source is mpll (1), rate is 532000000
+[    0.000000] mmc_bus: source is mout_epll (0), rate is 24000000
+[    0.000000] mmc_bus: source is mout_epll (0), rate is 24000000
+[    0.000000] mmc_bus: source is mout_epll (0), rate is 24000000
+[    0.000000] usb-bus-host: source is clk_48m (0), rate is 48000000
+[    0.000000] uclk1: source is dout_mpll (1), rate is 66500000
+[    0.000000] spi-bus: source is mout_epll (0), rate is 24000000
+[    0.000000] spi-bus: source is mout_epll (0), rate is 24000000
+[    0.000000] audio-bus: source is mout_epll (0), rate is 24000000
+[    0.000000] audio-bus: source is mout_epll (0), rate is 24000000
+[    0.000000] audio-bus: source is mout_epll (0), rate is 24000000
+[    0.000000] irda-bus: source is mout_epll (0), rate is 24000000
+[    0.000000] camera: no parent clock specified
+[    0.000000] Kernel command line: root=/dev/mtdblock2 rootfstype=yaffs2 init=/linuxrc console=ttySAC0,115200
+[    0.000000] PID hash table entries: 1024 (order: 0, 4096 bytes)
+[    0.000000] Dentry cache hash table entries: 32768 (order: 5, 131072 bytes)
+[    0.000000] Inode-cache hash table entries: 16384 (order: 4, 65536 bytes)
+[    0.000000] Memory: 256MB = 256MB total
+[    0.000000] Memory: 197612k/197612k available, 64532k reserved, 0K highmem
+[    0.000000] Virtual kernel memory layout:
+[    0.000000]     vector  : 0xffff0000 - 0xffff1000   (   4 kB)
+[    0.000000]     fixmap  : 0xfff00000 - 0xfffe0000   ( 896 kB)
+[    0.000000]     DMA     : 0xff600000 - 0xffe00000   (   8 MB)
+[    0.000000]     vmalloc : 0xd0800000 - 0xf4000000   ( 568 MB)
+[    0.000000]     lowmem  : 0xc0000000 - 0xd0000000   ( 256 MB)
+[    0.000000]     pkmap   : 0xbfe00000 - 0xc0000000   (   2 MB)
+[    0.000000]     modules : 0xbf000000 - 0xbfe00000   (  14 MB)
+[    0.000000]       .init : 0xc0008000 - 0xc0034000   ( 176 kB)
+[    0.000000]       .text : 0xc0034000 - 0xc0702094   (6969 kB)
+[    0.000000]       .data : 0xc0704000 - 0xc0746390   ( 265 kB)
+[    0.000000]        .bss : 0xc07463b4 - 0xc07c3d40   ( 503 kB)
+[    0.000000] SLUB: Genslabs=13, HWalign=32, Order=0-3, MinObjects=0, CPUs=1, Nodes=1
+[    0.000000] NR_IRQS:246 nr_irqs:246 246
+[    0.000000] VIC @f4000000: id 0x00041192, vendor 0x41
+[    0.000000] VIC @f4010000: id 0x00041192, vendor 0x41
+[    0.000000] Console: colour dummy device 80x30
+[    0.000000] console [ttySAC0] enabled
+[    0.030000] Calibrating delay loop... 528.79 BogoMIPS (lpj=2643968)
+[    0.080000] pid_max: default: 32768 minimum: 301
+[    0.090000] Mount-cache hash table entries: 512
+[    0.090000] CPU: Testing write buffer coherency: ok
+[    0.100000] hw perfevents: enabled with v6 PMU driver, 3 counters available
+[    0.100000] devtmpfs: initialized
+[    0.110000] NET: Registered protocol family 16
+[    0.120000] hw-breakpoint: found 6 breakpoint and 1 watchpoint registers.
+[    0.120000] hw-breakpoint: maximum watchpoint size is 4 bytes.
+[    0.120000] s3c64xx_dma_init: Registering DMA channels
+[    0.130000] PL080: IRQ 73, at d0804000, channels 0..8
+[    0.130000] PL080: IRQ 74, at d0806000, channels 8..16
+[    0.160000] bio: create slab <bio-0> at 0
+[    0.160000] SCSI subsystem initialized
+[    0.160000] ------------[ cut here ]------------
+[    0.160000] WARNING: at drivers/gpio/gpiolib.c:101 gpio_ensure_requested+0x58/0x124()
+[    0.160000] ---[ end trace da227214a82491b7 ]---
+[    0.170000] usbcore: registered new interface driver usbfs
+[    0.170000] usbcore: registered new interface driver hub
+[    0.180000] usbcore: registered new device driver usb
+[    0.180000] s3c-i2c s3c2440-i2c.0: slave address 0x10
+[    0.190000] s3c-i2c s3c2440-i2c.0: bus frequency set to 64 KHz
+[    0.190000] s3c-i2c s3c2440-i2c.0: i2c-0: S3C I2C adapter
+[    0.200000] Enter snd_info_register. create proc file. name=oss
+[    0.200000] Enter snd_info_register. create proc file. name=seq
+[    0.210000] Enter snd_info_register. create proc file. name=version
+[    0.220000] Enter snd_info_register. create proc file. name=devices
+[    0.220000] Enter snd_info_register. create proc file. name=devices
+[    0.230000] Enter snd_info_register. create proc file. name=cards
+[    0.240000] Enter snd_info_register. create proc file. name=sndstat
+[    0.240000] Advanced Linux Sound Architecture Driver Version 1.0.23.
+[    0.260000] cfg80211: Calling CRDA to update world regulatory domain
+[    0.290000] NET: Registered protocol family 2
+[    0.290000] IP route cache hash table entries: 2048 (order: 1, 8192 bytes)
+[    0.300000] TCP established hash table entries: 8192 (order: 4, 65536 bytes)
+[    0.300000] TCP bind hash table entries: 8192 (order: 3, 32768 bytes)
+[    0.310000] TCP: Hash tables configured (established 8192 bind 8192)
+[    0.320000] TCP reno registered
+[    0.320000] UDP hash table entries: 256 (order: 0, 4096 bytes)
+[    0.330000] UDP-Lite hash table entries: 256 (order: 0, 4096 bytes)
+[    0.330000] NET: Registered protocol family 1
+[    0.340000] RPC: Registered named UNIX socket transport module.
+[    0.340000] RPC: Registered udp transport module.
+[    0.350000] RPC: Registered tcp transport module.
+[    0.350000] RPC: Registered tcp NFSv4.1 backchannel transport module.
+[    0.360000] audit: initializing netlink socket (disabled)
+[    0.360000] type=2000 audit(0.360:1): initialized
+[    0.610000] msgmni has been set to 385
+[    0.610000] alg: No test for stdrng (krng)
+[    0.610000] Block layer SCSI generic (bsg) driver version 0.4 loaded (major 253)
+[    0.620000] io scheduler noop registered
+[    0.620000] io scheduler deadline registered
+[    0.630000] io scheduler cfq registered (default)
+[    0.650000] LCD TYPE :: LTE480WV will be initialized
+[    0.650000] Console: switching to colour frame buffer device 60x34
+[    0.660000] fb0: s3cfb frame buffer device
+[    0.660000] fb1: s3cfb frame buffer device
+[    0.670000] fb2: s3cfb frame buffer device
+[    0.670000] fb3: s3cfb frame buffer device
+[    0.680000] s3c6400-uart.0: ttySAC0 at MMIO 0x7f005000 (irq = 16) is a S3C6400/10
+[    0.680000] s3c6400-uart.1: ttySAC1 at MMIO 0x7f005400 (irq = 20) is a S3C6400/10
+[    0.690000] s3c6400-uart.2: ttySAC2 at MMIO 0x7f005800 (irq = 24) is a S3C6400/10
+[    0.700000] s3c6400-uart.3: ttySAC3 at MMIO 0x7f005c00 (irq = 28) is a S3C6400/10
+[    0.710000] Hello, world
+[    0.710000] NAND device: Manufacturer ID: 0xec, Chip ID: 0xd7 (Samsung NAND 4GiB 3,3V 8-bit)
+[    0.720000] Creating 4 MTD partitions on "NAND 4GiB 3,3V 8-bit":
+[    0.720000] 0x000000000000-0x000000200000 : "Bootloader"
+[    0.730000] 0x000000200000-0x000000700000 : "Kernel"
+[    0.730000] 0x000000700000-0x00000cf00000 : "User"
+[    0.760000] 0x00000cf00000-0x000100000000 : "File System"
+[    1.070000] vcan: Virtual CAN interface driver
+[    1.070000] slcan: serial line CAN interface driver
+[    1.080000] slcan: 10 dynamic interface channels.
+[    1.080000] CAN device driver interface
+[    1.080000] mcp251x: setup gpio pins CS and External Int
+[    2.100000] mcp2515 spi1.0: MCP251x didn't enter in conf mode after reset
+[    2.100000] mcp2515 spi1.0: Probe failed
+[    2.100000] mcp2515 spi1.0: probe failed
+[    2.100000] PPP generic driver version 2.4.2
+[    2.110000] PPP Deflate Compression module registered
+[    2.110000] PPP BSD Compression module registered
+[    2.120000] PPP MPPE Compression module registered
+[    2.120000] NET: Registered protocol family 24
+[    2.130000] dm9000 Ethernet Driver, V1.31
+[    2.250000] eth0: dm9000a at d081c000,d0c00004 IRQ 108 MAC: 08:90:00:a0:90:90 (platform data)
+[    2.250000] libertas_sdio: Libertas SDIO driver
+[    2.250000] libertas_sdio: Copyright Pierre Ossman
+[    2.260000] usbcore: registered new interface driver rt73usb
+[    2.260000] ohci_hcd: USB 1.1 'Open' Host Controller (OHCI) Driver
+[    2.270000] s3c2410-ohci s3c2410-ohci: S3C24XX OHCI
+[    2.280000] s3c2410-ohci s3c2410-ohci: new USB bus registered, assigned bus number 1
+[    2.280000] s3c2410-ohci s3c2410-ohci: irq 79, io mem 0x74300000
+[    2.350000] usb usb1: New USB device found, idVendor=1d6b, idProduct=0001
+[    2.350000] usb usb1: New USB device strings: Mfr=3, Product=2, SerialNumber=1
+[    2.360000] usb usb1: Product: S3C24XX OHCI
+[    2.360000] usb usb1: Manufacturer: Linux 3.0.1 ohci_hcd
+[    2.370000] usb usb1: SerialNumber: s3c24xx
+[    2.370000] hub 1-0:1.0: USB hub found
+[    2.370000] hub 1-0:1.0: 2 ports detected
+[    2.380000] usbcore: registered new interface driver cdc_acm
+[    2.380000] cdc_acm: USB Abstract Control Model driver for USB modems and ISDN adapters
+[    2.390000] Initializing USB Mass Storage driver...
+[    2.400000] usbcore: registered new interface driver usb-storage
+[    2.400000] USB Mass Storage support registered.
+[    2.410000] usbcore: registered new interface driver usbserial
+[    2.410000] USB Serial support registered for generic
+[    2.420000] usbcore: registered new interface driver usbserial_generic
+[    2.430000] usbserial: USB Serial Driver core
+[    2.430000] USB Serial support registered for GSM modem (1-port)
+[    2.440000] usbcore: registered new interface driver option
+[    2.440000] option: v0.7.2:USB Driver for GSM modems
+[    2.450000] USB Serial support registered for pl2303
+[    2.450000] usbcore: registered new interface driver pl2303
+[    2.460000] pl2303: Prolific PL2303 USB to serial adaptor driver
+[    2.460000] dummy_hcd dummy_hcd: USB Host+Gadget Emulator, driver 02 May 2005
+[    2.470000] dummy_hcd dummy_hcd: Dummy host controller
+[    2.470000] dummy_hcd dummy_hcd: new USB bus registered, assigned bus number 2
+[    2.480000] usb usb2: New USB device found, idVendor=1d6b, idProduct=0002
+[    2.490000] usb usb2: New USB device strings: Mfr=3, Product=2, SerialNumber=1
+[    2.500000] usb usb2: Product: Dummy host controller
+[    2.500000] usb usb2: Manufacturer: Linux 3.0.1 dummy_hcd
+[    2.510000] usb usb2: SerialNumber: dummy_hcd
+[    2.510000] hub 2-0:1.0: USB hub found
+[    2.510000] hub 2-0:1.0: 1 port detected
+[    2.520000] mousedev: PS/2 mouse device common for all mice
+[    2.520000] input: gpio-keys as /devices/platform/gpio-keys/input/input0
+[    2.530000] input: s3c-keypad as /devices/platform/s3c-keypad/input/input1
+[    2.540000] S3C Touchscreen driver, (c) 2008 Samsung Electronics
+[    2.540000] S3C TouchScreen got loaded successfully : 12 bits
+[    2.550000] input: S3C TouchScreen as /devices/virtual/input/input2
+[    2.560000] s3c-rtc s3c64xx-rtc: rtc disabled, re-enabling
+[    2.560000] s3c-rtc s3c64xx-rtc: rtc core: registered s3c as rtc0
+[    2.570000] i2c /dev entries driver
+[    2.570000] Linux video capture interface: v2.00
+[    2.580000] gspca: main v2.10.0 registered
+[    2.580000] usbcore: registered new interface driver benq
+[    2.580000] benq: registered
+[    2.590000] usbcore: registered new interface driver conex
+[    2.590000] conex: registered
+[    2.600000] usbcore: registered new interface driver cpia1
+[    2.600000] cpia1: registered
+[    2.600000] usbcore: registered new interface driver etoms
+[    2.610000] etoms: registered
+[    2.610000] usbcore: registered new interface driver finepix
+[    2.620000] finepix: registered
+[    2.620000] usbcore: registered new interface driver jeilinj
+[    2.630000] jeilinj: registered
+[    2.630000] usbcore: registered new interface driver mars
+[    2.640000] mars: registered
+[    2.640000] usbcore: registered new interface driver mr97310a
+[    2.640000] mr97310a: registered
+[    2.650000] usbcore: registered new interface driver ov519
+[    2.650000] ov519: registered
+[    2.660000] usbcore: registered new interface driver ov534
+[    2.660000] ov534: registered
+[    2.660000] usbcore: registered new interface driver ov534_9
+[    2.670000] ov534_9: registered
+[    2.670000] usbcore: registered new interface driver pac207
+[    2.680000] pac207: registered
+[    2.680000] usbcore: registered new interface driver pac7302
+[    2.690000] pac7302: registered
+[    2.690000] usbcore: registered new interface driver pac7311
+[    2.700000] pac7311: registered
+[    2.700000] usbcore: registered new interface driver sn9c2028
+[    2.700000] sn9c2028: registered
+[    2.710000] usbcore: registered new interface driver sn9c20x
+[    2.710000] sn9c20x: registered
+[    2.720000] usbcore: registered new interface driver sonixb
+[    2.720000] sonixb: registered
+[    2.730000] usbcore: registered new interface driver sonixj
+[    2.730000] sonixj: registered
+[    2.730000] usbcore: registered new interface driver spca500
+[    2.740000] spca500: registered
+[    2.740000] usbcore: registered new interface driver spca501
+[    2.750000] spca501: registered
+[    2.750000] usbcore: registered new interface driver spca505
+[    2.760000] spca505: registered
+[    2.760000] usbcore: registered new interface driver spca506
+[    2.770000] spca506: registered
+[    2.770000] usbcore: registered new interface driver spca508
+[    2.770000] spca508: registered
+[    2.780000] usbcore: registered new interface driver spca561
+[    2.780000] spca561: registered
+[    2.790000] usbcore: registered new interface driver spca1528
+[    2.790000] spca1528: registered
+[    2.800000] usbcore: registered new interface driver sq905
+[    2.800000] sq905: registered
+[    2.800000] usbcore: registered new interface driver sq905c
+[    2.810000] sq905c: registered
+[    2.810000] usbcore: registered new interface driver sq930x
+[    2.820000] sq930x: registered
+[    2.820000] usbcore: registered new interface driver sunplus
+[    2.830000] sunplus: registered
+[    2.830000] usbcore: registered new interface driver stk014
+[    2.840000] stk014: registered
+[    2.840000] usbcore: registered new interface driver stv0680
+[    2.840000] stv0680: registered
+[    2.850000] usbcore: registered new interface driver t613
+[    2.850000] t613: registered
+[    2.860000] usbcore: registered new interface driver tv8532
+[    2.860000] tv8532: registered
+[    2.860000] usbcore: registered new interface driver vc032x
+[    2.870000] vc032x: registered
+[    2.870000] usbcore: registered new interface driver zc3xx
+[    2.880000] zc3xx: registered
+[    2.880000] usbcore: registered new interface driver ALi m5602
+[    2.890000] ALi m5602: registered
+[    2.890000] usbcore: registered new interface driver STV06xx
+[    2.900000] STV06xx: registered
+[    2.900000] gspca_gl860: driver startup - version 0.9d10
+[    2.900000] usbcore: registered new interface driver gspca_gl860
+[    2.910000] gspca_gl860: driver registered
+[    2.920000] s3c-fimc: controller 0 registered successfully
+[    2.920000] s3c-fimc: controller 1 registered successfully
+[    2.930000] s3c-fimc: info ov965x_init
+[    3.150000] cym s3c_mfc_mememap: addr:5daf9000 size:1138688 
+[    3.160000] S3C6400 MFC Driver, (c) 2007 Samsung Electronics
+[    3.160000] S3C PostProcessor Driver v3.12, (c) 2009 Samsung Electronics
+[    3.170000] S3C6410 TV encoder Driver, (c) 2008 Samsung Electronics
+[    3.170000] S3C6410 TV scaler Driver, (c) 2008 Samsung Electronics
+[    3.180000] S3C Rotator Driver, (c) 2008 Samsung Electronics
+[    3.180000] s3c_rotator_probe called
+[    3.190000] S3C JPEG Driver, (c) 2007 Samsung Electronics
+[    3.190000] s3c_g2d_probe called
+[    3.200000]  s3c_g2d_probe Success
+[    3.200000] S3C G3D Driver, (c) 2007-2009 Samsung Electronics
+[    3.210000] S3C CMM Driver, (c) 2008 Samsung Electronics
+[    3.210000] usbcore: registered new interface driver uvcvideo
+[    3.220000] USB Video Class driver (v0.1.0)
+[    3.220000] S3C2410 Watchdog Timer, (c) 2004 Simtec Electronics
+[    3.230000] s3c2410-wdt s3c2410-wdt: watchdog inactive, reset disabled, irq enabled
+[    3.230000] sdhci: Secure Digital Host Controller Interface driver
+[    3.240000] sdhci: Copyright(c) Pierre Ossman
+[    3.240000] s3c-sdhci s3c-sdhci.0: clock source 0: hsmmc (133000000 Hz)
+[    3.250000] s3c-sdhci s3c-sdhci.0: clock source 1: hsmmc (133000000 Hz)
+[    3.260000] s3c-sdhci s3c-sdhci.0: clock source 2: mmc_bus (24000000 Hz)
+[    3.260000] mmc0: SDHCI controller on samsung-hsmmc [s3c-sdhci.0] using ADMA
+[    3.270000] s3c-sdhci s3c-sdhci.1: clock source 0: hsmmc (133000000 Hz)
+[    3.280000] s3c-sdhci s3c-sdhci.1: clock source 1: hsmmc (133000000 Hz)
+[    3.280000] s3c-sdhci s3c-sdhci.1: clock source 2: mmc_bus (24000000 Hz)
+[    3.290000] mmc1: SDHCI controller on samsung-hsmmc [s3c-sdhci.1] using ADMA
+[    3.300000] usbcore: registered new interface driver usbhid
+[    3.300000] usbhid: USB HID core driver
+[    3.310000] Enter snd_info_register. create proc file. name=timers
+[    3.310000] Enter snd_info_register. create proc file. name=pcm
+[    3.320000] Enter snd_info_register. create proc file. name=queues
+[    3.320000] Enter snd_info_register. create proc file. name=clients
+[    3.330000] Enter snd_info_register. create proc file. name=timer
+[    3.340000] Enter snd_info_register. create proc file. name=drivers
+[    3.340000] Enter snd_soc_instantiate_cards. Line=1857
+[    3.350000] Enter snd_soc_instantiate_cards. Line=1857
+[    3.350000] Enter smdk6410_init. Line=97
+[    3.360000] Enter wm9713_probe. line=1190
+[    3.360000] Enter snd_soc_instantiate_cards. Line=1857
+[    3.370000] Enter snd_soc_instantiate_cards. Line=1857
+[    3.370000] Enter soc_probe
+[    3.370000] Enter snd_soc_register_card. card->name=smdk6410-wm9713
+[    3.380000] Enter snd_soc_instantiate_cards. Line=1857
+[    3.390000] Enter snd_soc_instantiate_card. Line=1716
+[    3.390000] Enter snd_card_create. Line=152
+[    3.400000] Enter snd_info_card_create. card number=card0
+[    3.400000] Enter snd_info_register. create proc file. name=card0
+[    3.410000] soc-audio soc-audio: probe smdk6410-wm9713 dai link 0
+[    3.410000] Enter wm9713_soc_probe. line=1128
+[    3.660000] Enter snd_info_register. create proc file. name=pcm0p
+[    3.660000] Enter snd_info_register. create proc file. name=info
+[    3.670000] Enter snd_info_register. create proc file. name=xrun_debug
+[    3.670000] Enter snd_info_register. create proc file. name=sub0
+[    3.680000] Enter snd_info_register. create proc file. name=info
+[    3.690000] Enter snd_info_register. create proc file. name=hw_params
+[    3.690000] Enter snd_info_register. create proc file. name=sw_params
+[    3.700000] Enter snd_info_register. create proc file. name=status
+[    3.700000] Enter snd_info_register. create proc file. name=pcm0c
+[    3.710000] Enter snd_info_register. create proc file. name=info
+[    3.720000] Enter snd_info_register. create proc file. name=xrun_debug
+[    3.720000] Enter snd_info_register. create proc file. name=sub0
+[    3.730000] Enter snd_info_register. create proc file. name=info
+[    3.740000] Enter snd_info_register. create proc file. name=hw_params
+[    3.740000] Enter snd_info_register. create proc file. name=sw_params
+[    3.750000] Enter snd_info_register. create proc file. name=status
+[    3.760000] asoc: wm9713-hifi <-> samsung-ac97 mapping ok
+[    3.760000] Enter snd_card_register
+[    3.770000] Enter snd_info_register. create proc file. name=oss
+[    3.770000] Enter snd_info_register. create proc file. name=oss
+[    3.780000] Enter snd_info_register. create proc file. name=id
+[    3.790000] Enter snd_info_register. create proc file. name=oss_mixer
+[    3.790000] soc-audio soc-audio: Registered card 'smdk6410-wm9713'
+[    3.790000] ALSA device list:
+[    3.800000]   #0: smdk6410-wm9713
+[    3.800000] TCP cubic registered
+[    3.800000] NET: Registered protocol family 17
+[    3.810000] can: controller area network core (rev 20090105 abi 8)
+[    3.810000] NET: Registered protocol family 29
+[    3.820000] can: raw protocol (rev 20090105)
+[    3.820000] can: broadcast manager protocol (rev 20090105 t)
+[    3.830000] lib80211: common routines for IEEE802.11 drivers
+[    3.830000] Registering the dns_resolver key type
+[    3.840000] s3c-rtc s3c64xx-rtc: setting system clock to 2000-01-01 00:56:30 UTC (946688190)
+[    3.850000] yaffs: dev is 32505858 name is "mtdblock2" rw
+[    3.850000] yaffs: passed flags ""
+[   12.080000] VFS: Mounted root (yaffs2 filesystem) on device 31:2.
+[   12.080000] devtmpfs: mounted
+[   12.080000] Freeing init memory: 176K
+No state is present for card smdk6410wm9713
+Unknown hardware: "" "" "" "" ""
+Hardware is initialized using a guess method
+No state is present for card smdk6410wm9713
+Try to bring eth0 interface up......[   14.390000] dm9000 dm9000.0: eth0: link down
+Done
+                                  
+Starting Qtopia2, please waiting...
+
+Please press Enter to activate this console. touch...
