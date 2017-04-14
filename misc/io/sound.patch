@@ -1,0 +1,454 @@
+diff --git a/linux-3.0.1/sound/core/info.c b/linux-3.0.1/sound/core/info.c
+index b41e98c..89e3966 100644
+--- a/linux-3.0.1/sound/core/info.c
++++ b/linux-3.0.1/sound/core/info.c
+@@ -604,7 +604,7 @@ int snd_info_card_create(struct snd_card *card)
+ 		return -ENXIO;
+ 
+ 	sprintf(str, "card%i", card->number);
+-	printk(KERN_INFO "Enter %s. card number=%s\n", __func__, str);
++	printk(KERN_INFO "Enter %s. card name=%s\n", __func__, str);
+ 	if ((entry = snd_info_create_module_entry(card->module, str, NULL)) == NULL)
+ 		return -ENOMEM;
+ 	entry->mode = S_IFDIR | S_IRUGO | S_IXUGO;
+diff --git a/linux-3.0.1/sound/core/pcm.c b/linux-3.0.1/sound/core/pcm.c
+index 6b4b128..9960e53 100644
+--- a/linux-3.0.1/sound/core/pcm.c
++++ b/linux-3.0.1/sound/core/pcm.c
+@@ -492,8 +492,7 @@ static int snd_pcm_stream_proc_init(struct snd_pcm_str *pstr)
+ 	struct snd_info_entry *entry;
+ 	char name[16];
+ 
+-	sprintf(name, "pcm%i%c", pcm->device, 
+-		pstr->stream == SNDRV_PCM_STREAM_PLAYBACK ? 'p' : 'c');
++	sprintf(name, "pcm%i%c", pcm->device, pstr->stream == SNDRV_PCM_STREAM_PLAYBACK ? 'p' : 'c');
+ 	if ((entry = snd_info_create_card_entry(pcm->card, name, pcm->card->proc_root)) == NULL)
+ 		return -ENOMEM;
+ 	entry->mode = S_IFDIR | S_IRUGO | S_IXUGO;
+@@ -513,8 +512,7 @@ static int snd_pcm_stream_proc_init(struct snd_pcm_str *pstr)
+ 	pstr->proc_info_entry = entry;
+ 
+ #ifdef CONFIG_SND_PCM_XRUN_DEBUG
+-	if ((entry = snd_info_create_card_entry(pcm->card, "xrun_debug",
+-						pstr->proc_root)) != NULL) {
++	if ((entry = snd_info_create_card_entry(pcm->card, "xrun_debug",pstr->proc_root)) != NULL) {
+ 		entry->c.text.read = snd_pcm_xrun_debug_read;
+ 		entry->c.text.write = snd_pcm_xrun_debug_write;
+ 		entry->mode |= S_IWUSR;
+@@ -711,9 +709,12 @@ EXPORT_SYMBOL(snd_pcm_new_stream);
+  *
+  * Returns zero if successful, or a negative error code on failure.
+  */
+-int snd_pcm_new(struct snd_card *card, const char *id, int device,
+-		int playback_count, int capture_count,
+-	        struct snd_pcm ** rpcm)
++int snd_pcm_new(struct snd_card *card,
++					  const char *id,
++					  int device,
++					  int playback_count,
++					  int capture_count,
++				      struct snd_pcm ** rpcm)
+ {
+ 	struct snd_pcm *pcm;
+ 	int err;
+@@ -723,6 +724,8 @@ int snd_pcm_new(struct snd_card *card, const char *id, int device,
+ 		.dev_disconnect = snd_pcm_dev_disconnect,
+ 	};
+ 
++	printk(KERN_INFO "%s id=%d\n", __func__, id);
++
+ 	if (snd_BUG_ON(!card))
+ 		return -ENXIO;
+ 	if (rpcm)
+diff --git a/linux-3.0.1/sound/soc/soc-core.c b/linux-3.0.1/sound/soc/soc-core.c
+index 5817498..8b1b36a 100644
+--- a/linux-3.0.1/sound/soc/soc-core.c
++++ b/linux-3.0.1/sound/soc/soc-core.c
+@@ -1228,7 +1228,7 @@ static int soc_bind_dai_link(struct snd_soc_card *card, int num)
+ 
+ 	if (rtd->complete)
+ 		return 1;
+-	dev_dbg(card->dev, "binding %s at idx %d\n", dai_link->name, num);
++	dev_info(card->dev, "binding name=%s at idx %d\n", dai_link->name, num);
+ 
+ 	/* do we already have the CPU DAI for this link ? */
+ 	if (rtd->cpu_dai) {
+@@ -1245,8 +1245,7 @@ static int soc_bind_dai_link(struct snd_soc_card *card, int num)
+ 			goto find_codec;
+ 		}
+ 	}
+-	dev_dbg(card->dev, "CPU DAI %s not registered\n",
+-			dai_link->cpu_dai_name);
++	dev_err(card->dev, "CPU DAI %s not registered\n", dai_link->cpu_dai_name);
+ 
+ find_codec:
+ 	/* do we already have the CODEC for this link ? */
+@@ -1261,20 +1260,17 @@ find_codec:
+ 
+ 			/* CODEC found, so find CODEC DAI from registered DAIs from this CODEC*/
+ 			list_for_each_entry(codec_dai, &dai_list, list) {
+-				if (codec->dev == codec_dai->dev &&
+-						!strcmp(codec_dai->name, dai_link->codec_dai_name)) {
++				if (codec->dev == codec_dai->dev && !strcmp(codec_dai->name, dai_link->codec_dai_name)) {
+ 					rtd->codec_dai = codec_dai;
+ 					goto find_platform;
+ 				}
+ 			}
+-			dev_dbg(card->dev, "CODEC DAI %s not registered\n",
+-					dai_link->codec_dai_name);
++			dev_err(card->dev, "CODEC DAI %s not registered\n", dai_link->codec_dai_name);
+ 
+ 			goto find_platform;
+ 		}
+ 	}
+-	dev_dbg(card->dev, "CODEC %s not registered\n",
+-			dai_link->codec_name);
++	dev_err(card->dev, "CODEC %s not registered\n", dai_link->codec_name);
+ 
+ find_platform:
+ 	/* do we already have the CODEC DAI for this link ? */
+@@ -1289,8 +1285,7 @@ find_platform:
+ 		}
+ 	}
+ 
+-	dev_dbg(card->dev, "platform %s not registered\n",
+-			dai_link->platform_name);
++	dev_err(card->dev, "platform %s not registered\n", dai_link->platform_name);
+ 	return 0;
+ 
+ out:
+@@ -1396,21 +1391,21 @@ static void soc_set_name_prefix(struct snd_soc_card *card,
+ 	}
+ }
+ 
+-static int soc_probe_codec(struct snd_soc_card *card,
+-			   struct snd_soc_codec *codec)
++static int soc_probe_codec(struct snd_soc_card *card, struct snd_soc_codec *codec)
+ {
+ 	int ret = 0;
+ 
++	dev_info(codec->dev, "Enter %s. codec->name=%s\n", __func__, codec->name);
++
+ 	codec->card = card;
+ 	codec->dapm.card = card;
+ 	soc_set_name_prefix(card, codec);
+ 
+ 	if (codec->driver->probe) {
++		dev_info(codec->dev, "%s. codec->driver->probe=>%p\n", __func__, codec->driver->probe);
+ 		ret = codec->driver->probe(codec);
+ 		if (ret < 0) {
+-			dev_err(codec->dev,
+-				"asoc: failed to probe CODEC %s: %d\n",
+-				codec->name, ret);
++			dev_err(codec->dev, "asoc: failed to probe CODEC %s: %d\n",codec->name, ret);
+ 			return ret;
+ 		}
+ 	}
+@@ -1502,7 +1497,7 @@ static int soc_probe_dai_link(struct snd_soc_card *card, int num)
+ 	struct snd_soc_dai *codec_dai = rtd->codec_dai, *cpu_dai = rtd->cpu_dai;
+ 	int ret;
+ 
+-	dev_err(card->dev, "probe %s dai link %d\n", card->name, num);
++	dev_err(card->dev, "probe name=%s, dai link num=%d\n", card->name, num);
+ 
+ 	/* config components */
+ 	codec_dai->codec = codec;
+@@ -1518,8 +1513,7 @@ static int soc_probe_dai_link(struct snd_soc_card *card, int num)
+ 		if (cpu_dai->driver->probe) {
+ 			ret = cpu_dai->driver->probe(cpu_dai);
+ 			if (ret < 0) {
+-				printk(KERN_ERR "asoc: failed to probe CPU DAI %s\n",
+-						cpu_dai->name);
++				printk(KERN_ERR "asoc: failed to probe CPU DAI %s\n",cpu_dai->name);
+ 				return ret;
+ 			}
+ 		}
+@@ -1538,10 +1532,10 @@ static int soc_probe_dai_link(struct snd_soc_card *card, int num)
+ 	/* probe the platform */
+ 	if (!platform->probed) {
+ 		if (platform->driver->probe) {
++			printk(KERN_ERR "%s. platform->driver->probe=>%p\n", __func__, platform->driver->probe);
+ 			ret = platform->driver->probe(platform);
+ 			if (ret < 0) {
+-				printk(KERN_ERR "asoc: failed to probe platform %s\n",
+-						platform->name);
++				printk(KERN_ERR "asoc: failed to probe platform %s\n", platform->name);
+ 				return ret;
+ 			}
+ 		}
+@@ -1557,10 +1551,10 @@ static int soc_probe_dai_link(struct snd_soc_card *card, int num)
+ 	/* probe the CODEC DAI */
+ 	if (!codec_dai->probed) {
+ 		if (codec_dai->driver->probe) {
++			printk(KERN_ERR "%s. codec_dai->driver->probe=>%p\n", __func__, codec_dai->driver->probe);
+ 			ret = codec_dai->driver->probe(codec_dai);
+ 			if (ret < 0) {
+-				printk(KERN_ERR "asoc: failed to probe CODEC DAI %s\n",
+-						codec_dai->name);
++				printk(KERN_ERR "asoc: failed to probe CODEC DAI %s\n",codec_dai->name);
+ 				return ret;
+ 			}
+ 		}
+@@ -1972,6 +1966,9 @@ static int soc_new_pcm(struct snd_soc_pcm_runtime *rtd, int num)
+ 	char new_name[64];
+ 	int ret = 0, playback = 0, capture = 0;
+ 
++	printk(KERN_INFO "Enter %s. stream_name=%s, codec_dai->name=%s\n",
++					  __func__, rtd->dai_link->stream_name, codec_dai->name);
++
+ 	/* check client and interface hw capabilities */
+ 	snprintf(new_name, sizeof(new_name), "%s %s-%d",
+ 			rtd->dai_link->stream_name, codec_dai->name, num);
+@@ -1981,9 +1978,8 @@ static int soc_new_pcm(struct snd_soc_pcm_runtime *rtd, int num)
+ 	if (codec_dai->driver->capture.channels_min)
+ 		capture = 1;
+ 
+-	dev_dbg(rtd->card->dev, "registered pcm #%d %s\n",num,new_name);
+-	ret = snd_pcm_new(rtd->card->snd_card, new_name,
+-			num, playback, capture, &pcm);
++	dev_info(rtd->card->dev, "registered pcm #%d %s\n",num,new_name);
++	ret = snd_pcm_new(rtd->card->snd_card, new_name, num, playback, capture, &pcm);
+ 	if (ret < 0) {
+ 		printk(KERN_ERR "asoc: can't create pcm for codec %s\n", codec->name);
+ 		return ret;
+@@ -2100,7 +2096,7 @@ unsigned int snd_soc_read(struct snd_soc_codec *codec, unsigned int reg)
+ 	unsigned int ret;
+ 
+ 	ret = codec->read(codec, reg);
+-	dev_dbg(codec->dev, "read %x => %x\n", reg, ret);
++	dev_info(codec->dev, "codec %s reads reg=%x => %x\n", codec->name, reg, ret);
+ 	trace_snd_soc_reg_read(codec, reg, ret);
+ 
+ 	return ret;
+@@ -3191,6 +3187,7 @@ static char *fmt_single_name(struct device *dev, int *id)
+ 			*id = 0;
+ 	}
+ 
++	dev_info(dev, "%s, name=%s\n", __func__, name);
+ 	return kstrdup(name, GFP_KERNEL);
+ }
+ 
+@@ -3287,7 +3284,7 @@ int snd_soc_register_dais(struct device *dev,
+ 	struct snd_soc_dai *dai;
+ 	int i, ret = 0;
+ 
+-	dev_dbg(dev, "dai register %s #%Zu\n", dev_name(dev), count);
++	dev_info(dev, "dai register name=%s, count#%Zu\n", dev_name(dev), count);
+ 
+ 	for (i = 0; i < count; i++) {
+ 
+@@ -3459,7 +3456,7 @@ int snd_soc_register_codec(struct device *dev,
+ 	struct snd_soc_codec *codec;
+ 	int ret, i;
+ 
+-	dev_dbg(dev, "codec register %s\n", dev_name(dev));
++	dev_info(dev, "codec register %s\n", dev_name(dev));
+ 
+ 	codec = kzalloc(sizeof(struct snd_soc_codec), GFP_KERNEL);
+ 	if (codec == NULL)
+@@ -3496,8 +3493,7 @@ int snd_soc_register_codec(struct device *dev,
+ 		 * kernel might have freed the array by the time we initialize
+ 		 * the cache.
+ 		 */
+-		codec->reg_def_copy = kmemdup(codec_drv->reg_cache_default,
+-					      reg_size, GFP_KERNEL);
++		codec->reg_def_copy = kmemdup(codec_drv->reg_cache_default, reg_size, GFP_KERNEL);
+ 		if (!codec->reg_def_copy) {
+ 			ret = -ENOMEM;
+ 			goto fail;
+diff --git a/linux-3.0.1/sound/soc/soc-dapm.c b/linux-3.0.1/sound/soc/soc-dapm.c
+index 1790f83..f22bffb 100644
+--- a/linux-3.0.1/sound/soc/soc-dapm.c
++++ b/linux-3.0.1/sound/soc/soc-dapm.c
+@@ -133,23 +133,23 @@ static inline struct snd_soc_dapm_widget *dapm_cnew_widget(
+  * Returns 0 for success else error.
+  */
+ static int snd_soc_dapm_set_bias_level(struct snd_soc_card *card,
+-				       struct snd_soc_dapm_context *dapm,
+-				       enum snd_soc_bias_level level)
++				       						   struct snd_soc_dapm_context *dapm,
++				       						   enum snd_soc_bias_level level)
+ {
+ 	int ret = 0;
+ 
+ 	switch (level) {
+ 	case SND_SOC_BIAS_ON:
+-		dev_dbg(dapm->dev, "Setting full bias\n");
++		dev_info(dapm->dev, "Setting full bias\n");
+ 		break;
+ 	case SND_SOC_BIAS_PREPARE:
+-		dev_dbg(dapm->dev, "Setting bias prepare\n");
++		dev_info(dapm->dev, "Setting bias prepare\n");
+ 		break;
+ 	case SND_SOC_BIAS_STANDBY:
+-		dev_dbg(dapm->dev, "Setting standby bias\n");
++		dev_info(dapm->dev, "Setting standby bias\n");
+ 		break;
+ 	case SND_SOC_BIAS_OFF:
+-		dev_dbg(dapm->dev, "Setting bias off\n");
++		dev_info(dapm->dev, "Setting bias off\n");
+ 		break;
+ 	default:
+ 		dev_err(dapm->dev, "Setting invalid bias %d\n", level);
+@@ -158,17 +158,22 @@ static int snd_soc_dapm_set_bias_level(struct snd_soc_card *card,
+ 
+ 	trace_snd_soc_bias_level_start(card, level);
+ 
+-	if (card && card->set_bias_level)
++	if (card && card->set_bias_level) {
++		dev_info(dapm->dev, "card->set_bias_level=>%p\n", card->set_bias_level);
+ 		ret = card->set_bias_level(card, level);
++	}
+ 	if (ret == 0) {
+-		if (dapm->codec && dapm->codec->driver->set_bias_level)
++		if (dapm->codec && dapm->codec->driver->set_bias_level) {
++			dev_info(dapm->dev, "dapm->codec->driver->set_bias_level=>%p\n", dapm->codec->driver->set_bias_level);
+ 			ret = dapm->codec->driver->set_bias_level(dapm->codec, level);
+-		else
++		} else
+ 			dapm->bias_level = level;
+ 	}
+ 	if (ret == 0) {
+-		if (card && card->set_bias_level_post)
++		if (card && card->set_bias_level_post) {
++			dev_info(dapm->dev, "card->set_bias_level_post=>%p\n", card->set_bias_level_post);
+ 			ret = card->set_bias_level_post(card, level);
++		}
+ 	}
+ 
+ 	trace_snd_soc_bias_level_done(card, level);
+@@ -950,30 +955,27 @@ static void dapm_widget_update(struct snd_soc_dapm_context *dapm)
+ 	struct snd_soc_dapm_widget *w;
+ 	int ret;
+ 
++	pr_info("Enter %s\n", __func__);
++
+ 	if (!update)
+ 		return;
+ 
+ 	w = update->widget;
+ 
+-	if (w->event &&
+-	    (w->event_flags & SND_SOC_DAPM_PRE_REG)) {
++	if (w->event && (w->event_flags & SND_SOC_DAPM_PRE_REG)) {
+ 		ret = w->event(w, update->kcontrol, SND_SOC_DAPM_PRE_REG);
+ 		if (ret != 0)
+-			pr_err("%s DAPM pre-event failed: %d\n",
+-			       w->name, ret);
++			pr_err("%s DAPM pre-event failed: %d\n", w->name, ret);
+ 	}
+ 
+-	ret = snd_soc_update_bits(w->codec, update->reg, update->mask,
+-				  update->val);
++	ret = snd_soc_update_bits(w->codec, update->reg, update->mask, update->val);
+ 	if (ret < 0)
+ 		pr_err("%s DAPM update failed: %d\n", w->name, ret);
+ 
+-	if (w->event &&
+-	    (w->event_flags & SND_SOC_DAPM_POST_REG)) {
++	if (w->event &&(w->event_flags & SND_SOC_DAPM_POST_REG)) {
+ 		ret = w->event(w, update->kcontrol, SND_SOC_DAPM_POST_REG);
+ 		if (ret != 0)
+-			pr_err("%s DAPM post-event failed: %d\n",
+-			       w->name, ret);
++			pr_err("%s DAPM post-event failed: %d\n", w->name, ret);
+ 	}
+ }
+ 
+@@ -998,6 +1000,8 @@ static int dapm_power_widgets(struct snd_soc_dapm_context *dapm, int event)
+ 	int ret = 0;
+ 	int power;
+ 
++	printk(KERN_INFO "%s\n", __func__);
++
+ 	trace_snd_soc_dapm_start(card);
+ 
+ 	list_for_each_entry(d, &card->dapm_list, list)
+@@ -1042,9 +1046,7 @@ static int dapm_power_widgets(struct snd_soc_dapm_context *dapm, int event)
+ 		}
+ 	}
+ 
+-	/* If there are no DAPM widgets then try to figure out power from the
+-	 * event type.
+-	 */
++	/* If there are no DAPM widgets then try to figure out power from the event type.	 */
+ 	if (!dapm->n_widgets) {
+ 		switch (event) {
+ 		case SND_SOC_DAPM_STREAM_START:
+@@ -1075,18 +1077,15 @@ static int dapm_power_widgets(struct snd_soc_dapm_context *dapm, int event)
+ 
+ 	list_for_each_entry(d, &dapm->card->dapm_list, list) {
+ 		if (d->dev_power && d->bias_level == SND_SOC_BIAS_OFF) {
+-			ret = snd_soc_dapm_set_bias_level(card, d,
+-							  SND_SOC_BIAS_STANDBY);
++			ret = snd_soc_dapm_set_bias_level(card, d, SND_SOC_BIAS_STANDBY);
+ 			if (ret != 0)
+-				dev_err(d->dev,
+-					"Failed to turn on bias: %d\n", ret);
++				dev_err(d->dev, "Failed to turn on bias: %d\n", ret);
+ 		}
+ 
+ 		/* If we're changing to all on or all off then prepare */
+ 		if ((d->dev_power && d->bias_level == SND_SOC_BIAS_STANDBY) ||
+ 		    (!d->dev_power && d->bias_level == SND_SOC_BIAS_ON)) {
+-			ret = snd_soc_dapm_set_bias_level(card, d,
+-							  SND_SOC_BIAS_PREPARE);
++			ret = snd_soc_dapm_set_bias_level(card, d, SND_SOC_BIAS_PREPARE);
+ 			if (ret != 0)
+ 				dev_err(d->dev,
+ 					"Failed to prepare bias: %d\n", ret);
+@@ -1104,37 +1103,27 @@ static int dapm_power_widgets(struct snd_soc_dapm_context *dapm, int event)
+ 	list_for_each_entry(d, &dapm->card->dapm_list, list) {
+ 		/* If we just powered the last thing off drop to standby bias */
+ 		if (d->bias_level == SND_SOC_BIAS_PREPARE && !d->dev_power) {
+-			ret = snd_soc_dapm_set_bias_level(card, d,
+-							  SND_SOC_BIAS_STANDBY);
++			ret = snd_soc_dapm_set_bias_level(card, d, SND_SOC_BIAS_STANDBY);
+ 			if (ret != 0)
+-				dev_err(d->dev,
+-					"Failed to apply standby bias: %d\n",
+-					ret);
++				dev_err(d->dev,"Failed to apply standby bias: %d\n", ret);
+ 		}
+ 
+ 		/* If we're in standby and can support bias off then do that */
+-		if (d->bias_level == SND_SOC_BIAS_STANDBY &&
+-		    d->idle_bias_off) {
+-			ret = snd_soc_dapm_set_bias_level(card, d,
+-							  SND_SOC_BIAS_OFF);
++		if (d->bias_level == SND_SOC_BIAS_STANDBY && d->idle_bias_off) {
++			ret = snd_soc_dapm_set_bias_level(card, d, SND_SOC_BIAS_OFF);
+ 			if (ret != 0)
+-				dev_err(d->dev,
+-					"Failed to turn off bias: %d\n", ret);
++				dev_err(d->dev, "Failed to turn off bias: %d\n", ret);
+ 		}
+ 
+ 		/* If we just powered up then move to active bias */
+ 		if (d->bias_level == SND_SOC_BIAS_PREPARE && d->dev_power) {
+-			ret = snd_soc_dapm_set_bias_level(card, d,
+-							  SND_SOC_BIAS_ON);
++			ret = snd_soc_dapm_set_bias_level(card, d, SND_SOC_BIAS_ON);
+ 			if (ret != 0)
+-				dev_err(d->dev,
+-					"Failed to apply active bias: %d\n",
+-					ret);
++				dev_err(d->dev, "Failed to apply active bias: %d\n", ret);
+ 		}
+ 	}
+ 
+-	pop_dbg(dapm->dev, card->pop_time,
+-		"DAPM sequencing finished, waiting %dms\n", card->pop_time);
++	pop_dbg(dapm->dev, card->pop_time, "DAPM sequencing finished, waiting %dms\n", card->pop_time);
+ 	pop_wait(card->pop_time);
+ 
+ 	trace_snd_soc_dapm_done(card);
+@@ -1636,7 +1625,7 @@ int snd_soc_dapm_new_widgets(struct snd_soc_dapm_context *dapm)
+ {
+ 	struct snd_soc_dapm_widget *w;
+ 	unsigned int val;
+-
++	printk(KERN_ERR "%s\n", __func__);
+ 	list_for_each_entry(w, &dapm->card->widgets, list)
+ 	{
+ 		if (w->new)
