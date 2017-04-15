@@ -492,8 +492,7 @@ static int snd_pcm_stream_proc_init(struct snd_pcm_str *pstr)
 	struct snd_info_entry *entry;
 	char name[16];
 
-	sprintf(name, "pcm%i%c", pcm->device, 
-		pstr->stream == SNDRV_PCM_STREAM_PLAYBACK ? 'p' : 'c');
+	sprintf(name, "pcm%i%c", pcm->device, pstr->stream == SNDRV_PCM_STREAM_PLAYBACK ? 'p' : 'c');
 	if ((entry = snd_info_create_card_entry(pcm->card, name, pcm->card->proc_root)) == NULL)
 		return -ENOMEM;
 	entry->mode = S_IFDIR | S_IRUGO | S_IXUGO;
@@ -513,8 +512,7 @@ static int snd_pcm_stream_proc_init(struct snd_pcm_str *pstr)
 	pstr->proc_info_entry = entry;
 
 #ifdef CONFIG_SND_PCM_XRUN_DEBUG
-	if ((entry = snd_info_create_card_entry(pcm->card, "xrun_debug",
-						pstr->proc_root)) != NULL) {
+	if ((entry = snd_info_create_card_entry(pcm->card, "xrun_debug",pstr->proc_root)) != NULL) {
 		entry->c.text.read = snd_pcm_xrun_debug_read;
 		entry->c.text.write = snd_pcm_xrun_debug_write;
 		entry->mode |= S_IWUSR;
@@ -711,9 +709,12 @@ EXPORT_SYMBOL(snd_pcm_new_stream);
  *
  * Returns zero if successful, or a negative error code on failure.
  */
-int snd_pcm_new(struct snd_card *card, const char *id, int device,
-		int playback_count, int capture_count,
-	        struct snd_pcm ** rpcm)
+int snd_pcm_new(struct snd_card *card,
+		const char *id,
+		int device,
+		int playback_count,
+		int capture_count,
+		struct snd_pcm ** rpcm)
 {
 	struct snd_pcm *pcm;
 	int err;
@@ -722,6 +723,8 @@ int snd_pcm_new(struct snd_card *card, const char *id, int device,
 		.dev_register =	snd_pcm_dev_register,
 		.dev_disconnect = snd_pcm_dev_disconnect,
 	};
+
+	printk(KERN_INFO "%s id=%d\n", __func__, id);
 
 	if (snd_BUG_ON(!card))
 		return -ENXIO;

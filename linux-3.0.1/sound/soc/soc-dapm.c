@@ -132,24 +132,22 @@ static inline struct snd_soc_dapm_widget *dapm_cnew_widget(
  *
  * Returns 0 for success else error.
  */
-static int snd_soc_dapm_set_bias_level(struct snd_soc_card *card,
-				       struct snd_soc_dapm_context *dapm,
-				       enum snd_soc_bias_level level)
+static int snd_soc_dapm_set_bias_level(struct snd_soc_card *card, struct snd_soc_dapm_context *dapm, enum snd_soc_bias_level level)
 {
 	int ret = 0;
 
 	switch (level) {
 	case SND_SOC_BIAS_ON:
-		dev_dbg(dapm->dev, "Setting full bias\n");
+		dev_info(dapm->dev, "Setting full bias\n");
 		break;
 	case SND_SOC_BIAS_PREPARE:
-		dev_dbg(dapm->dev, "Setting bias prepare\n");
+		dev_info(dapm->dev, "Setting bias prepare\n");
 		break;
 	case SND_SOC_BIAS_STANDBY:
-		dev_dbg(dapm->dev, "Setting standby bias\n");
+		dev_info(dapm->dev, "Setting standby bias\n");
 		break;
 	case SND_SOC_BIAS_OFF:
-		dev_dbg(dapm->dev, "Setting bias off\n");
+		dev_info(dapm->dev, "Setting bias off\n");
 		break;
 	default:
 		dev_err(dapm->dev, "Setting invalid bias %d\n", level);
@@ -158,17 +156,22 @@ static int snd_soc_dapm_set_bias_level(struct snd_soc_card *card,
 
 	trace_snd_soc_bias_level_start(card, level);
 
-	if (card && card->set_bias_level)
+	if (card && card->set_bias_level) {
+		dev_info(dapm->dev, "level=%d, card->set_bias_level=>%p\n", level, card->set_bias_level);
 		ret = card->set_bias_level(card, level);
+	}
 	if (ret == 0) {
-		if (dapm->codec && dapm->codec->driver->set_bias_level)
+		if (dapm->codec && dapm->codec->driver->set_bias_level) {
+			dev_info(dapm->dev, "dapm->codec->driver->set_bias_level=>%p\n", dapm->codec->driver->set_bias_level);
 			ret = dapm->codec->driver->set_bias_level(dapm->codec, level);
-		else
+		} else
 			dapm->bias_level = level;
 	}
 	if (ret == 0) {
-		if (card && card->set_bias_level_post)
+		if (card && card->set_bias_level_post) {
+			dev_info(dapm->dev, "card->set_bias_level_post=>%p\n", card->set_bias_level_post);
 			ret = card->set_bias_level_post(card, level);
+		}
 	}
 
 	trace_snd_soc_bias_level_done(card, level);
@@ -177,8 +180,7 @@ static int snd_soc_dapm_set_bias_level(struct snd_soc_card *card,
 }
 
 /* set up initial codec paths */
-static void dapm_set_path_status(struct snd_soc_dapm_widget *w,
-	struct snd_soc_dapm_path *p, int i)
+static void dapm_set_path_status(struct snd_soc_dapm_widget *w, struct snd_soc_dapm_path *p, int i)
 {
 	switch (w->id) {
 	case snd_soc_dapm_switch:
@@ -950,30 +952,27 @@ static void dapm_widget_update(struct snd_soc_dapm_context *dapm)
 	struct snd_soc_dapm_widget *w;
 	int ret;
 
+	pr_info("Enter %s\n", __func__);
+
 	if (!update)
 		return;
 
 	w = update->widget;
 
-	if (w->event &&
-	    (w->event_flags & SND_SOC_DAPM_PRE_REG)) {
+	if (w->event && (w->event_flags & SND_SOC_DAPM_PRE_REG)) {
 		ret = w->event(w, update->kcontrol, SND_SOC_DAPM_PRE_REG);
 		if (ret != 0)
-			pr_err("%s DAPM pre-event failed: %d\n",
-			       w->name, ret);
+			pr_err("%s DAPM pre-event failed: %d\n", w->name, ret);
 	}
 
-	ret = snd_soc_update_bits(w->codec, update->reg, update->mask,
-				  update->val);
+	ret = snd_soc_update_bits(w->codec, update->reg, update->mask, update->val);
 	if (ret < 0)
 		pr_err("%s DAPM update failed: %d\n", w->name, ret);
 
-	if (w->event &&
-	    (w->event_flags & SND_SOC_DAPM_POST_REG)) {
+	if (w->event &&(w->event_flags & SND_SOC_DAPM_POST_REG)) {
 		ret = w->event(w, update->kcontrol, SND_SOC_DAPM_POST_REG);
 		if (ret != 0)
-			pr_err("%s DAPM post-event failed: %d\n",
-			       w->name, ret);
+			pr_err("%s DAPM post-event failed: %d\n", w->name, ret);
 	}
 }
 
@@ -997,6 +996,8 @@ static int dapm_power_widgets(struct snd_soc_dapm_context *dapm, int event)
 	LIST_HEAD(down_list);
 	int ret = 0;
 	int power;
+
+	printk(KERN_INFO "%s\n", __func__);
 
 	trace_snd_soc_dapm_start(card);
 
@@ -1042,9 +1043,7 @@ static int dapm_power_widgets(struct snd_soc_dapm_context *dapm, int event)
 		}
 	}
 
-	/* If there are no DAPM widgets then try to figure out power from the
-	 * event type.
-	 */
+	/* If there are no DAPM widgets then try to figure out power from the event type. */
 	if (!dapm->n_widgets) {
 		switch (event) {
 		case SND_SOC_DAPM_STREAM_START:
@@ -1075,18 +1074,15 @@ static int dapm_power_widgets(struct snd_soc_dapm_context *dapm, int event)
 
 	list_for_each_entry(d, &dapm->card->dapm_list, list) {
 		if (d->dev_power && d->bias_level == SND_SOC_BIAS_OFF) {
-			ret = snd_soc_dapm_set_bias_level(card, d,
-							  SND_SOC_BIAS_STANDBY);
+			ret = snd_soc_dapm_set_bias_level(card, d, SND_SOC_BIAS_STANDBY);
 			if (ret != 0)
-				dev_err(d->dev,
-					"Failed to turn on bias: %d\n", ret);
+				dev_err(d->dev, "Failed to turn on bias: %d\n", ret);
 		}
 
 		/* If we're changing to all on or all off then prepare */
 		if ((d->dev_power && d->bias_level == SND_SOC_BIAS_STANDBY) ||
 		    (!d->dev_power && d->bias_level == SND_SOC_BIAS_ON)) {
-			ret = snd_soc_dapm_set_bias_level(card, d,
-							  SND_SOC_BIAS_PREPARE);
+			ret = snd_soc_dapm_set_bias_level(card, d, SND_SOC_BIAS_PREPARE);
 			if (ret != 0)
 				dev_err(d->dev,
 					"Failed to prepare bias: %d\n", ret);
@@ -1104,37 +1100,27 @@ static int dapm_power_widgets(struct snd_soc_dapm_context *dapm, int event)
 	list_for_each_entry(d, &dapm->card->dapm_list, list) {
 		/* If we just powered the last thing off drop to standby bias */
 		if (d->bias_level == SND_SOC_BIAS_PREPARE && !d->dev_power) {
-			ret = snd_soc_dapm_set_bias_level(card, d,
-							  SND_SOC_BIAS_STANDBY);
+			ret = snd_soc_dapm_set_bias_level(card, d, SND_SOC_BIAS_STANDBY);
 			if (ret != 0)
-				dev_err(d->dev,
-					"Failed to apply standby bias: %d\n",
-					ret);
+				dev_err(d->dev,"Failed to apply standby bias: %d\n", ret);
 		}
 
 		/* If we're in standby and can support bias off then do that */
-		if (d->bias_level == SND_SOC_BIAS_STANDBY &&
-		    d->idle_bias_off) {
-			ret = snd_soc_dapm_set_bias_level(card, d,
-							  SND_SOC_BIAS_OFF);
+		if (d->bias_level == SND_SOC_BIAS_STANDBY && d->idle_bias_off) {
+			ret = snd_soc_dapm_set_bias_level(card, d, SND_SOC_BIAS_OFF);
 			if (ret != 0)
-				dev_err(d->dev,
-					"Failed to turn off bias: %d\n", ret);
+				dev_err(d->dev, "Failed to turn off bias: %d\n", ret);
 		}
 
 		/* If we just powered up then move to active bias */
 		if (d->bias_level == SND_SOC_BIAS_PREPARE && d->dev_power) {
-			ret = snd_soc_dapm_set_bias_level(card, d,
-							  SND_SOC_BIAS_ON);
+			ret = snd_soc_dapm_set_bias_level(card, d, SND_SOC_BIAS_ON);
 			if (ret != 0)
-				dev_err(d->dev,
-					"Failed to apply active bias: %d\n",
-					ret);
+				dev_err(d->dev, "Failed to apply active bias: %d\n", ret);
 		}
 	}
 
-	pop_dbg(dapm->dev, card->pop_time,
-		"DAPM sequencing finished, waiting %dms\n", card->pop_time);
+	pop_dbg(dapm->dev, card->pop_time, "DAPM sequencing finished, waiting %dms\n", card->pop_time);
 	pop_wait(card->pop_time);
 
 	trace_snd_soc_dapm_done(card);
@@ -1636,7 +1622,7 @@ int snd_soc_dapm_new_widgets(struct snd_soc_dapm_context *dapm)
 {
 	struct snd_soc_dapm_widget *w;
 	unsigned int val;
-
+	printk(KERN_ERR "%s\n", __func__);
 	list_for_each_entry(w, &dapm->card->widgets, list)
 	{
 		if (w->new)
