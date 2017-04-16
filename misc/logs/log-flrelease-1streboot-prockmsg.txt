@@ -1,0 +1,1121 @@
+
+
+[root@FORLINX6410]# cat /proc/kmsg
+<5>Linux version 3.0.1 (root@forlinx) (gcc version 4.3.2 (Sourcery G++ Lite 2008q3-72) ) #439 Sun Sep 23 13:36:30 CST 2012
+<7>CPU: ARMv6-compatible processor [410fb766] revision 6 (ARMv7), cr=00c5387f
+<7>CPU: VIPT nonaliasing data cache, VIPT nonaliasing instruction cache
+<7>Machine: SMDK6410
+<7>Memory policy: ECC disabled, Data cache writeback
+<7>CPU S3C6410 (id 0x36410101)
+<7>s3c6410_init_clocks: initialising clocks
+<6>S3C24XX Clocks, Copyright 2004 Simtec Electronics
+<3>camera: no parent clock specified
+<7>s3c6400_setup_clocks: registering clocks
+<7>s3c6400_setup_clocks: clkdiv0 = 01043310
+<7>s3c6400_setup_clocks: xtal is 12000000
+<6>S3C64XX: PLL settings, A=532000000, M=532000000, E=24000000
+<6>S3C64XX: HCLK2=266000000, HCLK=133000000, PCLK=66500000
+<6>mout_apll: source is fout_apll (1), rate is 532000000
+<6>mout_epll: source is epll (1), rate is 24000000
+<6>mout_mpll: source is mpll (1), rate is 532000000
+<6>mmc_bus: source is mout_epll (0), rate is 24000000
+<6>mmc_bus: source is mout_epll (0), rate is 24000000
+<6>mmc_bus: source is mout_epll (0), rate is 24000000
+<6>usb-bus-host: source is clk_48m (0), rate is 48000000
+<7>s3c64xx_clk_doutmpll_get_rate: parent is 532000000
+<6>uclk1: source is dout_mpll (1), rate is 66500000
+<6>spi-bus: source is mout_epll (0), rate is 24000000
+<6>spi-bus: source is mout_epll (0), rate is 24000000
+<6>audio-bus: source is mout_epll (0), rate is 24000000
+<6>audio-bus: source is mout_epll (0), rate is 24000000
+<6>audio-bus: source is mout_epll (0), rate is 24000000
+<6>irda-bus: source is mout_epll (0), rate is 24000000
+<3>camera: no parent clock specified
+<7>s3c64xx: 15728640 bytes SDRAM reserved for fimc at 0x5f0f9000
+<7>s3c64xx: 8388608 bytes SDRAM reserved for pp at 0x5e8f9000
+<7>s3c64xx: 8388608 bytes SDRAM reserved for tv at 0x5e0f9000
+<7>s3c64xx: 6291456 bytes SDRAM reserved for mfc at 0x5daf9000
+<7>s3c64xx: 8388608 bytes SDRAM reserved for jpeg at 0x5d2f9000
+<7>s3c64xx: 8388608 bytes SDRAM reserved for cmm at 0x5caf9000
+<7>On node 0 totalpages: 65536
+<7>free_area_init_node: node 0, pgdat c074306c, node_mem_map c07c4000
+<7>  Normal zone: 512 pages used for memmap
+<7>  Normal zone: 0 pages reserved
+<7>  Normal zone: 65024 pages, LIFO batch:15
+<7>pcpu-alloc: s0 r0 d32768 u32768 alloc=1*32768
+<7>pcpu-alloc: [0] 0 
+<7>Built 1 zonelists in Zone order, mobility grouping on.  Total pages: 65024
+<5>Kernel command line: root=/dev/mtdblock2 rootfstype=yaffs2 init=/linuxrc console=ttySAC0,115200
+<6>PID hash table entries: 1024 (order: 0, 4096 bytes)
+<6>Dentry cache hash table entries: 32768 (order: 5, 131072 bytes)
+<6>Inode-cache hash table entries: 16384 (order: 4, 65536 bytes)
+<6>Memory: 256MB = 256MB total
+<5>Memory: 197612k/197612k available, 64532k reserved, 0K highmem
+<5>Virtual kernel memory layout:
+<5>    vector  : 0xffff0000 - 0xffff1000   (   4 kB)
+<5>    fixmap  : 0xfff00000 - 0xfffe0000   ( 896 kB)
+<5>    DMA     : 0xff600000 - 0xffe00000   (   8 MB)
+<5>    vmalloc : 0xd0800000 - 0xf4000000   ( 568 MB)
+<5>    lowmem  : 0xc0000000 - 0xd0000000   ( 256 MB)
+<5>    pkmap   : 0xbfe00000 - 0xc0000000   (   2 MB)
+<5>    modules : 0xbf000000 - 0xbfe00000   (  14 MB)
+<5>      .init : 0xc0008000 - 0xc0034000   ( 176 kB)
+<5>      .text : 0xc0034000 - 0xc0702094   (6969 kB)
+<5>      .data : 0xc0704000 - 0xc0746390   ( 265 kB)
+<5>       .bss : 0xc07463b4 - 0xc07c3d40   ( 503 kB)
+<6>SLUB: Genslabs=13, HWalign=32, Order=0-3, MinObjects=0, CPUs=1, Nodes=1
+<6>NR_IRQS:246 nr_irqs:246 246
+<7>s3c64xx_init_irq: initialising interrupts
+<6>VIC @f4000000: id 0x00041192, vendor 0x41
+<6>VIC @f4010000: id 0x00041192, vendor 0x41
+<7>timer tcon=00500000, tcnt 1b0f0, tcfg 00000200,00010000, usec 00001719
+<6>Console: colour dummy device 80x30
+<6>console [ttySAC0] enabled
+<6>Calibrating delay loop... 528.79 BogoMIPS (lpj=2643968)
+<6>pid_max: default: 32768 minimum: 301
+<6>Mount-cache hash table entries: 512
+<6>CPU: Testing write buffer coherency: ok
+<6>hw perfevents: enabled with v6 PMU driver, 3 counters available
+<6>devtmpfs: initialized
+<7>device: 'platform': device_add
+<7>bus: 'platform': registered
+<7>Registering sysdev class 'cpu'
+<7>Registering sysdev class 's3c64xx-core'
+<7>Registering sys device of class 's3c64xx-core'
+<7>Registering sys device 's3c64xx-core0'
+<7>Registering sysdev class 's3c6410-core'
+<6>NET: Registered protocol family 16
+<7>device class 'bdi': registering
+<7>device class 'tty': registering
+<7>device class 'vtconsole': registering
+<7>device: 'vtcon0': device_add
+<7>bus: 'spi': registered
+<7>device class 'spi_master': registering
+<7>bus: 'i2c': registered
+<7>bus: 'i2c': add driver dummy
+<7>Registering platform device 's3c-sdhci.0'. Parent at platform
+<7>device: 's3c-sdhci.0': device_add
+<7>bus: 'platform': add device s3c-sdhci.0
+<7>Registering platform device 's3c-sdhci.1'. Parent at platform
+<7>device: 's3c-sdhci.1': device_add
+<7>bus: 'platform': add device s3c-sdhci.1
+<7>Registering platform device 's3c2440-i2c.0'. Parent at platform
+<7>device: 's3c2440-i2c.0': device_add
+<7>bus: 'platform': add device s3c2440-i2c.0
+<7>Registering platform device 's3c-fb'. Parent at platform
+<7>device: 's3c-fb': device_add
+<7>bus: 'platform': add device s3c-fb
+<7>Registering platform device 's3c2410-ohci'. Parent at platform
+<7>device: 's3c2410-ohci': device_add
+<7>bus: 'platform': add device s3c2410-ohci
+<7>Registering platform device 's3c-hsotg'ce_add
+<7>bus: 'platform': add device s3c-keypad
+<7>Registering platform device 'gpio-keys'. Parent at platform
+<7>device: 'gpio-keys': device_add
+<7>bus: 'platform': add device gpio-keys
+<7>Registering platform device 's3c6410-nand'. Parent at platform
+<7>device: 's3c6410-nand': device_add
+<7>bus: 'platform': add device s3c6410-nand
+<7>Registering platform device 'dm9000.0'. Parent at platform
+<7>device: 'dm9000.0': device_add
+<7>bus: 'platform': add device dm9000.0
+<7>Registering platform device 'samsung-ac97'. Parent at platform
+<7>device: 'samsung-ac97': device_add
+<7>bus: 'platform': add device samsung-ac97
+<7>Registering platform device 's3c64xx-rtc'. Parent at platform
+<7>device: 's3c64xx-rtc': device_add
+<7>bus: 'platform': add device s3c64xx-rtc
+<7>Registering platform device 's3c-ts'. Parent at platform
+<7>device: 's3c-ts': device_add
+<7>bus: 'platform': add device s3c-ts
+<7>Registering platform device 's3c-fimc.0'. Parent at platform
+<7>device: 's3c-fimc.0': device_add
+<7>bus: 'platform': add device s3c-fimc.0
+<7>Registering platform device 's3c-fimc.1'. Parent at platform
+<7>device: 's3c-fimc.1': device_add
+<7>bus: 'platform': add device s3c-fimc.1
+<7>Registering platform device 's3c2410-wdt'. Parent at platform
+<7>device: 's3c2410-wdt': device_add
+<7>bus: 'platform': add device s3c2410-wdt
+<7>Registering platform device 's3c-pp'. Parent at platform
+<7>device: 's3c-pp': device_add
+<7>bus: 'platform': add device s3c-pp
+<7>Registering platform device 's3c-mfc'. Parent at platform
+<7>device: 's3c-mfc': device_add
+<7>bus: 'platform': add device s3c-mfc
+<7>Registering platform device 's3c-tvenc'. Parent at platform
+<7>device: 's3c-tvenc': device_add
+<7>bus: 'platform': add device s3c-tvenc
+<7>Registering platform device 's3c-tvscaler'. Parent at platform
+<7>device: 's3c-tvscaler': device_add
+<7>bus: 'platform': add device s3c-tvscaler
+<7>Registering platform device 's3c-rotator'. Parent at platform
+<7>device: 's3c-rotator': device_add
+<7>bus: 'platform': add device s3c-rotator
+<7>Registering platform device 's3c-jpeg'. Parent at platform
+<7>device: 's3c-jpeg': device_add
+<7>bus: 'platform': add device s3c-jpeg
+<7>Registering platform device 's3c-g2d'. Parent at platform
+<7>device: 's3c-g2d': device_add
+<7>bus: 'platform': add device s3c-g2d
+<7>Registering platform device 's3c-g3d'. Parent at platform
+<7>device: 's3c-g3d': device_add
+<7>bus: 'platform': add device s3c-g3d
+<7>Registering platform device 's3c64xx-spi.0'. Parent at platform
+<7>device: 's3c64xx-spi.0': device_add
+<7>bus: 'platform': add device s3c64xx-spi.0
+<7>Registering platform device 's3c64xx-spi.1'. Parent at platform
+<7>device: 's3c64xx-spi.1': device_add
+<7>bus: 'platform': add device s3c64xx-spi.1
+<6>hw-breakpoint: found 6 breakpoint and 1 watchpoint registers.
+<6>hw-breakpoint: maximum watchpoint size is 4 bytes.
+<6>s3c64xx_dma_init: Registering DMA channels
+<7>Registering sysdev class 's3c64xx-dma'
+<7>Registering sys device of class 's3c64xx-dma'
+<7>Registering sys device 's3c64xx-dma0'
+<6>PL080: IRQ 73, at d0804000, channels 0..8
+<7>Registering sys device of class 's3c64xx-dma'
+<7>Registering sys device 's3c64xx-dma1'
+<6>PL080: IRQ 74, at d0806000, channels 8..16
+<7>S3C6410: Initialising architecture
+<7>Registering sys device of class 's3c6410-core'
+<7>Registering sys device 's3c6410-core0'
+<7>Registering platform device 's3c6400-uart.0'. Parent at platform
+<7>device: 's3c6400-uart.0': device_add
+<7>bus: 'platform': add device s3c6400-uart.0
+<7>Registering platform device 's3c6400-uart.1'. Parent at platform
+<7>device: 's3c6400-uart.1': device_add
+<7>bus: 'platform': add device s3c6400-uart.1
+<7>Registering platform device 's3c6400-uart.2'. Parent at platform
+<7>device: 's3c6400-uart.2': device_add
+<7>bus: 'platform': add device s3c6400-uart.2
+<7>Registering platform device 's3c6400-uart.3'. Parent at platform
+<7>device: 's3c6400-uart.3': device_add
+<7>bus: 'platform': add device s3c6400-uart.3
+<7>bus: 'platform': add driver s3c-adc
+<7>Registering sys device of class 'cpu'
+<7>Registering sys device 'cpu0'
+<7>device: 'default': device_add
+<6>bio: create slab <bio-0> at 0
+<7>device class 'block': registering
+<7>device class 'graphics': registering
+<7>device class 'misc': registering
+<7>device class 'scsi_host': registering
+<7>bus: 'scsi': registered
+<7>device class 'scsi_device': registering
+<5>SCSI subsystem initialized
+<7>bus: 'platform': add driver s3c64xx-spi
+<7>bus: 'platform': driver_probe_device: matched device s3c64xx-spi.0 with driver s3c64xx-spi
+<7>bus: 'platform': really_probe: probing driver s3c64xx-spi with device s3c64xx-spi.0
+<7>
+<7>@@@@@@@@@@@@@@@@@@@@
+<7>s3c64xx_spi_probe 1111111111111111
+<7>@@@@@@@@@@@@@@@@@@@@
+<7>device: 'spi0': device_add
+<7>s3c64xx-spi s3c64xx-spi.0: registered master spi0
+<7>s3c64xx-spi s3c64xx-spi.0: Samsung SoC SPI Driver loaded for Bus SPI-0 with 1 Slaves attached
+<7>s3c64xx-spi s3c64xx-spi.0: 	IOmem=[0x7f00b0ff-0x7f00b000]	DMA=[Rx-13, Tx-12]
+<7>driver: 's3c64xx-spi.0': driver_bound: bound to device 's3c64xx-spi'
+<7>bus: 'platform': really_probe: bound device s3c64xx-spi.0 to driver s3c64xx-spi
+<7>bus: 'platform': driver_probe_device: matched device s3c64xx-spi.1 with driver s3c64xx-spi
+<7>bus: 'platform': really_probe: probing driver s3c64xx-spi with device s3c64xx-spi.1
+<7>
+<7>@@@@@@@@@@@@@@@@@@@@
+<7>s3c64xx_spi_probe 1111111111111111
+<7>@@@@@@@@@@@@@@@@@@@@
+<7>device: 'spi1': device_add
+<7>s3c64xx-spi s3c64xx-spi.1: registered master spi1
+<4>------------[ cut here ]------------
+<4>WARNING: at drivers/gpio/gpiolib.c:101 gpio_ensure_requested+0x58/0x124()
+<7>autorequest GPIO-24
+<7>Modules linked in:
+<7>[<c003aca8>] (unwind_backtrace+0x0/0xfc) from [<c04a7f2c>] (dump_stack+0x18/0x1c)
+<7>[<c04a7f2c>] (dump_stack+0x18/0x1c) from [<c0050840>] (warn_slowpath_common+0x54/0x6c)
+<7>[<c0050840>] (warn_slowpath_common+0x54/0x6c) from [<c00508fc>] (warn_slowpath_fmt+0x38/0x40)
+<7>[<c00508fc>] (warn_slowpath_fmt+0x38/0x40) from [<c020e254>] (gpio_ensure_requested+0x58/0x124)
+<7>[<c020e254>] (gpio_ensure_requested+0x58/0x124) from [<c020e470>] (gpio_direction_output+0x84/0x1a0)
+<7>[<c020e470>] (gpio_direction_output+0x84/0x1a0) from [<c0042cb0>] (cs_set_level+0x10/0x14)
+<7>[<c0042cb0>] (cs_set_level+0x10/0x14) from [<c02762e8>] (s3c64xx_spi_setup+0x10c/0x1f8)
+<7>[<c02762e8>] (s3c64xx_spi_setup+0x10c/0x1f8) from [<c0274698>] (spi_setup+0x60/0x114)
+<7>[<c0274698>] (spi_setup+0x60/0x114) from [<c0274a04>] (spi_add_device+0x98/0x150)
+<7>[<c0274a04>] (spi_add_device+0x98/0x150) from [<c0274b38>] (spi_new_device+0x7c/0xb4)
+<7>[<c0274b38>] (spi_new_device+0x7c/0xb4) from [<c0274b98>] (spi_match_master_to_boardinfo+0x28/0x48)
+<7>[<c0274b98>] (spi_match_master_to_boardinfo+0x28/0x48) from [<c0274cb4>] (spi_register_master+0xfc/0x164)
+<7>[<c0274cb4>] (spi_register_master+0xfc/0x164) from [<c0021a40>] (s3c64xx_spi_probe+0x42c/0x540)
+<7>[<c0021a40>] (s3c64xx_spi_probe+0x42c/0x540) from [<c0246054>] (platform_drv_probe+0x20/0x24)
+<7>[<c0246054>] (platform_drv_probe+0x20/0x24) from [<c0244c58>] (driver_probe_device+0xe0/0x238)
+<7>[<c0244c58>] (driver_probe_device+0xe0/0x238) from [<c0244e44>] (__driver_attach+0x94/0x98)
+<7>[<c0244e44>] (__driver_attach+0x94/0x98) from [<c0244380>] (bus_for_each_dev+0x68/0x94)
+<7>[<c0244380>] (bus_for_each_dev+0x68/0x94) from [<c0244a04>] (driver_attach+0x20/0x28)
+<7>[<c0244a04>] (driver_attach+0x20/0x28) from [<c0243b54>] (bus_add_driver+0xd4/0x274)
+<7>[<c0243b54>] (bus_add_driver+0xd4/0x274) from [<c0245240>] (driver_register+0x74/0x15c)
+<7>[<c0245240>] (driver_register+0x74/0x15c) from [<c0246340>] (platform_driver_register+0x4c/0x60)
+<7>[<c0246340>] (platform_driver_register+0x4c/0x60) from [<c0246374>] (platform_driver_probe+0x20/0x6c)
+<7>[<c0246374>] (platform_driver_probe+0x20/0x6c) from [<c0021608>] (s3c64xx_spi_init+0x18/0x24)
+<7>[<c0021608>] (s3c64xx_spi_init+0x18/0x24) from [<c00343c8>] (do_one_initcall+0x3c/0x188)
+<7>[<c00343c8>] (do_one_initcall+0x3c/0x188) from [<c000845c>] (kernel_init+0x88/0x130)
+<7>[<c000845c>] (kernel_init+0x88/0x130) from [<c0035a34>] (kernel_thread_exit+0x0/0x8)
+<4>---[ end trace da227214a82491b7 ]---
+<7>spi spi1.0: setup mode 0, 8 bits/w, 8312500 Hz max --> 0
+<7>
+<7>@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+<7>setup status = 0
+<7>@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+<7>device: 'spi1.0': device_add
+<7>bus: 'spi': add device spi1.0
+<7>s3c64xx-spi s3c64xx-spi.1: registered child spi1.0
+<7>s3c64xx-spi s3c64xx-spi.1: Samsung SoC SPI Driver loaded for Bus SPI-1 with 1 Slaves attached
+<7>s3c64xx-spi s3c64xx-spi.1: 	IOmem=[0x7f00c0ff-0x7f00c000]	DMA=[Rx-21, Tx-20]
+<7>driver: 's3c64xx-spi.1': driver_bound: bound to device 's3c64xx-spi'
+<7>bus: 'platform': really_probe: bound device s3c64xx-spi.1 to driver s3c64xx-spi
+<7>device class 'mdio_bus': registering
+<7>bus: 'mdio_bus': registered
+<7>bus: 'mdio_bus': add driver Generic PHY
+<7>bus: 'usb': registered
+<7>bus: 'usb': add driver usbfs
+<6>usbcore: registered new interface driver usbfs
+<7>device class 'usb_device': registering
+<7>bus: 'usb': add driver hub
+<6>usbcore: registered new interface driver hub
+<7>bus: 'usb': add driver usb
+<6>usbcore: registered new device driver usb
+<7>bus: 'serio': registered
+<7>device class 'input': registering
+<7>device class 'rtc': registering
+<7>bus: 'platform': add driver s3c-i2c
+<7>bus: 'platform': driver_probe_device: matched device s3c2440-i2c.0 with driver s3c-i2c
+<7>bus: 'platform': really_probe: probing driver s3c-i2c with device s3c2440-i2c.0
+<6>s3c-i2c s3c2440-i2c.0: slave address 0x10
+<6>s3c-i2c s3c2440-i2c.0: bus frequency set to 64 KHz
+<7>device: 'i2c-0': device_add
+<7>bus: 'i2c': add device i2c-0
+<7>device: '0-0050': device_add
+<7>bus: 'i2c': add device 0-0050
+<7>device: '0-001b': device_add
+<7>bus: 'i2c': add device 0-001b
+<7>device: '0-0030': device_add
+<7>bus: 'i2c': add device 0-0030
+<6>s3c-i2c s3c2440-i2c.0: i2c-0: S3C I2C adapter
+<7>driver: 's3c2440-i2c.0': driver_bound: bound to device 's3c-i2c'
+<7>bus: 'platform': really_probe: bound device s3c2440-i2c.0 to driver s3c-i2c
+<7>bus: 'mmc': registered
+<7>device class 'mmc_host': registering
+<7>bus: 'sdio': registered
+<7>device class 'leds': registering
+<7>device class 'sound': registering
+<6>Advanced Linux Sound Architecture Driver Version 1.0.23.
+<7>bus: 'ac97': registered
+<7>device class 'net': registering
+<7>device: 'lo': device_add
+<7>device class 'ieee80211': registering
+<7>Registering platform device 'regulatory.0'. Parent at platform
+<7>device: 'regulatory.0': device_add
+<7>bus: 'platform': add device regulatory.0
+<6>cfg80211: Calling CRDA to update world regulatory domain
+<7>device class 'mem': registering
+<7>device: 'mem': device_add
+<7>device: 'null': device_add
+<7>device: 'zero': device_add
+<7>device: 'full': device_add
+<7>device: 'random': device_add
+<7>device: 'urandom': device_add
+<7>device: 'kmsg': device_add
+<7>device: 'tty': device_add
+<7>device: 'console': device_add
+<7>device: 'tty0': device_add
+<7>device class 'vc': registering
+<7>device: 'vcs': device_add
+<7>device: 'vcsa': device_add
+<7>device: 'vcs1': device_add
+<7>device: 'vcsa1': device_add
+<7>device: 'tty1': device_add
+<7>device: 'tty2': device_add
+<7>device: 'tty3': device_add
+<7>device: 'tty4': device_add
+<7>device: 'tty5': device_add
+<7>device: 'tty6': device_add
+<7>device: 'tty7': device_add
+<7>device: 'tty8': device_add
+<7>device: 'tty9': device_add
+<7>device: 'tty10': device_add
+<7>device: 'tty11': device_add
+<7>device: 'tty12': device_add
+<7>device: 'tty13': device_add
+<7>device: 'tty14': device_add
+<7>device: 'tty15': device_add
+<7>device: 'tty16': device_add
+<7>device: 'tty17': device_add
+<7>device: 'tty18': device_add
+<7>device: 'tty19': device_add
+<7>device: 'tty20': device_add
+<7>device: 'tty21': device_add
+<7>device: 'tty22': device_add
+<7>device: 'tty23': device_add
+<7>device: 'tty24': device_add
+<7>device: 'tty25': device_add
+<7>device: 'tty26': device_add
+<7>device: 'tty27': device_add
+<7>device: 'tty28': device_add
+<7>device: 'tty29': device_add
+<7>device: 'tty30': device_add
+<7>device: 'tty31': device_add
+<7>device: 'tty32': device_add
+<7>device: 'tty33': device_add
+<7>device: 'tty34': device_add
+<7>device: 'tty35': device_add
+<7>device: 'tty36': device_add
+<7>device: 'tty37': device_add
+<7>device: 'tty38': device_add
+<7>device: 'tty39': device_add
+<7>device: 'tty40': device_add
+<7>device: 'tty41': device_add
+<7>device: 'tty42': device_add
+<7>device: 'tty43': device_add
+<7>device: 'tty44': device_add
+<7>device: 'tty45': device_add
+<7>device: 'tty46': device_add
+<7>device: 'tty47': device_add
+<7>device: 'tty48': device_add
+<7>device: 'tty49': device_add
+<7>device: 'tty50': device_add
+<7>device: 'tty51': device_add
+<7>device: 'tty52': device_add
+<7>device: 'tty53': device_add
+<7>device: 'tty54': device_add
+<7>device: 'tty55': device_add
+<7>device: 'tty56': device_add
+<7>device: 'tty57': device_add
+<7>device: 'tty58': device_add
+<7>device: 'tty59': device_add
+<7>device: 'tty60': device_add
+<7>device: 'tty61': device_add
+<7>device: 'tty62': device_add
+<7>device: 'tty63': device_add
+<7>device class 'firmware': registering
+<6>NET: Registered protocol family 2
+<6>IP route cache hash table entries: 2048 (order: 1, 8192 bytes)
+<6>TCP established hash table entries: 8192 (order: 4, 65536 bytes)
+<6>TCP bind hash table entries: 8192 (order: 3, 32768 bytes)
+<6>TCP: Hash tables configured (established 8192 bind 8192)
+<6>TCP reno registered
+<6>UDP hash table entries: 256 (order: 0, 4096 bytes)
+<6>UDP-Lite hash table entries: 256 (order: 0, 4096 bytes)
+<6>NET: Registered protocol family 1
+<6>RPC: Registered named UNIX socket transport module.
+<6>RPC: Registered udp transport module.
+<6>RPC: Registered tcp transport module.
+<6>RPC: Registered tcp NFSv4.1 backchannel transport module.
+<7>bus: 'platform': add driver arm-pmu
+<7>Registering sysdev class 'clocksource'
+<7>Registering sys device of class 'clocksource'
+<7>Registering sys device 'clocksource0'
+<7>bus: 'platform': add driver alarmtimer
+<7>Registering platform device 'alarmtimer'. Parent at platform
+<7>device: 'alarmtimer': device_add
+<7>bus: 'platform': add device alarmtimer
+<7>bus: 'platform': driver_probe_device: matched device alarmtimer with driver alarmtimer
+<7>bus: 'platform': really_probe: probing driver alarmtimer with device alarmtimer
+<7>driver: 'alarmtimer': driver_bound: bound to device 'alarmtimer'
+<7>bus: 'platform': really_probe: bound device alarmtimer to driver alarmtimer
+<6>audit: initializing netlink socket (disabled)
+<5>type=2000 audit(0.270:1): initialized
+<7>bus: 'event_source': registered
+<7>device: 'cpu': device_add
+<7>bus: 'event_source': add device cpu
+<7>device: 'breakpoint': device_add
+<7>bus: 'event_source': add device breakpoint
+<7>device: 'tracepoint': device_add
+<7>bus: 'event_source': add device tracepoint
+<7>device: 'software': device_add
+<7>bus: 'event_source': add device software
+<7>yaffs: yaffs built Sep 23 2012 13:28:50 Installing.
+<6>msgmni has been set to 385
+<6>alg: No test for stdrng (krng)
+<7>device class 'bsg': registering
+<6>Block layer SCSI generic (bsg) driver version 0.4 loaded (major 253)
+<6>io scheduler noop registered
+<6>io scheduler deadline registered
+<6>io scheduler cfq registered (default)
+<7>device: 'fbcon': device_add
+<7>bus: 'platform': add driver s3c-fb
+<7>bus: 'platform': driver_probe_device: matched device s3c-fb with driver s3c-fb
+<7>bus: 'platform': really_probe: probing driver s3c-fb with device s3c-fb
+<7>S3C_LCD clock got enabled :: 133.000 Mhz
+<6>LCD TYPE :: LTE480WV will be initialized
+<7>Window[0] - FB1: map_video_memory: clear ffd80000:0007f800
+<7>            FB1: map_video_memory: dma=5c580000 cpu=ffd80000 size=0007f800
+<7>Window[0] - FB2: map_video_memory: clear ffdbfc00:0003fc00
+<7>            FB2: map_video_memory: dma=5c5bfc00 cpu=ffdbfc00 size=0003fc00
+<7>device: 'fb0': device_add
+<7>device: 'vtcon1': device_add
+<6>Console: switching to colour frame buffer device 60x34
+<6>fb0: s3cfb frame buffer device
+<7>Window[1] - FB1: map_video_memory: clear ffd40000:0003fc00
+<7>            FB1: map_video_memory: dma=5c600000 cpu=ffd40000 size=0003fc00
+<7>Window[1] - FB2: map_video_memory: clear ffd5fe00:0001fe00
+<7>            FB2: map_video_memory: dma=5c61fe00 cpu=ffd5fe00 size=0001fe00
+<7>device: 'fb1': device_add
+<6>fb1: s3cfb frame buffer device
+<7>Window[2] - FB1: map_video_memory: clear ffd00000:0003fc00
+<7>            FB1: map_video_memory: dma=5c640000 cpu=ffd00000 size=0003fc00
+<7>device: 'fb2': device_add
+<6>fb2: s3cfb frame buffer device
+<7>Window[3] - FB1: map_video_memory: clear ffcc0000:0003fc00
+<7>            FB1: map_video_memory: dma=5c680000 cpu=ffcc0000 size=0003fc00
+<7>device: 'fb3': device_add
+<6>fb3: s3cfb frame buffer device
+<7>driver: 's3c-fb': driver_bound: bound to device 's3c-fb'
+<7>bus: 'platform': really_probe: bound device s3c-fb to driver s3c-fb
+<7>device: 'ptmx': device_add
+<7>bus: 'platform': add driver s3c6400-uart
+<7>bus: 'platform': driver_probe_device: matched device s3c6400-uart.0 with driver s3c6400-uart
+<7>bus: 'platform': really_probe: probing driver s3c6400-uart with device s3c6400-uart.0
+<6>s3c6400-uart.0: ttySAC0 at MMIO 0x7f005000 (irq = 16) is a S3C6400/10
+<7>device: 'ttySAC0': device_add
+<7>driver: 's3c6400-uart.0': driver_bound: bound to device 's3c6400-uart'
+<7>bus: 'platform': really_probe: bound device s3c6400-uart.0 to driver s3c6400-uart
+<7>bus: 'platform': driver_probe_device: matched device s3c6400-uart.1 with driver s3c6400-uart
+<7>bus: 'platform': really_probe: probing driver s3c6400-uart with device s3c6400-uart.1
+<6>s3c6400-uart.1: ttySAC1 at MMIO 0x7f005400 (irq = 20) is a S3C6400/10
+<7>device: 'ttySAC1': device_add
+<7>driver: 's3c6400-uart.1': driver_bound: bound to device 's3c6400-uart'
+<7>bus: 'platform': really_probe: bound device s3c6400-uart.1 to driver s3c6400-uart
+<7>bus: 'platform': driver_probe_device: matched device s3c6400-uart.2 with driver s3c6400-uart
+<7>bus: 'platform': really_probe: probing driver s3c6400-uart with device s3c6400-uart.2
+<6>s3c6400-uart.2: ttySAC2 at MMIO 0x7f005800 (irq = 24) is a S3C6400/10
+<7>device: 'ttySAC2': device_add
+<7>driver: 's3c6400-uart.2': driver_bound: bound to device 's3c6400-uart'
+<7>bus: 'platform': really_probe: bound device s3c6400-uart.2 to driver s3c6400-uart
+<7>bus: 'platform': driver_probe_device: matched device s3c6400-uart.3 with driver s3c6400-uart
+<7>bus: 'platform': really_probe: probing driver s3c6400-uart with device s3c6400-uart.3
+<6>s3c6400-uart.3: ttySAC3 at MMIO 0x7f005c00 (irq = 28) is a S3C6400/10
+<7>device: 'ttySAC3': device_add
+<7>driver: 's3c6400-uart.3': driver_bound: bound to device 's3c6400-uart'
+<7>bus: 'platform': really_probe: bound device s3c6400-uart.3 to driver s3c6400-uart
+<7>device: 'leds': device_add
+<7>device: 'pwm': device_add
+<7>pwm	initialized
+<7>adc	herr
+<7>device: 'adc': device_add
+<7>adc	initialized
+<7>device class 'tem_class': registering
+<7>device: 'tem0': device_add
+<7>
+<7>@@@@@@@@@@@@@@@@@@@@@@@@@@
+<7>Tem	initialized
+<7>
+<7>@@@@@@@@@@@@@@@@@@@@@@@@@@
+<1>Hello, world
+<7>device class 'irda_class': registering
+<7>device: 'irda0': device_add
+<7>
+<7>@@@@@@@@@@@@@@@@@@@@@@@@@@
+<7>irda	initialized
+<7>
+<7>@@@@@@@@@@@@@@@@@@@@@@@@@@
+<7>
+<7>@@@@@@@@@@@
+<7>
+<7>tmp = 0
+<7>
+<7>@@@@@@@@@@@
+<7>device: 'rs485io': device_add
+<7>device class 'scsi_disk': registering
+<7>bus: 'scsi': add driver sd
+<7>device class 'scsi_generic': registering
+<7>device class 'mtd': registering
+<7>device: 'mtd-unmap': device_add
+<7>device: 'mtd-romap': device_add
+<7>device: 'mtd-rwmap': device_add
+<7>S3C NAND Driver, (c) 2008 Samsung Electronics
+<7>bus: 'platform': add driver s3c2450-nand
+<7>bus: 'platform': add driver s3c6400-nand
+<7>bus: 'platform': add driver s3c6410-nand
+<7>bus: 'platform': driver_probe_device: matched device s3c6410-nand with driver s3c6410-nand
+<7>bus: 'platform': really_probe: probing driver s3c6410-nand with device s3c6410-nand
+<7>NandFlash is busying.........
+<7>forlinx nandflash dev_id=d7
+<7>forlinx****Nandflash:ChipType= MLC  ChipName=samsung-K9LBG08U0D************ 
+<7>S3C NAND Driver is using hardware ECC.
+<6>NAND device: Manufacturer ID: 0xec, Chip ID: 0xd7 (Samsung NAND 4GiB 3,3V 8-bit)
+<7>forlinx*******nand chipsize=4096 MB
+<7>forlinx****** nand  mtd->erasesize = 512 KB
+<7>forlinx*******nand mtd->writesize = 4  KB
+<7>forlinx*******nand mtd->oobsize = 218 
+<5>Creating 4 MTD partitions on "NAND 4GiB 3,3V 8-bit":
+<5>0x000000000000-0x000000200000 : "Bootloader"
+<7>device: 'mtd0': device_add
+<7>device: 'mtd0ro': device_add
+<7>device: '31:0': device_add
+<7>device: 'mtdblock0': device_add
+<5>0x000000200000-0x000000700000 : "Kernel"
+<7>device: 'mtd1': device_add
+<7>device: 'mtd1ro': device_add
+<7>device: '31:1': device_add
+<7>device: 'mtdblock1': device_add
+<5>0x000000700000-0x00000cf00000 : "User"
+<7>device: 'mtd2': device_add
+<7>device: 'mtd2ro': device_add
+<7>device: '31:2': device_add
+<7>device: 'mtdblock2': device_add
+<5>0x00000cf00000-0x000100000000 : "File System"
+<7>device: 'mtd3': device_add
+<7>device: 'mtd3ro': device_add
+<7>device: '31:3': device_add
+<7>device: 'mtdblock3': device_add
+<7>driver: 's3c6410-nand': driver_bound: bound to device 's3c6410-nand'
+<7>bus: 'platform': really_probe: bound device s3c6410-nand to driver s3c6410-nand
+<7>bus: 'platform': add driver s5pc100-nand
+<7>bus: 'platform': add driver gen_nand
+<7>bus: 'platform': add driver spi_gpio
+<7>bus: 'platform': remove driver spi_gpio
+<7>driver: 'spi_gpio': driver_release
+<7>device class 'spidev': registering
+<7>bus: 'spi': add driver spidev
+<6>vcan: Virtual CAN interface driver
+<6>slcan: serial line CAN interface driver
+<6>slcan: 10 dynamic interface channels.
+<6>CAN device driver interface
+<7>bus: 'spi': add driver mcp2515
+<7>bus: 'spi': driver_probe_device: matched device spi1.0 with driver mcp2515
+<7>bus: 'spi': really_probe: probing driver mcp2515 with device spi1.0
+<7>
+<7>@@@@@@@@@@@@@@@@@@@@
+<7>mcp251x probe 1111111111111111
+<7>@@@@@@@@@@@@@@@@@@@@
+<6>mcp251x: setup gpio pins CS and External Int
+<7>mcp2515 spi1.0: setup mode 0, 8 bits/w, 8312500 Hz max --> 0
+<7>
+<7>@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+<7>setup status = 0
+<7>@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+<3>mcp2515 spi1.0: MCP251x didn't enter in conf mode after reset
+<7>mcp2515 spi1.0: CANSTAT 0xee CANCTRL 0x17
+<6>mcp2515 spi1.0: Probe failed
+<3>mcp2515 spi1.0: probe failed
+<6>PPP generic driver version 2.4.2
+<7>device class 'ppp': registering
+<7>device: 'ppp': device_add
+<6>PPP Deflate Compression module registered
+<6>PPP BSD Compression module registered
+<6>PPP MPPE Compression module registered
+<6>NET: Registered protocol family 24
+<6>dm9000 Ethernet Driver, V1.31
+<7>bus: 'platform': add driver dm9000
+<7>bus: 'platform': driver_probe_device: matched device dm9000.0 with driver dm9000
+<7>bus: 'platform': really_probe: probing driver dm9000 with device dm9000.0
+<3>dm9000 dm9000.0: read wrong id 0x00000000
+<3>dm9000 dm9000.0: read wrong id 0x00000000
+<3>dm9000 dm9000.0: read wrong id 0x00000000
+<3>dm9000 dm9000.0: read wrong id 0x00000000
+<3>dm9000 dm9000.0: read wrong id 0x00000000
+<3>dm9000 dm9000.0: read wrong id 0x00000000
+<3>dm9000 dm9000.0: read wrong id 0x00000000
+<3>dm9000 dm9000.0: read wrong id 0x00000000
+<3>dm9000 dm9000.0: wrong id: 0x00000000
+<3>dm9000 dm9000.0: not found (-19).
+<6>libertas_sdio: Libertas SDIO driver
+<6>libertas_sdio: Copyright Pierre Ossman
+<7>bus: 'sdio': add driver libertas_sdio
+<7>bus: 'usb': add driver rt73usb
+<6>usbcore: registered new interface driver rt73usb
+<6>ohci_hcd: USB 1.1 'Open' Host Controller (OHCI) Driver
+<7>bus: 'platform': add driver s3c2410-ohci
+<7>bus: 'platform': driver_probe_device: matched device s3c2410-ohci with driver s3c2410-ohci
+<7>bus: 'platform': really_probe: probing driver s3c2410-ohci with device s3c2410-ohci
+<7>gjl usb_hcd_s3c2410_probe here 000!
+<7>gjl usb_hcd_s3c2410_probe here 11111!
+<6>s3c2410-ohci s3c2410-ohci: S3C24XX OHCI
+<6>s3c2410-ohci s3c2410-ohci: new USB bus registered, assigned bus number 1
+<6>s3c2410-ohci s3c2410-ohci: irq 79, io mem 0x74300000
+<7>gjl ohci_init here 000!
+<6>usb usb1: New USB device found, idVendor=1d6b, idProduct=0001
+<6>usb usb1: New USB device strings: Mfr=3, Product=2, SerialNumber=1
+<6>usb usb1: Product: S3C24XX OHCI
+<6>usb usb1: Manufacturer: Linux 3.0.1 ohci_hcd
+<6>usb usb1: SerialNumber: s3c24xx
+<7>device: 'usb1': device_add
+<7>bus: 'usb': add device usb1
+<7>bus: 'usb': driver_probe_device: matched device usb1 with driver usb
+<7>bus: 'usb': really_probe: probing driver usb with device usb1
+<7>device: '1-0:1.0': device_add
+<7>bus: 'usb': add device 1-0:1.0
+<7>bus: 'usb': driver_probe_device: matched device 1-0:1.0 with driver hub
+<7>bus: 'usb': really_probe: probing driver hub with device 1-0:1.0
+<6>hub 1-0:1.0: USB hub found
+<6>hub 1-0:1.0: 2 ports detected
+<7>driver: '1-0:1.0': driver_bound: bound to device 'hub'
+<7>bus: 'usb': really_probe: bound device 1-0:1.0 to driver hub
+<7>device: 'ep_81': device_add
+<7>device: 'usbdev1.1': device_add
+<7>driver: 'usb1': driver_bound: bound to device 'usb'
+<7>bus: 'usb': really_probe: bound device usb1 to driver usb
+<7>device: 'ep_00': device_add
+<7>driver: 's3c2410-ohci': driver_bound: bound to device 's3c2410-ohci'
+<7>bus: 'platform': really_probe: bound device s3c2410-ohci to driver s3c2410-ohci
+<7>bus: 'usb': add driver cdc_acm
+<6>usbcore: registered new interface driver cdc_acm
+<6>cdc_acm: USB Abstract Control Model driver for USB modems and ISDN adapters
+<6>Initializing USB Mass Storage driver...
+<7>bus: 'usb': add driver usb-storage
+<6>usbcore: registered new interface driver usb-storage
+<6>USB Mass Storage support registered.
+<7>bus: 'usb-serial': registered
+<7>bus: 'usb': add driver usbserial
+<6>usbcore: registered new interface driver usbserial
+<7>bus: 'usb-serial': add driver generic
+<6>USB Serial support registered for generic
+<7>bus: 'usb': add driver usbserial_generic
+<6>usbcore: registered new interface driver usbserial_generic
+<6>usbserial: USB Serial Driver core
+<7>bus: 'usb-serial': add driver option1
+<6>USB Serial support registered for GSM modem (1-port)
+<7>bus: 'usb': add driver option
+<6>usbcore: registered new interface driver option
+<6>option: v0.7.2:USB Driver for GSM modems
+<7>bus: 'usb-serial': add driver pl2303
+<6>USB Serial support registered for pl2303
+<7>bus: 'usb': add driver pl2303
+<6>usbcore: registered new interface driver pl2303
+<6>pl2303: Prolific PL2303 USB to serial adaptor driver
+<7>bus: 'platform': add driver dummy_hcd
+<7>bus: 'platform': add driver dummy_udc
+<7>Registering platform device 'dummy_hcd'. Parent at platform
+<7>device: 'dummy_hcd': device_add
+<7>bus: 'platform': add device dummy_hcd
+<7>bus: 'platform': driver_probe_device: matched device dummy_hcd with driver dummy_hcd
+<7>bus: 'platform': really_probe: probing driver dummy_hcd with device dummy_hcd
+<6>dummy_hcd dummy_hcd: USB Host+Gadget Emulator, driver 02 May 2005
+<6>dummy_hcd dummy_hcd: Dummy host controller
+<6>dummy_hcd dummy_hcd: new USB bus registered, assigned bus number 2
+<6>usb usb2: New USB device found, idVendor=1d6b, idProduct=0002
+<6>usb usb2: New USB device strings: Mfr=3, Product=2, SerialNumber=1
+<6>usb usb2: Product: Dummy host controller
+<6>usb usb2: Manufacturer: Linux 3.0.1 dummy_hcd
+<6>usb usb2: SerialNumber: dummy_hcd
+<7>device: 'usb2': device_add
+<7>bus: 'usb': add device usb2
+<7>bus: 'usb': driver_probe_device: matched device usb2 with driver usb
+<7>bus: 'usb': really_probe: probing driver usb with device usb2
+<7>device: '2-0:1.0': device_add
+<7>bus: 'usb': add device 2-0:1.0
+<7>bus: 'usb': driver_probe_device: matched device 2-0:1.0 with driver hub
+<7>bus: 'usb': really_probe: probing driver hub with device 2-0:1.0
+<6>hub 2-0:1.0: USB hub found
+<6>hub 2-0:1.0: 1 port detected
+<7>driver: '2-0:1.0': driver_bound: bound to device 'hub'
+<7>bus: 'usb': really_probe: bound device 2-0:1.0 to driver hub
+<7>device: 'ep_81': device_add
+<7>device: 'usbdev2.1': device_add
+<7>driver: 'usb2': driver_bound: bound to device 'usb'
+<7>bus: 'usb': really_probe: bound device usb2 to driver usb
+<7>device: 'ep_00': device_add
+<7>driver: 'dummy_hcd': driver_bound: bound to device 'dummy_hcd'
+<7>bus: 'platform': really_probe: bound device dummy_hcd to driver dummy_hcd
+<7>Registering platform device 'dummy_udc'. Parent at platform
+<7>device: 'dummy_udc': device_add
+<7>bus: 'platform': add device dummy_udc
+<7>bus: 'platform': driver_probe_device: matched device dummy_udc with driver dummy_udc
+<7>bus: 'platform': really_probe: probing driver dummy_udc with device dummy_udc
+<7>device: 'gadget': device_add
+<7>driver: 'dummy_udc': driver_bound: bound to device 'dummy_udc'
+<7>bus: 'platform': really_probe: bound device dummy_udc to driver dummy_udc
+<7>device: 'mice': device_add
+<6>mousedev: PS/2 mouse device common for all mice
+<7>bus: 'platform': add driver gpio-keys
+<7>bus: 'platform': driver_probe_device: matched device gpio-keys with driver gpio-keys
+<7>bus: 'platform': really_probe: probing driver gpio-keys with device gpio-keys
+<7>device: 'input0': device_add
+<6>input: gpio-keys as /devices/platform/gpio-keys/input/input0
+<7>device: 'event0': device_add
+<7>driver: 'gpio-keys': driver_bound: bound to device 'gpio-keys'
+<7>bus: 'platform': really_probe: bound device gpio-keys to driver gpio-keys
+<7>bus: 'platform': add driver s3c-keypad
+<7>bus: 'platform': driver_probe_device: matched device s3c-keypad with driver s3c-keypad
+<7>bus: 'platform': really_probe: probing driver s3c-keypad with device s3c-keypad
+<7>
+<7>@@@@@@@@@@@@@ keypad size = 10
+<7>device: 'input1': device_add
+<6>input: s3c-keypad as /devices/platform/s3c-keypad/input/input1
+<7>device: 'event1': device_add
+<7>driver: 's3c-keypad': driver_bound: bound to device 's3c-keypad'
+<7>bus: 'platform': really_probe: bound device s3c-keypad to driver s3c-keypad
+<6>S3C Touchscreen driver, (c) 2008 Samsung Electronics
+<7>bus: 'platform': add driver s3c-ts
+<7>bus: 'platform': driver_probe_device: matched device s3c-ts with driver s3c-ts
+<7>bus: 'platform': really_probe: probing driver s3c-ts with device s3c-ts
+<6>S3C TouchScreen got loaded successfully : 12 bits
+<7>device: 'input2': device_add
+<6>input: S3C TouchScreen as /devices/virtual/input/input2
+<7>device: 'mouse0': device_add
+<7>device: 'event2': device_add
+<7>driver: 's3c-ts': driver_bound: bound to device 's3c-ts'
+<7>bus: 'platform': really_probe: bound device s3c-ts to driver s3c-ts
+<7>S3C24XX RTC, (c) 2004,2006 Simtec Electronics
+<7>bus: 'platform': add driver s3c-rtc
+<7>bus: 'platform': driver_probe_device: matched device s3c64xx-rtc with driver s3c-rtc
+<7>bus: 'platform': really_probe: probing driver s3c-rtc with device s3c64xx-rtc
+<6>s3c-rtc s3c64xx-rtc: rtc disabled, re-enabling
+<7>device: 'rtc0': device_add
+<6>s3c-rtc s3c64xx-rtc: rtc core: registered s3c as rtc0
+<7>driver: 's3c64xx-rtc': driver_bound: bound to device 's3c-rtc'
+<7>bus: 'platform': really_probe: bound device s3c64xx-rtc to driver s3c-rtc
+<6>i2c /dev entries driver
+<7>device class 'i2c-dev': registering
+<7>device: 'i2c-0': device_add
+<6>Linux video capture interface: v2.00
+<7>device class 'video4linux': registering
+<6>gspca: main v2.10.0 registered
+<7>bus: 'usb': add driver benq
+<6>usbcore: registered new interface driver benq
+<6>benq: registered
+<7>bus: 'usb': add driver conex
+<6>usbcore: registered new interface driver conex
+<6>conex: registered
+<7>bus: 'usb': add driver cpia1
+<6>usbcore: registered new interface driver cpia1
+<6>cpia1: registered
+<7>bus: 'usb': add driver etoms
+<6>usbcore: registered new interface driver etoms
+<6>etoms: registered
+<7>bus: 'usb': add driver finepix
+<6>usbcore: registered new interface driver finepix
+<6>finepix: registered
+<7>bus: 'usb': add driver jeilinj
+<6>usbcore: registered new interface driver jeilinj
+<6>jeilinj: registered
+<7>bus: 'usb': add driver mars
+<6>usbcore: registered new interface driver mars
+<6>mars: registered
+<7>bus: 'usb': add driver mr97310a
+<6>usbcore: registered new interface driver mr97310a
+<6>mr97310a: registered
+<7>bus: 'usb': add driver ov519
+<6>usbcore: registered new interface driver ov519
+<6>ov519: registered
+<7>bus: 'usb': add driver ov534
+<6>usbcore: registered new interface driver ov534
+<6>ov534: registered
+<7>bus: 'usb': add driver ov534_9
+<6>usbcore: registered new interface driver ov534_9
+<6>ov534_9: registered
+<7>bus: 'usb': add driver pac207
+<6>usbcore: registered new interface driver pac207
+<6>pac207: registered
+<7>bus: 'usb': add driver pac7302
+<6>usbcore: registered new interface driver pac7302
+<6>pac7302: registered
+<7>bus: 'usb': add driver pac7311
+<6>usbcore: registered new interface driver pac7311
+<6>pac7311: registered
+<7>bus: 'usb': add driver sn9c2028
+<6>usbcore: registered new interface driver sn9c2028
+<6>sn9c2028: registered
+<7>bus: 'usb': add driver sn9c20x
+<6>usbcore: registered new interface driver sn9c20x
+<6>sn9c20x: registered
+<7>bus: 'usb': add driver sonixb
+<6>usbcore: registered new interface driver sonixb
+<6>sonixb: registered
+<7>bus: 'usb': add driver sonixj
+<6>usbcore: registered new interface driver sonixj
+<6>sonixj: registered
+<7>bus: 'usb': add driver spca500
+<6>usbcore: registered new interface driver spca500
+<6>spca500: registered
+<7>bus: 'usb': add driver spca501
+<6>usbcore: registered new interface driver spca501
+<6>spca501: registered
+<7>bus: 'usb': add driver spca505
+<6>usbcore: registered new interface driver spca505
+<6>spca505: registered
+<7>bus: 'usb': add driver spca506
+<6>usbcore: registered new interface driver spca506
+<6>spca506: registered
+<7>bus: 'usb': add driver spca508
+<6>usbcore: registered new interface driver spca508
+<6>spca508: registered
+<7>bus: 'usb': add driver spca561
+<6>usbcore: registered new interface driver spca561
+<6>spca561: registered
+<7>bus: 'usb': add driver spca1528
+<6>usbcore: registered new interface driver spca1528
+<6>spca1528: registered
+<7>bus: 'usb': add driver sq905
+<6>usbcore: registered new interface driver sq905
+<6>sq905: registered
+<7>bus: 'usb': add driver sq905c
+<6>usbcore: registered new interface driver sq905c
+<6>sq905c: registered
+<7>bus: 'usb': add driver sq930x
+<6>usbcore: registered new interface driver sq930x
+<6>sq930x: registered
+<7>bus: 'usb': add driver sunplus
+<6>usbcore: registered new interface driver sunplus
+<6>sunplus: registered
+<7>bus: 'usb': add driver stk014
+<6>usbcore: registered new interface driver stk014
+<6>stk014: registered
+<7>bus: 'usb': add driver stv0680
+<6>usbcore: registered new interface driver stv0680
+<6>stv0680: registered
+<7>bus: 'usb': add driver t613
+<6>usb 1-2: new full speed USB device number 2 using s3c2410-ohci
+<6>usbcore: registered new interface driver t613
+<6>t613: registered
+<7>bus: 'usb': add driver tv8532
+<6>usbcore: registered new interface driver tv8532
+<6>tv8532: registered
+<7>bus: 'usb': add driver vc032x
+<6>usbcore: registered new interface driver vc032x
+<6>vc032x: registered
+<7>bus: 'usb': add driver zc3xx
+<6>usbcore: registered new interface driver zc3xx
+<6>zc3xx: registered
+<7>bus: 'usb': add driver ALi m5602
+<6>usbcore: registered new interface driver ALi m5602
+<6>ALi m5602: registered
+<7>bus: 'usb': add driver STV06xx
+<6>usbcore: registered new interface driver STV06xx
+<6>STV06xx: registered
+<6>gspca_gl860: driver startup - version 0.9d10
+<7>bus: 'usb': add driver gspca_gl860
+<6>usbcore: registered new interface driver gspca_gl860
+<6>gspca_gl860: driver registered
+<7>bus: 'platform': add driver s3c-fimc
+<7>bus: 'platform': driver_probe_device: matched device s3c-fimc.0 with driver s3c-fimc
+<7>bus: 'platform': really_probe: probing driver s3c-fimc with device s3c-fimc.0
+<7>[CAM]s3c_fimc_register_controller.id=0
+<7>s3c_fimc_init_global s3c_fimc.cam_clock=-1066354752
+<7>device: 'video0': device_add
+<6>s3c-fimc: controller 0 registered successfully
+<7>driver: 's3c-fimc.0': driver_bound: bound to device 's3c-fimc'
+<7>bus: 'platform': really_probe: bound device s3c-fimc.0 to driver s3c-fimc
+<7>bus: 'platform': driver_probe_device: matched device s3c-fimc.1 with driver s3c-fimc
+<7>bus: 'platform': really_probe: probing driver s3c-fimc with device s3c-fimc.1
+<7>[CAM]s3c_fimc_register_controller.id=1
+<7>device: 'video1': device_add
+<6>s3c-fimc: controller 1 registered successfully
+<7>driver: 's3c-fimc.1': driver_bound: bound to device 's3c-fimc'
+<7>bus: 'platform': really_probe: bound device s3c-fimc.1 to driver s3c-fimc
+<6>s3c-fimc: info ov965x_init
+<7>bus: 'i2c': add driver ov965x
+<7>bus: 'i2c': driver_probe_device: matched device 0-0030 with driver ov965x
+<7>bus: 'i2c': really_probe: probing driver ov965x with device 0-0030
+<7>[CAM]s3c_fimc_register_camera,cam->id=0
+<7>s3c_fimc.cam_clock = c070b7c0
+<7>parent clock for camera: 266.000 MHz, divisor: 11
+<7>[CAM]RESET CAM.[CAM]Reset and init reg!1cam->client=cc45fb00
+<7>[CAM]Reset and init reg!1
+<7>[CAM]Reset and init reg!2
+<7>[CAM]s3c_fimc_init_camera[CAM]I2C_CAM_INIT.
+<7>[CAM]s3c_fimc_init_camera[CAM]s3c_fimc_init_camera[CAM]Reset and init reg!3
+<7>driver: '0-0030': driver_bound: bound to device 'ov965x'
+<7>bus: 'i2c': really_probe: bound device 0-0030 to driver ov965x
+<7>S3C6400 MFC Driver, (c) 2007 Samsung Electronics
+<7>bus: 'platform': add driver s3c-mfc
+<7>bus: 'platform': driver_probe_device: matched device s3c-mfc with driver s3c-mfc
+<7>bus: 'platform': really_probe: probing driver s3c-mfc with device s3c-mfc
+<7>->################### s3cmfc:s3c_mfc_sfr_base_virt_addr:d082e000
+<6>cym s3c_mfc_mememap: addr:5daf9000 size:1138688 
+<7>device: 's3c-mfc': device_add
+<7>driver: 's3c-mfc': driver_bound: bound to device 's3c-mfc'
+<7>bus: 'platform': really_probe: bound device s3c-mfc to driver s3c-mfc
+<6>S3C6400 MFC Driver, (c) 2007 Samsung Electronics
+<6>S3C PostProcessor Driver v3.12, (c) 2009 Samsung Electronics
+<7>bus: 'platform': add driver s3c-pp
+<7>bus: 'platform': driver_probe_device: matched device s3c-pp with driver s3c-pp
+<7>bus: 'platform': really_probe: probing driver s3c-pp with device s3c-pp
+<7>device: 's3c-pp': device_add
+<7>driver: 's3c-pp': driver_bound: bound to device 's3c-pp'
+<7>bus: 'platform': really_probe: bound device s3c-pp to driver s3c-pp
+<6>S3C6410 TV encoder Driver, (c) 2008 Samsung Electronics
+<7>bus: 'platform': add driver s3c-tvenc
+<7>bus: 'platform': driver_probe_device: matched device s3c-tvenc with driver s3c-tvenc
+<7>bus: 'platform': really_probe: probing driver s3c-tvenc with device s3c-tvenc
+<7>device: 'video14': device_add
+<7>driver: 's3c-tvenc': driver_bound: bound to device 's3c-tvenc'
+<7>bus: 'platform': really_probe: bound device s3c-tvenc to driver s3c-tvenc
+<7> S3C6410 TV encoder Driver init OK. 
+<6>S3C6410 TV scaler Driver, (c) 2008 Samsung Electronics
+<7>bus: 'platform': add driver s3c-tvscaler
+<7>bus: 'platform': driver_probe_device: matched device s3c-tvscaler with driver s3c-tvscaler
+<7>bus: 'platform': really_probe: probing driver s3c-tvscaler with device s3c-tvscaler
+<7>driver: 's3c-tvscaler': driver_bound: bound to device 's3c-tvscaler'
+<7>bus: 'platform': really_probe: bound device s3c-tvscaler to driver s3c-tvscaler
+<7> S3C6410 TV scaler Driver init OK. 
+<6>S3C Rotator Driver, (c) 2008 Samsung Electronics
+<7>bus: 'platform': add driver s3c-rotator
+<7>bus: 'platform': driver_probe_device: matched device s3c-rotator with driver s3c-rotator
+<7>bus: 'platform': really_probe: probing driver s3c-rotator with device s3c-rotator
+<6>s3c_rotator_probe called
+<7>device: 's3c-rotator': device_add
+<7>s3c_rotator_probe success
+<7>driver: 's3c-rotator': driver_bound: bound to device 's3c-rotator'
+<7>bus: 'platform': really_probe: bound device s3c-rotator to driver s3c-rotator
+<6>S3C JPEG Driver, (c) 2007 Samsung Electronics
+<7>bus: 'platform': add driver s3c-jpeg
+<7>bus: 'platform': driver_probe_device: matched device s3c-jpeg with driver s3c-jpeg
+<7>bus: 'platform': really_probe: probing driver s3c-jpeg with device s3c-jpeg
+<7>[JPEG_DRV: TRACE] s3c_jpeg_probe: JPG_Init
+<7>phy_addr = 78800000..mem_size = 1034
+<7>phy_addr = 5d2f9000..mem_size = 79e000
+<7>device: 's3c-jpg': device_add
+<7>driver: 's3c-jpeg': driver_bound: bound to device 's3c-jpeg'
+<7>bus: 'platform': really_probe: bound device s3c-jpeg to driver s3c-jpeg
+<7>bus: 'platform': add driver s3c-g2d
+<7>bus: 'platform': driver_probe_device: matched device s3c-g2d with driver s3c-g2d
+<7>bus: 'platform': really_probe: probing driver s3c-g2d with device s3c-g2d
+<1>s3c_g2d_probe called
+<7>device: 's3c-g2d': device_add
+<1> s3c_g2d_probe Success
+<7>driver: 's3c-g2d': driver_bound: bound to device 's3c-g2d'
+<7>bus: 'platform': really_probe: bound device s3c-g2d to driver s3c-g2d
+<7> S3C G2D Init : Done
+<6>S3C G3D Driver, (c) 2007-2009 Samsung Electronics
+<7>bus: 'platform': add driver s3c-g3d
+<7>bus: 'platform': driver_probe_device: matched device s3c-g3d with driver s3c-g3d
+<7>bus: 'platform': really_probe: probing driver s3c-g3d with device s3c-g3d
+<7>device: 's3c-g3d': device_add
+<7>s3c_g3d version : 0x1050000
+<7>driver: 's3c-g3d': driver_bound: bound to device 's3c-g3d'
+<7>bus: 'platform': really_probe: bound device s3c-g3d to driver s3c-g3d
+<7> S3C G3D Init : Done
+<6>S3C CMM Driver, (c) 2008 Samsung Electronics
+<7>device: 's3c-cmm': device_add
+<7>bus: 'usb': add driver uvcvideo
+<6>usbcore: registered new interface driver uvcvideo
+<6>USB Video Class driver (v0.1.0)
+<6>S3C2410 Watchdog Timer, (c) 2004 Simtec Electronics
+<7>bus: 'platform': add driver s3c2410-wdt
+<7>bus: 'platform': driver_probe_device: matched device s3c2410-wdt with driver s3c2410-wdt
+<7>bus: 'platform': really_probe: probing driver s3c2410-wdt with device s3c2410-wdt
+<7>device: 'watchdog': device_add
+<6>s3c2410-wdt s3c2410-wdt: watchdog inactive, reset disabled, irq enabled
+<7>driver: 's3c2410-wdt': driver_bound: bound to device 's3c2410-wdt'
+<7>bus: 'platform': really_probe: bound device s3c2410-wdt to driver s3c2410-wdt
+<7>bus: 'mmc': add driver mmcblk
+<6>sdhci: Secure Digital Host Controller Interface driver
+<6>sdhci: Copyright(c) Pierre Ossman
+<7>bus: 'platform': add driver s3c-sdhci
+<7>bus: 'platform': driver_probe_device: matched device s3c-sdhci.0 with driver s3c-sdhci
+<7>bus: 'platform': really_probe: probing driver s3c-sdhci with device s3c-sdhci.0
+<6>s3c-sdhci s3c-sdhci.0: clock source 0: hsmmc (133000000 Hz)
+<6>s3c-sdhci s3c-sdhci.0: clock source 1: hsmmc (133000000 Hz)
+<6>s3c-sdhci s3c-sdhci.0: clock source 2: mmc_bus (24000000 Hz)
+<7>device: 'mmc0::': device_add
+<7>Registered led device: mmc0::
+<7>device: 'mmc0': device_add
+<6>mmc0: SDHCI controller on samsung-hsmmc [s3c-sdhci.0] using ADMA
+<7>driver: 's3c-sdhci.0': driver_bound: bound to device 's3c-sdhci'
+<7>bus: 'platform': really_probe: bound device s3c-sdhci.0 to driver s3c-sdhci
+<7>bus: 'platform': driver_probe_device: matched device s3c-sdhci.1 with driver s3c-sdhci
+<7>bus: 'platform': really_probe: probing driver s3c-sdhci with device s3c-sdhci.1
+<6>s3c-sdhci s3c-sdhci.1: clock source 0: hsmmc (133000000 Hz)
+<6>s3c-sdhci s3c-sdhci.1: clock source 1: hsmmc (133000000 Hz)
+<6>s3c-sdhci s3c-sdhci.1: clock source 2: mmc_bus (24000000 Hz)
+<7>device: 'mmc1::': device_add
+<7>Registered led device: mmc1::
+<7>device: 'mmc1': device_add
+<6>mmc1: SDHCI controller on samsung-hsmmc [s3c-sdhci.1] using ADMA
+<7>driver: 's3c-sdhci.1': driver_bound: bound to device 's3c-sdhci'
+<7>bus: 'platform': really_probe: bound device s3c-sdhci.1 to driver s3c-sdhci
+<7>bus: 'hid': registered
+<7>bus: 'hid': add driver a4tech
+<7>bus: 'hid': add driver apple
+<7>bus: 'hid': add driver belkin
+<7>bus: 'hid': add driver cherry
+<7>bus: 'hid': add driver chicony
+<7>bus: 'hid': add driver cypress
+<7>bus: 'hid': add driver ezkey
+<7>bus: 'hid': add driver kensington
+<7>bus: 'hid': add driver kye
+<7>bus: 'hid': add driver logitech
+<7>bus: 'hid': add driver microsoft
+<7>bus: 'hid': add driver monterey
+<7>bus: 'hid': add driver generic-usb
+<7>bus: 'usb': add driver usbhid
+<6>usbcore: registered new interface driver usbhid
+<6>usbhid: USB HID core driver
+<7>device: 'timer': device_add
+<7>device: 'seq': device_add
+<7>bus: 'platform': add driver soc-audio
+<7>bus: 'platform': add driver wm9713-codec
+<7>bus: 'platform': add driver samsung-audio
+<7>bus: 'platform': driver_probe_device: matched device samsung-audio with driver samsung-audio
+<7>bus: 'platform': really_probe: probing driver samsung-audio with device samsung-audio
+<7>driver: 'samsung-audio': driver_bound: bound to device 'samsung-audio'
+<7>bus: 'platform': really_probe: bound device samsung-audio to driver samsung-audio
+<7>bus: 'platform': add driver samsung-ac97
+<7>bus: 'platform': driver_probe_device: matched device samsung-ac97 with driver samsung-ac97
+<7>bus: 'platform': really_probe: probing driver samsung-ac97 with device samsung-ac97
+<7>driver: 'samsung-ac97': driver_bound: bound to device 'samsung-ac97'
+<7>bus: 'platform': really_probe: bound device samsung-ac97 to driver samsung-ac97
+<7>Registering platform device 'wm9713-codec'. Parent at platform
+<7>device: 'wm9713-codec': device_add
+<7>bus: 'platform': add device wm9713-codec
+<7>bus: 'platform': driver_probe_device: matched device wm9713-codec with driver wm9713-codec
+<7>bus: 'platform': really_probe: probing driver wm9713-codec with device wm9713-codec
+<7>driver: 'wm9713-codec': driver_bound: bound to device 'wm9713-codec'
+<7>bus: 'platform': really_probe: bound device wm9713-codec to driver wm9713-codec
+<7>Registering platform device 'soc-audio'. Parent at platform
+<7>device: 'soc-audio': device_add
+<7>bus: 'platform': add device soc-audio
+<7>bus: 'platform': driver_probe_device: matched device soc-audio with driver soc-audio
+<7>bus: 'platform': really_probe: probing driver soc-audio with device soc-audio
+<3>usb 1-2: device descriptor read/64, error -62
+<7>device: 'AC97': device_add
+<6>asoc: wm9713-hifi <-> samsung-ac97 mapping ok
+<7>device: 'card0': device_add
+<7>device: 'pcmC0D0p': device_add
+<7>device: 'pcmC0D0c': device_add
+<7>device: 'dsp': device_add
+<7>device: 'audio': device_add
+<7>device: 'controlC0': device_add
+<7>device: 'mixer': device_add
+<3>usb 1-2: device descriptor read/64, error -62
+<7>device: '0-0:wm9713-codec': device_add
+<7>bus: 'ac97': add device 0-0:wm9713-codec
+<7>driver: 'soc-audio': driver_bound: bound to device 'soc-audio'
+<7>bus: 'platform': really_probe: bound device soc-audio to driver soc-audio
+<6>ALSA device list:
+<6>  #0: smdk6410
+<6>TCP cubic registered
+<6>NET: Registered protocol family 17
+<6>can: controller area network core (rev 20090105 abi 8)
+<6>NET: Registered protocol family 29
+<6>can: raw protocol (rev 20090105)
+<6>can: broadcast manager protocol (rev 20090105 t)
+<6>lib80211: common routines for IEEE802.11 drivers
+<7>lib80211_crypt: registered algorithm 'NULL'
+<7>lib80211_crypt: registered algorithm 'WEP'
+<7>lib80211_crypt: registered algorithm 'CCMP'
+<7>lib80211_crypt: registered algorithm 'TKIP'
+<5>Registering the dns_resolver key type
+<7>device: 'cpu_dma_latency': device_add
+<7>device: 'network_latency': device_add
+<7>device: 'network_throughput': device_add
+<6>s3c-rtc s3c64xx-rtc: setting system clock to 2000-01-01 00:43:41 UTC (946687421)
+<6>yaffs: dev is 32505858 name is "mtdblock2" rw
+<6>yaffs: passed flags ""
+<7>yaffs: yaffs: Attempting MTD mount of 31.2,"mtdblock2"
+<6>usb 1-2: new full speed USB device number 3 using s3c2410-ohci
+<3>usb 1-2: device descriptor read/64, error -62
+<3>usb 1-2: device descriptor read/64, error -62
+<6>usb 1-2: new full speed USB device number 4 using s3c2410-ohci
+<3>usb 1-2: device not accepting address 4, error -62
+<6>usb 1-2: new full speed USB device number 5 using s3c2410-ohci
+<3>usb 1-2: device not accepting address 5, error -62
+<3>hub 1-0:1.0: unable to enumerate USB device on port 2
+<7>yaffs: yaffs_read_super: is_checkpointed 0
+<6>VFS: Mounted root (yaffs2 filesystem) on device 31:2.
+<6>devtmpfs: mounted
+<6>Freeing init memory: 176K
+<7>s3c-nand: MLC8 1 bit(s) error detected, corrected successfully
+<7>device: 'vcs4': device_add
+<7>device: 'vcsa4': device_add
+<7>device: 'vcs3': device_add
+<7>device: 'vcsa3': device_add
+<7>device: 'vcs2': device_add
+<7>device: 'vcsa2': device_add
+<7>s3c-nand: MLC8 1 bit(s) error detected, corrected successfully
