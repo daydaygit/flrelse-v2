@@ -94,7 +94,7 @@ static int __init smdk6410_init(void)
 {
 	int ret;
 
-	printk(KERN_INFO "Enter %s\n", __func__);
+	printk(KERN_INFO "Enter sound/soc/samsung/smdk_wm9713.c %s() start++++++++++++++++++++++\n", __func__);
 
 	/* add device wm9713 */
 	smdk6410_snd_wm9713_device = platform_device_alloc("wm9713-codec", -1);
@@ -114,6 +114,8 @@ static int __init smdk6410_init(void)
 	ret = platform_device_add(smdk6410_snd_ac97_device);
 	if (ret)
 		goto err3;
+
+	printk(KERN_INFO "Enter sound/soc/samsung/smdk_wm9713.c %s() end++++++++++++++++++++++\n", __func__);
 
 	return 0;
 

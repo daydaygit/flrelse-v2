@@ -369,6 +369,8 @@ static __devinit int s3c_ac97_probe(struct platform_device *pdev)
 	struct s3c_audio_pdata *ac97_pdata;
 	int ret;
 
+	pr_err("Enter %s ++++?????????\n", __func__);
+
 	ac97_pdata = pdev->dev.platform_data;
 	if (!ac97_pdata || !ac97_pdata->cfg_gpio) {
 		dev_err(&pdev->dev, "cfg_gpio callback not provided!\n");

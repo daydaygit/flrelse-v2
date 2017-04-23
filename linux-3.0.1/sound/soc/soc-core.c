@@ -224,26 +224,19 @@ static void soc_init_codec_debugfs(struct snd_soc_codec *codec)
 {
 	struct dentry *debugfs_card_root = codec->card->debugfs_card_root;
 
-	codec->debugfs_codec_root = debugfs_create_dir(codec->name,
-						       debugfs_card_root);
+	codec->debugfs_codec_root = debugfs_create_dir(codec->name, debugfs_card_root);
 	if (!codec->debugfs_codec_root) {
-		printk(KERN_WARNING
-		       "ASoC: Failed to create codec debugfs directory\n");
+		printk(KERN_WARNING "ASoC: Failed to create codec debugfs directory\n");
 		return;
 	}
 
-	codec->debugfs_reg = debugfs_create_file("codec_reg", 0644,
-						 codec->debugfs_codec_root,
-						 codec, &codec_reg_fops);
+	codec->debugfs_reg = debugfs_create_file("codec_reg", 0644, codec->debugfs_codec_root, codec, &codec_reg_fops);
 	if (!codec->debugfs_reg)
-		printk(KERN_WARNING
-		       "ASoC: Failed to create codec register debugfs file\n");
+		printk(KERN_WARNING "ASoC: Failed to create codec register debugfs file\n");
 
-	codec->dapm.debugfs_dapm = debugfs_create_dir("dapm",
-						 codec->debugfs_codec_root);
+	codec->dapm.debugfs_dapm = debugfs_create_dir("dapm", codec->debugfs_codec_root);
 	if (!codec->dapm.debugfs_dapm)
-		printk(KERN_WARNING
-		       "Failed to create DAPM debugfs directory\n");
+		printk(KERN_WARNING "Failed to create DAPM debugfs directory\n");
 
 	snd_soc_dapm_debugfs_init(&codec->dapm);
 }
@@ -1199,10 +1192,10 @@ static int soc_resume(struct device *dev)
 	for (i = 0; i < card->num_rtd; i++) {
 		struct snd_soc_dai *cpu_dai = card->rtd[i].cpu_dai;
 		if (cpu_dai->driver->ac97_control) {
-			dev_dbg(dev, "Resuming AC97 immediately\n");
+			printk(KERN_INFO "Resuming AC97 immediately\n");
 			soc_resume_deferred(&card->deferred_resume_work);
 		} else {
-			dev_dbg(dev, "Scheduling resume work\n");
+			printk(KERN_INFO "Scheduling resume work\n");
 			if (!schedule_work(&card->deferred_resume_work))
 				dev_err(dev, "resume work item may be lost\n");
 		}
@@ -1228,26 +1221,30 @@ static int soc_bind_dai_link(struct snd_soc_card *card, int num)
 
 	if (rtd->complete)
 		return 1;
-	dev_info(card->dev, "binding name=%s at idx %d\n", dai_link->name, num);
+	pr_err("binding dai_link->name=%s at num=%d\n", dai_link->name, num);
 
+	pr_err("%s find_cpu (dai)@@@\n", __func__);
 	/* do we already have the CPU DAI for this link ? */
 	if (rtd->cpu_dai) {
 		goto find_codec;
 	}
 	/* no, then find CPU DAI from registered DAIs*/
 	list_for_each_entry(cpu_dai, &dai_list, list) {
+		printk(KERN_ERR "%s. cpu_dai->name=%s, dai_link->cpu_dai_name=%s\n", __func__, cpu_dai->name, dai_link->cpu_dai_name);
 		if (!strcmp(cpu_dai->name, dai_link->cpu_dai_name)) {
-
+					printk(KERN_ERR "%s. Compared +++++++++  cpu_dai->name=%s, dai_link->cpu_dai_name=%s\n", __func__, cpu_dai->name, dai_link->cpu_dai_name);
 			if (!try_module_get(cpu_dai->dev->driver->owner))
 				return -ENODEV;
 
 			rtd->cpu_dai = cpu_dai;
+					printk(KERN_ERR "%s, cpu_dai->name=%s\n", __func__, cpu_dai->name);
 			goto find_codec;
 		}
 	}
-	dev_err(card->dev, "CPU DAI %s not registered\n", dai_link->cpu_dai_name);
+	dev_err(card->dev, "CPU DAI %s not registered --------------------\n", dai_link->cpu_dai_name);
 
 find_codec:
+	pr_err("%s find_codec (dai)@@@\n", __func__);
 	/* do we already have the CODEC for this link ? */
 	if (rtd->codec) {
 		goto find_platform;
@@ -1255,12 +1252,19 @@ find_codec:
 
 	/* no, then find CODEC from registered CODECs*/
 	list_for_each_entry(codec, &codec_list, list) {
+		printk(KERN_ERR "%s. codec->name=%s, dai_link->codec_name=%s\n", __func__, codec->name, dai_link->codec_name);
 		if (!strcmp(codec->name, dai_link->codec_name)) {
+					printk(KERN_ERR "%s. Compared +++++++++  codec->name=%s, dai_link->codec_name=%s\n", __func__, codec->name, dai_link->codec_name);
 			rtd->codec = codec;
+					printk(KERN_ERR "%s. codec->name=%s\n", __func__, codec->name);
 
+			printk(KERN_ERR "CODEC found, so find CODEC DAI from registered DAIs from this CODEC +++++++++\n");
 			/* CODEC found, so find CODEC DAI from registered DAIs from this CODEC*/
 			list_for_each_entry(codec_dai, &dai_list, list) {
+				pr_err("%s. ------- codec_dai->name=%s, dai_link->codec_dai_name=%s\n",__func__, codec_dai->name, dai_link->codec_dai_name);
 				if (codec->dev == codec_dai->dev && !strcmp(codec_dai->name, dai_link->codec_dai_name)) {
+                                        printk(KERN_ERR "%s. Compared ++++++++ codec_dai->name=%s, dai_link->codec_dai_name=%s\n", __func__, codec_dai->name, dai_link->codec_dai_name);
+					printk(KERN_ERR "%s.codec_dai->name=%s\n", __func__, codec_dai->name);
 					rtd->codec_dai = codec_dai;
 					goto find_platform;
 				}
@@ -1273,13 +1277,17 @@ find_codec:
 	dev_err(card->dev, "CODEC %s not registered\n", dai_link->codec_name);
 
 find_platform:
+	pr_err("%s find_platform@@@\n", __func__);
 	/* do we already have the CODEC DAI for this link ? */
 	if (rtd->platform) {
 		goto out;
 	}
 	/* no, then find CPU DAI from registered DAIs*/
 	list_for_each_entry(platform, &platform_list, list) {
+		pr_err("%s. ------- platform->name=%s, dai_link->platform_name=%s\n",__func__, platform->name, dai_link->platform_name);
 		if (!strcmp(platform->name, dai_link->platform_name)) {
+					printk(KERN_ERR "%s. Compared ++++++++ platform->name=%s, dai_link->platform_name=%s\n", __func__, platform->name, dai_link->platform_name);
+					printk(KERN_ERR "%s. platform->name=%s\n", __func__, platform->name);
 			rtd->platform = platform;
 			goto out;
 		}
@@ -1402,7 +1410,7 @@ static int soc_probe_codec(struct snd_soc_card *card, struct snd_soc_codec *code
 	soc_set_name_prefix(card, codec);
 
 	if (codec->driver->probe) {
-		dev_info(codec->dev, "%s. codec->driver->probe=>%p\n", __func__, codec->driver->probe);
+		printk(KERN_ERR "%s. codec->driver->probe=>%p\n", __func__, codec->driver->probe);
 		ret = codec->driver->probe(codec);
 		if (ret < 0) {
 			dev_err(codec->dev, "asoc: failed to probe CODEC %s: %d\n",codec->name, ret);
@@ -1497,7 +1505,9 @@ static int soc_probe_dai_link(struct snd_soc_card *card, int num)
 	struct snd_soc_dai *codec_dai = rtd->codec_dai, *cpu_dai = rtd->cpu_dai;
 	int ret;
 
-	dev_err(card->dev, "probe name=%s, dai link num=%d\n", card->name, num);
+	dev_err(card->dev, "probe name=%s, dai link num=%d ++++++++++++++++++++\n", card->name, num);
+//	printk(KERN_ERR "%s.\n", __func__);
+	printk(KERN_ERR "%s.codec->name=%s, platform->name=%s, card->name=%s\n", __func__, codec->name, platform->name, card->name);
 
 	/* config components */
 	codec_dai->codec = codec;
@@ -1511,6 +1521,7 @@ static int soc_probe_dai_link(struct snd_soc_card *card, int num)
 	/* probe the cpu_dai */
 	if (!cpu_dai->probed) {
 		if (cpu_dai->driver->probe) {
+			printk(KERN_ERR "%s.cpu_dai->driver->probe=>%p\n", __func__, cpu_dai->driver->probe);
 			ret = cpu_dai->driver->probe(cpu_dai);
 			if (ret < 0) {
 				printk(KERN_ERR "asoc: failed to probe CPU DAI %s\n",cpu_dai->name);
@@ -1707,7 +1718,7 @@ static void snd_soc_instantiate_card(struct snd_soc_card *card)
 	enum snd_soc_compress_type compress_type;
 	int ret, i;
 
-	printk(KERN_INFO "Enter %s\n", __func__);
+	printk(KERN_ERR "Enter %s. card->name=%s +++++++++++++++++++++++++++++++++\n", __func__,card->name);
 
 	mutex_lock(&card->mutex);
 
@@ -1717,6 +1728,7 @@ static void snd_soc_instantiate_card(struct snd_soc_card *card)
 	}
 
 	/* bind DAIs */
+	pr_err("%s() To bind DAIs @@@\n", __func__);
 	for (i = 0; i < card->num_links; i++)
 		soc_bind_dai_link(card, i);
 
@@ -1733,6 +1745,7 @@ static void snd_soc_instantiate_card(struct snd_soc_card *card)
 		/* check to see if we need to override the compress_type */
 		for (i = 0; i < card->num_configs; ++i) {
 			codec_conf = &card->codec_conf[i];
+			pr_err("%s codec->name=%s, codec_conf->dev_nam=%s\n", __func__,codec->name, codec_conf->dev_name);
 			if (!strcmp(codec->name, codec_conf->dev_name)) {
 				compress_type = codec_conf->compress_type;
 				if (compress_type && compress_type != codec->compress_type)
@@ -1774,6 +1787,7 @@ static void snd_soc_instantiate_card(struct snd_soc_card *card)
 
 	/* initialise the sound card only once */
 	if (card->probe) {
+		printk(KERN_ERR "%s. card->probe=>%p", __func__, card->probe);
 		ret = card->probe(pdev);
 		if (ret < 0)
 			goto card_probe_error;
@@ -1860,7 +1874,7 @@ static int soc_probe(struct platform_device *pdev)
 	struct snd_soc_card *card = platform_get_drvdata(pdev);
 	int ret = 0;
 
-	printk(KERN_INFO "Enter %s\n", __func__);
+	printk(KERN_INFO "Enter sound/soc/soc-core.c %s card->name=%s ++++++++++++\n", __func__, card->name ? card->name : "");
 
 	/* Bodge while we unpick instantiation */
 	card->dev = &pdev->dev;
@@ -1966,19 +1980,18 @@ static int soc_new_pcm(struct snd_soc_pcm_runtime *rtd, int num)
 	char new_name[64];
 	int ret = 0, playback = 0, capture = 0;
 
-	printk(KERN_INFO "Enter %s. stream_name=%s, codec_dai->name=%s\n",
+	printk(KERN_INFO "Enter %s. stream_name=%s, codec_dai->name=%s ++++++++++++++++++++++\n",
 					  __func__, rtd->dai_link->stream_name, codec_dai->name);
 
 	/* check client and interface hw capabilities */
-	snprintf(new_name, sizeof(new_name), "%s %s-%d",
-			rtd->dai_link->stream_name, codec_dai->name, num);
+	snprintf(new_name, sizeof(new_name), "%s %s-%d", rtd->dai_link->stream_name, codec_dai->name, num);
 
 	if (codec_dai->driver->playback.channels_min)
 		playback = 1;
 	if (codec_dai->driver->capture.channels_min)
 		capture = 1;
 
-	dev_info(rtd->card->dev, "registered pcm #%d %s\n",num,new_name);
+	printk(KERN_INFO "%s. registered pcm #%d %s\n", __func__, num, new_name);
 	ret = snd_pcm_new(rtd->card->snd_card, new_name, num, playback, capture, &pcm);
 	if (ret < 0) {
 		printk(KERN_ERR "asoc: can't create pcm for codec %s\n", codec->name);
@@ -2001,15 +2014,15 @@ static int soc_new_pcm(struct snd_soc_pcm_runtime *rtd, int num)
 	if (capture)
 		snd_pcm_set_ops(pcm, SNDRV_PCM_STREAM_CAPTURE, &soc_pcm_ops);
 
+	printk(KERN_ERR "%s. platform->driver->pcm_new=>%p", __func__, platform->driver->pcm_new);
 	ret = platform->driver->pcm_new(rtd->card->snd_card, codec_dai, pcm);
 	if (ret < 0) {
-		printk(KERN_ERR "asoc: platform pcm constructor failed\n");
+		printk(KERN_ERR "%s. asoc: platform pcm constructor failed\n", __func__);
 		return ret;
 	}
 
 	pcm->private_free = platform->driver->pcm_free;
-	printk(KERN_INFO "asoc: %s <-> %s mapping ok\n", codec_dai->name,
-		cpu_dai->name);
+	printk(KERN_INFO "%s. asoc: %s <-> %s mapping ok ++++++++++++++++\n", __func__, codec_dai->name, cpu_dai->name);
 	return ret;
 }
 
@@ -3187,7 +3200,7 @@ static char *fmt_single_name(struct device *dev, int *id)
 			*id = 0;
 	}
 
-	dev_info(dev, "%s, name=%s\n", __func__, name);
+	printk(KERN_ERR "sound/soc/soc-core.c %s, name=%s\n", __func__, name);
 	return kstrdup(name, GFP_KERNEL);
 }
 
@@ -3217,7 +3230,7 @@ int snd_soc_register_dai(struct device *dev,
 {
 	struct snd_soc_dai *dai;
 
-	dev_dbg(dev, "dai register %s\n", dev_name(dev));
+	printk(KERN_ERR "Enter ===%s===. dai register %s\n", __func__, dev_name(dev));
 
 	dai = kzalloc(sizeof(struct snd_soc_dai), GFP_KERNEL);
 	if (dai == NULL)
@@ -3278,13 +3291,12 @@ EXPORT_SYMBOL_GPL(snd_soc_unregister_dai);
  * @dai: Array of DAIs to register
  * @count: Number of DAIs
  */
-int snd_soc_register_dais(struct device *dev,
-		struct snd_soc_dai_driver *dai_drv, size_t count)
+int snd_soc_register_dais(struct device *dev, struct snd_soc_dai_driver *dai_drv, size_t count)
 {
 	struct snd_soc_dai *dai;
 	int i, ret = 0;
 
-	dev_info(dev, "dai register name=%s, count#%Zu\n", dev_name(dev), count);
+	printk(KERN_INFO "dai register. dev->init_name=%s, count=%Zu\n", dev_name(dev), count);
 
 	for (i = 0; i < count; i++) {
 
@@ -3295,6 +3307,7 @@ int snd_soc_register_dais(struct device *dev,
 		}
 
 		/* create DAI component name */
+		printk(KERN_INFO "%s. dai_drv[%d]->name=%s\n", __func__, i, (&dai_drv[i])->name);
 		dai->name = fmt_multiple_name(dev, &dai_drv[i]);
 		if (dai->name == NULL) {
 			kfree(dai);
@@ -3315,7 +3328,7 @@ int snd_soc_register_dais(struct device *dev,
 		list_add(&dai->list, &dai_list);
 		mutex_unlock(&client_mutex);
 
-		pr_debug("Registered DAI '%s'\n", dai->name);
+		pr_info("%s. Registered DAI. dai->name='%s'\n", __func__, dai->name);
 	}
 
 	mutex_lock(&client_mutex);
@@ -3351,12 +3364,11 @@ EXPORT_SYMBOL_GPL(snd_soc_unregister_dais);
  *
  * @platform: platform to register
  */
-int snd_soc_register_platform(struct device *dev,
-		struct snd_soc_platform_driver *platform_drv)
+int snd_soc_register_platform(struct device *dev, struct snd_soc_platform_driver *platform_drv)
 {
 	struct snd_soc_platform *platform;
 
-	dev_dbg(dev, "platform register %s\n", dev_name(dev));
+	printk(KERN_ERR "Enter ===%s=== platform register. name=%s\n", __func__, dev_name(dev));
 
 	platform = kzalloc(sizeof(struct snd_soc_platform), GFP_KERNEL);
 	if (platform == NULL)
@@ -3377,7 +3389,7 @@ int snd_soc_register_platform(struct device *dev,
 	snd_soc_instantiate_cards();
 	mutex_unlock(&client_mutex);
 
-	pr_debug("Registered platform '%s'\n", platform->name);
+	pr_err("%s. Registered platform '%s'\n", platform->name);
 
 	return 0;
 }
@@ -3456,7 +3468,7 @@ int snd_soc_register_codec(struct device *dev,
 	struct snd_soc_codec *codec;
 	int ret, i;
 
-	dev_info(dev, "codec register %s\n", dev_name(dev));
+	printk(KERN_ERR "Enter ===%s=== codec register %s\n", __func__, dev_name(dev));
 
 	codec = kzalloc(sizeof(struct snd_soc_codec), GFP_KERNEL);
 	if (codec == NULL)
@@ -3517,7 +3529,7 @@ int snd_soc_register_codec(struct device *dev,
 	snd_soc_instantiate_cards();
 	mutex_unlock(&client_mutex);
 
-	pr_debug("Registered codec '%s'\n", codec->name);
+	printk(KERN_ERR "Registered codec name='%s'\n", codec->name);
 	return 0;
 
 fail:
@@ -3565,6 +3577,8 @@ EXPORT_SYMBOL_GPL(snd_soc_unregister_codec);
 
 static int __init snd_soc_init(void)
 {
+	printk(KERN_INFO "Enter: sound/soc/soc-core.c %s ++++++++++++++++++++++++++\n", __func__);
+
 #ifdef CONFIG_DEBUG_FS
 	debugfs_root = debugfs_create_dir("asoc", NULL);
 	if (IS_ERR(debugfs_root) || !debugfs_root) {

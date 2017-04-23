@@ -108,6 +108,8 @@ static inline int init_info_for_card(struct snd_card *card)
 	int err;
 	struct snd_info_entry *entry;
 
+	printk(KERN_INFO "Enter %s\n", __func__);
+
 	if ((err = snd_info_card_register(card)) < 0) {
 		snd_printd("unable to create card info\n");
 		return err;

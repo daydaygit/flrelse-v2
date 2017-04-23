@@ -604,7 +604,7 @@ int snd_info_card_create(struct snd_card *card)
 		return -ENXIO;
 
 	sprintf(str, "card%i", card->number);
-	printk(KERN_INFO "Enter %s. card name=%s\n", __func__, str);
+	printk(KERN_INFO "Enter sound/core/info.c %s. card name=%s\n", __func__, str);
 	if ((entry = snd_info_create_module_entry(card->module, str, NULL)) == NULL)
 		return -ENOMEM;
 	entry->mode = S_IFDIR | S_IRUGO | S_IXUGO;

@@ -465,6 +465,7 @@ static struct snd_soc_platform_driver samsung_asoc_platform = {
 
 static int __devinit samsung_asoc_platform_probe(struct platform_device *pdev)
 {
+	pr_info("Enter sound/soc/samsung/dma.c %s\n", __func__);
 	return snd_soc_register_platform(&pdev->dev, &samsung_asoc_platform);
 }
 

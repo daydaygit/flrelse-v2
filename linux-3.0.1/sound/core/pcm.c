@@ -724,7 +724,7 @@ int snd_pcm_new(struct snd_card *card,
 		.dev_disconnect = snd_pcm_dev_disconnect,
 	};
 
-	printk(KERN_INFO "%s id=%d\n", __func__, id);
+	printk(KERN_INFO "%s id=%s +++++++\n", __func__, id);
 
 	if (snd_BUG_ON(!card))
 		return -ENXIO;
