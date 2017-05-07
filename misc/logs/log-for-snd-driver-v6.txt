@@ -1,0 +1,941 @@
+U-Boot 1.1.6 (Sep 25 2012 - 10:09:14) for SMDK6410
+
+
+****************************************
+
+**    u-boot 1.1.6                    **
+
+**    Updated for OK6410  TE6410 Board  **
+
+**    Version (2012-09-23)          **
+
+**    OEM: Forlinx Embedded           **
+
+**    Web: http://www.witech.com.cn   **
+
+****************************************
+
+
+CPU:     S3C6410 @532MHz
+
+         Fclk = 532MHz, Hclk = 133MHz, Pclk = 66MHz, Serial = CLKUART (SYNC Mode) 
+
+Board:   SMDK6410
+
+DRAM:    256 MB
+
+Flash:   0 kB
+
+NAND:    2048 MB 
+
+In:      serial
+
+Out:     serial
+
+Err:     serial
+
+Hit any key to stop autoboot:  0 
+
+
+NAND read: device 0 offset 0x200000, size 0x500000
+
+ 5242880 bytes read: OK
+
+Boot with zImage
+
+
+Starting kernel ...
+
+
+Uncompressing Linux... done, booting the kernel.
+Linux version 3.0.1 (qiu@qiu---linux) (gcc version 4.3.2 (Sourcery G++ Lite 2008q3-72) ) #10 Sun May 7 17:36:42 CST 2017
+S3C24XX Clocks, Copyright 2004 Simtec Electronics
+camera: no parent clock specified
+S3C64XX: PLL settings, A=532000000, M=532000000, E=24000000
+S3C64XX: HCLK2=266000000, HCLK=133000000, PCLK=66500000
+mout_apll: source is fout_apll (1), rate is 532000000
+mout_epll: source is epll (1), rate is 24000000
+mout_mpll: source is mpll (1), rate is 532000000
+mmc_bus: source is mout_epll (0), rate is 24000000
+mmc_bus: source is mout_epll (0), rate is 24000000
+mmc_bus: source is mout_epll (0), rate is 24000000
+usb-bus-host: source is clk_48m (0), rate is 48000000
+uclk1: source is dout_mpll (1), rate is 66500000
+spi-bus: source is mout_epll (0), rate is 24000000
+spi-bus: source is mout_epll (0), rate is 24000000
+audio-bus: source is mout_epll (0), rate is 24000000
+audio-bus: source is mout_epll (0), rate is 24000000
+audio-bus: source is mout_epll (0), rate is 24000000
+irda-bus: source is mout_epll (0), rate is 24000000
+camera: no parent clock specified
+Kernel command line: root=/dev/mtdblock2 rootfstype=yaffs2 init=/linuxrc console=ttySAC0,115200
+PID hash table entries: 1024 (order: 0, 4096 bytes)
+Dentry cache hash table entries: 32768 (order: 5, 131072 bytes)
+Inode-cache hash table entries: 16384 (order: 4, 65536 bytes)
+Memory: 256MB = 256MB total
+Memory: 197604k/197604k available, 64540k reserved, 0K highmem
+Virtual kernel memory layout:
+    vector  : 0xffff0000 - 0xffff1000   (   4 kB)
+    fixmap  : 0xfff00000 - 0xfffe0000   ( 896 kB)
+    DMA     : 0xff600000 - 0xffe00000   (   8 MB)
+    vmalloc : 0xd0800000 - 0xf4000000   ( 568 MB)
+    lowmem  : 0xc0000000 - 0xd0000000   ( 256 MB)
+    pkmap   : 0xbfe00000 - 0xc0000000   (   2 MB)
+    modules : 0xbf000000 - 0xbfe00000   (  14 MB)
+      .init : 0xc0008000 - 0xc0034000   ( 176 kB)
+      .text : 0xc0034000 - 0xc07040a8   (6977 kB)
+      .data : 0xc0706000 - 0xc0748390   ( 265 kB)
+       .bss : 0xc07483b4 - 0xc07c5d40   ( 503 kB)
+SLUB: Genslabs=13, HWalign=32, Order=0-3, MinObjects=0, CPUs=1, Nodes=1
+NR_IRQS:246 nr_irqs:246 246
+VIC @f4000000: id 0x00041192, vendor 0x41
+VIC @f4010000: id 0x00041192, vendor 0x41
+Console: colour dummy device 80x30
+console [ttySAC0] enabled
+Calibrating delay loop... 528.79 BogoMIPS (lpj=2643968)
+pid_max: default: 32768 minimum: 301
+Mount-cache hash table entries: 512
+CPU: Testing write buffer coherency: ok
+hw perfevents: enabled with v6 PMU driver, 3 counters available
+devtmpfs: initialized
+NET: Registered protocol family 16
+hw-breakpoint: found 6 breakpoint and 1 watchpoint registers.
+hw-breakpoint: maximum watchpoint size is 4 bytes.
+s3c64xx_dma_init: Registering DMA channels
+PL080: IRQ 73, at d0804000, channels 0..8
+PL080: IRQ 74, at d0806000, channels 8..16
+bio: create slab <bio-0> at 0
+SCSI subsystem initialized
+------------[ cut here ]------------
+WARNING: at drivers/gpio/gpiolib.c:101 gpio_ensure_requested+0x58/0x124()
+---[ end trace da227214a82491b7 ]---
+usbcore: registered new interface driver usbfs
+usbcore: registered new interface driver hub
+usbcore: registered new device driver usb
+s3c-i2c s3c2440-i2c.0: slave address 0x10
+s3c-i2c s3c2440-i2c.0: bus frequency set to 64 KHz
+s3c-i2c s3c2440-i2c.0: i2c-0: S3C I2C adapter
+Enter snd_info_register. create proc file. name=oss
+Enter snd_info_register. create proc file. name=seq
+Enter snd_info_register. create proc file. name=version
+Enter snd_info_register. create proc file. name=devices
+Enter snd_info_register. create proc file. name=devices
+Enter: snd_card_info_init ++++++++++++++++++++
+Enter snd_info_register. create proc file. name=cards
+Enter snd_info_register. create proc file. name=sndstat
+Advanced Linux Sound Architecture Driver Version 1.0.23.
+cfg80211: Calling CRDA to update world regulatory domain
+NET: Registered protocol family 2
+IP route cache hash table entries: 2048 (order: 1, 8192 bytes)
+TCP established hash table entries: 8192 (order: 4, 65536 bytes)
+TCP bind hash table entries: 8192 (order: 3, 32768 bytes)
+TCP: Hash tables configured (established 8192 bind 8192)
+TCP reno registered
+UDP hash table entries: 256 (order: 0, 4096 bytes)
+UDP-Lite hash table entries: 256 (order: 0, 4096 bytes)
+NET: Registered protocol family 1
+RPC: Registered named UNIX socket transport module.
+RPC: Registered udp transport module.
+RPC: Registered tcp transport module.
+RPC: Registered tcp NFSv4.1 backchannel transport module.
+audit: initializing netlink socket (disabled)
+type=2000 audit(0.310:1): initialized
+msgmni has been set to 385
+alg: No test for stdrng (krng)
+Block layer SCSI generic (bsg) driver version 0.4 loaded (major 253)
+io scheduler noop registered
+io scheduler deadline registered
+io scheduler cfq registered (default)
+LCD TYPE :: LTE480WV will be initialized
+Console: switching to colour frame buffer device 60x34
+fb0: s3cfb frame buffer device
+fb1: s3cfb frame buffer device
+fb2: s3cfb frame buffer device
+fb3: s3cfb frame buffer device
+s3c6400-uart.0: ttySAC0 at MMIO 0x7f005000 (irq = 16) is a S3C6400/10
+s3c6400-uart.1: ttySAC1 at MMIO 0x7f005400 (irq = 20) is a S3C6400/10
+s3c6400-uart.2: ttySAC2 at MMIO 0x7f005800 (irq = 24) is a S3C6400/10
+s3c6400-uart.3: ttySAC3 at MMIO 0x7f005c00 (irq = 28) is a S3C6400/10
+Hello, world
+NAND device: Manufacturer ID: 0xec, Chip ID: 0xd7 (Samsung NAND 4GiB 3,3V 8-bit)
+Creating 4 MTD partitions on "NAND 4GiB 3,3V 8-bit":
+0x000000000000-0x000000200000 : "Bootloader"
+0x000000200000-0x000000700000 : "Kernel"
+0x000000700000-0x00000cf00000 : "User"
+0x00000cf00000-0x000100000000 : "File System"
+vcan: Virtual CAN interface driver
+slcan: serial line CAN interface driver
+slcan: 10 dynamic interface channels.
+CAN device driver interface
+mcp251x: setup gpio pins CS and External Int
+mcp2515 spi1.0: MCP251x didn't enter in conf mode after reset
+mcp2515 spi1.0: Probe failed
+mcp2515 spi1.0: probe failed
+PPP generic driver version 2.4.2
+PPP Deflate Compression module registered
+PPP BSD Compression module registered
+PPP MPPE Compression module registered
+NET: Registered protocol family 24
+dm9000 Ethernet Driver, V1.31
+dm9000 dm9000.0: read wrong id 0x00000000
+dm9000 dm9000.0: read wrong id 0x00000000
+dm9000 dm9000.0: read wrong id 0x00000000
+dm9000 dm9000.0: read wrong id 0x00000000
+dm9000 dm9000.0: read wrong id 0x00000000
+dm9000 dm9000.0: read wrong id 0x00000000
+dm9000 dm9000.0: read wrong id 0x00000000
+dm9000 dm9000.0: read wrong id 0x00000000
+dm9000 dm9000.0: wrong id: 0x00000000
+dm9000 dm9000.0: not found (-19).
+libertas_sdio: Libertas SDIO driver
+libertas_sdio: Copyright Pierre Ossman
+usbcore: registered new interface driver rt73usb
+ohci_hcd: USB 1.1 'Open' Host Controller (OHCI) Driver
+s3c2410-ohci s3c2410-ohci: S3C24XX OHCI
+s3c2410-ohci s3c2410-ohci: new USB bus registered, assigned bus number 1
+s3c2410-ohci s3c2410-ohci: irq 79, io mem 0x74300000
+usb usb1: New USB device found, idVendor=1d6b, idProduct=0001
+usb usb1: New USB device strings: Mfr=3, Product=2, SerialNumber=1
+usb usb1: Product: S3C24XX OHCI
+usb usb1: Manufacturer: Linux 3.0.1 ohci_hcd
+usb usb1: SerialNumber: s3c24xx
+hub 1-0:1.0: USB hub found
+hub 1-0:1.0: 2 ports detected
+usbcore: registered new interface driver cdc_acm
+cdc_acm: USB Abstract Control Model driver for USB modems and ISDN adapters
+Initializing USB Mass Storage driver...
+usbcore: registered new interface driver usb-storage
+USB Mass Storage support registered.
+usbcore: registered new interface driver usbserial
+USB Serial support registered for generic
+usbcore: registered new interface driver usbserial_generic
+usbserial: USB Serial Driver core
+USB Serial support registered for GSM modem (1-port)
+usbcore: registered new interface driver option
+option: v0.7.2:USB Driver for GSM modems
+USB Serial support registered for pl2303
+usbcore: registered new interface driver pl2303
+pl2303: Prolific PL2303 USB to serial adaptor driver
+dummy_hcd dummy_hcd: USB Host+Gadget Emulator, driver 02 May 2005
+dummy_hcd dummy_hcd: Dummy host controller
+dummy_hcd dummy_hcd: new USB bus registered, assigned bus number 2
+usb usb2: New USB device found, idVendor=1d6b, idProduct=0002
+usb usb2: New USB device strings: Mfr=3, Product=2, SerialNumber=1
+usb usb2: Product: Dummy host controller
+usb usb2: Manufacturer: Linux 3.0.1 dummy_hcd
+usb usb2: SerialNumber: dummy_hcd
+hub 2-0:1.0: USB hub found
+hub 2-0:1.0: 1 port detected
+mousedev: PS/2 mouse device common for all mice
+input: gpio-keys as /devices/platform/gpio-keys/input/input0
+input: s3c-keypad as /devices/platform/s3c-keypad/input/input1
+S3C Touchscreen driver, (c) 2008 Samsung Electronics
+S3C TouchScreen got loaded successfully : 12 bits
+input: S3C TouchScreen as /devices/virtual/input/input2
+s3c-rtc s3c64xx-rtc: rtc disabled, re-enabling
+s3c-rtc s3c64xx-rtc: rtc core: registered s3c as rtc0
+s3c-rtc s3c64xx-rtc: warning: invalid RTC value so initializing it
+i2c /dev entries driver
+Linux video capture interface: v2.00
+gspca: main v2.10.0 registered
+usbcore: registered new interface driver benq
+benq: registered
+usbcore: registered new interface driver conex
+conex: registered
+usbcore: registered new interface driver cpia1
+cpia1: registered
+usbcore: registered new interface driver etoms
+etoms: registered
+usbcore: registered new interface driver finepix
+finepix: registered
+usbcore: registered new interface driver jeilinj
+jeilinj: registered
+usbcore: registered new interface driver mars
+mars: registered
+usbcore: registered new interface driver mr97310a
+mr97310a: registered
+usbcore: registered new interface driver ov519
+ov519: registered
+usbcore: registered new interface driver ov534
+ov534: registered
+usbcore: registered new interface driver ov534_9
+ov534_9: registered
+usbcore: registered new interface driver pac207
+pac207: registered
+usbcore: registered new interface driver pac7302
+pac7302: registered
+usbcore: registered new interface driver pac7311
+pac7311: registered
+usbcore: registered new interface driver sn9c2028
+sn9c2028: registered
+usbcore: registered new interface driver sn9c20x
+sn9c20x: registered
+usbcore: registered new interface driver sonixb
+sonixb: registered
+usbcore: registered new interface driver sonixj
+sonixj: registered
+usbcore: registered new interface driver spca500
+spca500: registered
+usbcore: registered new interface driver spca501
+spca501: registered
+usbcore: registered new interface driver spca505
+spca505: registered
+usbcore: registered new interface driver spca506
+spca506: registered
+usbcore: registered new interface driver spca508
+spca508: registered
+usbcore: registered new interface driver spca561
+spca561: registered
+usbcore: registered new interface driver spca1528
+spca1528: registered
+usbcore: registered new interface driver sq905
+sq905: registered
+usbcore: registered new interface driver sq905c
+sq905c: registered
+usbcore: registered new interface driver sq930x
+sq930x: registered
+usbcore: registered new interface driver sunplus
+sunplus: registered
+usbcore: registered new interface driver stk014
+stk014: registered
+usbcore: registered new interface driver stv0680
+stv0680: registered
+usbcore: registered new interface driver t613
+t613: registered
+usbcore: registered new interface driver tv8532
+tv8532: registered
+usbcore: registered new interface driver vc032x
+vc032x: registered
+usbcore: registered new interface driver zc3xx
+zc3xx: registered
+usbcore: registered new interface driver ALi m5602
+ALi m5602: registered
+usbcore: registered new interface driver STV06xx
+STV06xx: registered
+gspca_gl860: driver startup - version 0.9d10
+usbcore: registered new interface driver gspca_gl860
+gspca_gl860: driver registered
+s3c-fimc: controller 0 registered successfully
+s3c-fimc: controller 1 registered successfully
+s3c-fimc: info ov965x_init
+cym s3c_mfc_mememap: addr:5daf9000 size:1138688 
+S3C6400 MFC Driver, (c) 2007 Samsung Electronics
+S3C PostProcessor Driver v3.12, (c) 2009 Samsung Electronics
+S3C6410 TV encoder Driver, (c) 2008 Samsung Electronics
+S3C6410 TV scaler Driver, (c) 2008 Samsung Electronics
+S3C Rotator Driver, (c) 2008 Samsung Electronics
+s3c_rotator_probe called
+S3C JPEG Driver, (c) 2007 Samsung Electronics
+s3c_g2d_probe called
+ s3c_g2d_probe Success
+S3C G3D Driver, (c) 2007-2009 Samsung Electronics
+S3C CMM Driver, (c) 2008 Samsung Electronics
+usbcore: registered new interface driver uvcvideo
+USB Video Class driver (v0.1.0)
+S3C2410 Watchdog Timer, (c) 2004 Simtec Electronics
+s3c2410-wdt s3c2410-wdt: watchdog inactive, reset disabled, irq enabled
+sdhci: Secure Digital Host Controller Interface driver
+sdhci: Copyright(c) Pierre Ossman
+s3c-sdhci s3c-sdhci.0: clock source 0: hsmmc (133000000 Hz)
+s3c-sdhci s3c-sdhci.0: clock source 1: hsmmc (133000000 Hz)
+s3c-sdhci s3c-sdhci.0: clock source 2: mmc_bus (24000000 Hz)
+mmc0: SDHCI controller on samsung-hsmmc [s3c-sdhci.0] using ADMA
+s3c-sdhci s3c-sdhci.1: clock source 0: hsmmc (133000000 Hz)
+s3c-sdhci s3c-sdhci.1: clock source 1: hsmmc (133000000 Hz)
+s3c-sdhci s3c-sdhci.1: clock source 2: mmc_bus (24000000 Hz)
+mmc1: SDHCI controller on samsung-hsmmc [s3c-sdhci.1] using ADMA
+usbcore: registered new interface driver usbhid
+usbhid: USB HID core driver
+Enter snd_info_register. create proc file. name=timers
+Enter snd_info_register. create proc file. name=pcm
+Enter snd_info_register. create proc file. name=queues
+Enter snd_info_register. create proc file. name=clients
+Enter snd_info_register. create proc file. name=timer
+Enter snd_info_register. create proc file. name=drivers
+Enter: sound/soc/soc-core.c snd_soc_init() ++++++++++++++++++++++++++
+Enter: samsung_asoc_init+++++++++
+Enter sound/soc/samsung/dma.c samsung_asoc_platform_probe
+Enter ===snd_soc_register_platform=== platform register. name=samsung-audio
+sound/soc/soc-core.c fmt_single_name, name=samsung-audio
+Enter snd_soc_instantiate_cards
+snd_soc_register_platform. Registered platform 'samsung-audio'
+Enter sound/soc/samsung/ac97.c s3c_ac97_probe ++++?????????
+s3c_ac97_probe Now todo: platform_get_resource() ++++++++
+Enter snd_soc_register_dais. dai register. dev->init_name=samsung-ac97, count=2
+snd_soc_register_dais. dai_drv[0]->name=samsung-ac97
+snd_soc_register_dais. Registered DAI. dai->name='samsung-ac97'
+snd_soc_register_dais. dai_drv[1]->name=samsung-ac97-mic
+snd_soc_register_dais. Registered DAI. dai->name='samsung-ac97-mic'
+Enter snd_soc_instantiate_cards
+Enter sound/soc/samsung/smdk_wm9713.c smdk6410_init() start++++++++++++++++++++++
+Enter sound/soc/codecs/wm9713.c wm9713_probe ++++++++++++++++++++++
+Enter ===snd_soc_register_codec=== codec register wm9713-codec
+sound/soc/soc-core.c fmt_single_name, name=wm9713-codec
+Enter snd_soc_register_dais. dai register. dev->init_name=wm9713-codec, count=3
+snd_soc_register_dais. dai_drv[0]->name=wm9713-hifi
+snd_soc_register_dais. Registered DAI. dai->name='wm9713-hifi'
+snd_soc_register_dais. dai_drv[1]->name=wm9713-aux
+snd_soc_register_dais. Registered DAI. dai->name='wm9713-aux'
+snd_soc_register_dais. dai_drv[2]->name=wm9713-voice
+snd_soc_register_dais. Registered DAI. dai->name='wm9713-voice'
+Enter snd_soc_instantiate_cards
+Enter snd_soc_instantiate_cards
+Registered codec name='wm9713-codec'
+Enter sound/soc/soc-core.c soc_probe() card->name=smdk6410-wm9713 ++++++++++++
+Enter snd_soc_register_card. card->name=smdk6410-wm9713
+Enter snd_soc_instantiate_cards
+Enter snd_soc_instantiate_card. card->name=smdk6410-wm9713 +++++++++++++++++++++++++++++++++
+snd_soc_instantiate_card() To bind DAIs @@@
+soc_bind_dai_link() binding dai_link->name=AC97, num=0
+soc_bind_dai_link find_cpu (dai)@@@
+soc_bind_dai_link. cpu_dai->name=wm9713-voice, dai_link->cpu_dai_name=samsung-ac97
+soc_bind_dai_link. cpu_dai->name=wm9713-aux, dai_link->cpu_dai_name=samsung-ac97
+soc_bind_dai_link. cpu_dai->name=wm9713-hifi, dai_link->cpu_dai_name=samsung-ac97
+soc_bind_dai_link. cpu_dai->name=samsung-ac97-mic, dai_link->cpu_dai_name=samsung-ac97
+soc_bind_dai_link. cpu_dai->name=samsung-ac97, dai_link->cpu_dai_name=samsung-ac97
+soc_bind_dai_link. Compared +++++++++  cpu_dai->name=samsung-ac97, dai_link->cpu_dai_name=samsung-ac97
+soc_bind_dai_link, cpu_dai->name=samsung-ac97
+soc_bind_dai_link find_codec (dai)@@@
+soc_bind_dai_link. codec->name=wm9713-codec, dai_link->codec_name=wm9713-codec
+soc_bind_dai_link. Compared +++++++++  codec->name=wm9713-codec, dai_link->codec_name=wm9713-codec
+soc_bind_dai_link. codec->name=wm9713-codec
+CODEC found, so find codec dai from registered DAIs from this CODEC +++++++++
+soc_bind_dai_link. ------- codec_dai->name=wm9713-voice, dai_link->codec_dai_name=wm9713-hifi
+soc_bind_dai_link. ------- codec_dai->name=wm9713-aux, dai_link->codec_dai_name=wm9713-hifi
+soc_bind_dai_link. ------- codec_dai->name=wm9713-hifi, dai_link->codec_dai_name=wm9713-hifi
+soc_bind_dai_link. Compared ++++++++ codec_dai->name=wm9713-hifi, dai_link->codec_dai_name=wm9713-hifi
+soc_bind_dai_link.codec_dai->name=wm9713-hifi
+soc_bind_dai_link find_platform@@@
+soc_bind_dai_link. ------- platform->name=samsung-audio, dai_link->platform_name=samsung-audio
+soc_bind_dai_link. Compared ++++++++ platform->name=samsung-audio, dai_link->platform_name=samsung-audio
+soc_bind_dai_link. platform->name=samsung-audio
+snd_soc_cache_init. Initializing cache:flat for codec:wm9713-codec. codec->cache_ops->init=>c03b7e0c (snd_soc_flat_cache_init)
+Enter snd_card_create +++++++++++++++++++++++++++++
+snd_card_create. (*card_ret)->id=(null), idx=-1
+Enter snd_info_card_create
+Enter sound/core/info.c snd_info_card_create. card name=card0
+Enter snd_info_register. create proc file. name=card0
+Enter soc_probe_dai_link. probe name=smdk6410-wm9713, dai link num=0 ++++++++++++++++++++
+soc_probe_dai_link.codec->name=wm9713-codec, platform->name=samsung-audio, card->name=smdk6410-wm9713
+soc_probe_dai_link. probe the cpu_dai +++++++++++++++++
+soc_probe_dai_link. probe the CODEC +++++++++++++++++
+Enter soc_probe_codec. codec->name=wm9713-codec
+soc_probe_codec. codec->driver->probe=>c03b9c44 (TODO: wm9713_soc_probe)
+Enter sound/soc/codecs/wm9713.c wm9713_soc_probe  +++++++++++++++
+Enter snd_soc_new_ac97_codec. codec->name=wm9713-codec, num=0
+Enter wm9713_reset.codec->name=wm9713-codec, try_warm=0
+Enter ac97_read. codec->name=wm9713-codec, soc_ac97_ops.read=>c03ba70c, reg=0x0
+Enter wm9713_reset.codec->name=wm9713-codec, try_warm=1
+Enter wm9713_set_bias_level. level=SND_SOC_BIAS_STANDBY
+Enter snd_soc_add_controls. codec->name=wm9713-codec
+snd_soc_add_controls name=Speaker Playback Volume
+Enter snd_soc_cnew
+snd_soc_add_controls name=Speaker Playback Switch
+Enter snd_soc_cnew
+snd_soc_add_controls name=Headphone Playback Volume
+Enter snd_soc_cnew
+snd_soc_add_controls name=Headphone Playback Switch
+Enter snd_soc_cnew
+snd_soc_add_controls name=Line In Volume
+Enter snd_soc_cnew
+snd_soc_add_controls name=PCM Playback Volume
+Enter snd_soc_cnew
+snd_soc_add_controls name=Mic 1 Volume
+Enter snd_soc_cnew
+snd_soc_add_controls name=Mic 2 Volume
+Enter snd_soc_cnew
+snd_soc_add_controls name=Mic 1 Preamp Volume
+Enter snd_soc_cnew
+snd_soc_add_controls name=Mic 2 Preamp Volume
+Enter snd_soc_cnew
+snd_soc_add_controls name=Mic Boost (+20dB) Switch
+Enter snd_soc_cnew
+snd_soc_add_controls name=Mic Headphone Mixer Volume
+Enter snd_soc_cnew
+snd_soc_add_controls name=Capture Switch
+Enter snd_soc_cnew
+snd_soc_add_controls name=Capture Volume Steps
+Enter snd_soc_cnew
+snd_soc_add_controls name=Capture Volume
+Enter snd_soc_cnew
+snd_soc_add_controls name=Capture ZC Switch
+Enter snd_soc_cnew
+snd_soc_add_controls name=Capture to Headphone Volume
+Enter snd_soc_cnew
+snd_soc_add_controls name=Capture to Mono Boost (+20dB) Switch
+Enter snd_soc_cnew
+snd_soc_add_controls name=Capture ADC Boost (+20dB) Switch
+Enter snd_soc_cnew
+snd_soc_add_controls name=ALC Target Volume
+Enter snd_soc_cnew
+snd_soc_add_controls name=ALC Hold Time
+Enter snd_soc_cnew
+snd_soc_add_controls name=ALC Decay Time
+Enter snd_soc_cnew
+snd_soc_add_controls name=ALC Attack Time
+Enter snd_soc_cnew
+snd_soc_add_controls name=ALC Function
+Enter snd_soc_cnew
+snd_soc_add_controls name=ALC Max Volume
+Enter snd_soc_cnew
+snd_soc_add_controls name=ALC ZC Timeout
+Enter snd_soc_cnew
+snd_soc_add_controls name=ALC ZC Switch
+Enter snd_soc_cnew
+snd_soc_add_controls name=ALC NG Switch
+Enter snd_soc_cnew
+snd_soc_add_controls name=ALC NG Type
+Enter snd_soc_cnew
+snd_soc_add_controls name=ALC NG Threshold
+Enter snd_soc_cnew
+snd_soc_add_controls name=Speaker Playback ZC Switch
+Enter snd_soc_cnew
+snd_soc_add_controls name=Headphone Playback ZC Switch
+Enter snd_soc_cnew
+snd_soc_add_controls name=Out4 Playback Switch
+Enter snd_soc_cnew
+snd_soc_add_controls name=Out4 Playback ZC Switch
+Enter snd_soc_cnew
+snd_soc_add_controls name=Out4 Playback Volume
+Enter snd_soc_cnew
+snd_soc_add_controls name=Out3 Playback Switch
+Enter snd_soc_cnew
+snd_soc_add_controls name=Out3 Playback ZC Switch
+Enter snd_soc_cnew
+snd_soc_add_controls name=Out3 Playback Volume
+Enter snd_soc_cnew
+snd_soc_add_controls name=Mono Capture Volume
+Enter snd_soc_cnew
+snd_soc_add_controls name=Mono Playback Switch
+Enter snd_soc_cnew
+snd_soc_add_controls name=Mono Playback ZC Switch
+Enter snd_soc_cnew
+snd_soc_add_controls name=Mono Playback Volume
+Enter snd_soc_cnew
+snd_soc_add_controls name=Headphone Mixer Beep Playback Volume
+Enter snd_soc_cnew
+snd_soc_add_controls name=Speaker Mixer Beep Playback Volume
+Enter snd_soc_cnew
+snd_soc_add_controls name=Mono Mixer Beep Playback Volume
+Enter snd_soc_cnew
+snd_soc_add_controls name=Voice Playback Headphone Volume
+Enter snd_soc_cnew
+snd_soc_add_controls name=Voice Playback Master Volume
+Enter snd_soc_cnew
+snd_soc_add_controls name=Voice Playback Mono Volume
+Enter snd_soc_cnew
+snd_soc_add_controls name=Headphone Mixer Aux Playback Volume
+Enter snd_soc_cnew
+snd_soc_add_controls name=Speaker Mixer Voice Playback Volume
+Enter snd_soc_cnew
+snd_soc_add_controls name=Speaker Mixer Aux Playback Volume
+Enter snd_soc_cnew
+snd_soc_add_controls name=Mono Mixer Voice Playback Volume
+Enter snd_soc_cnew
+snd_soc_add_controls name=Mono Mixer Aux Playback Volume
+Enter snd_soc_cnew
+snd_soc_add_controls name=Aux Playback Headphone Volume
+Enter snd_soc_cnew
+snd_soc_add_controls name=Aux Playback Master Volume
+Enter snd_soc_cnew
+snd_soc_add_controls name=Bass Control
+Enter snd_soc_cnew
+snd_soc_add_controls name=Bass Cut-off Switch
+Enter snd_soc_cnew
+snd_soc_add_controls name=Tone Cut-off Switch
+Enter snd_soc_cnew
+snd_soc_add_controls name=Playback Attenuate (-6dB) Switch
+Enter snd_soc_cnew
+snd_soc_add_controls name=Bass Volume
+Enter snd_soc_cnew
+snd_soc_add_controls name=Tone Volume
+Enter snd_soc_cnew
+snd_soc_add_controls name=3D Upper Cut-off Switch
+Enter snd_soc_cnew
+snd_soc_add_controls name=3D Lower Cut-off Switch
+Enter snd_soc_cnew
+snd_soc_add_controls name=3D Depth
+Enter snd_soc_cnew
+Enter wm9713_add_widgets
+wm9713_add_widgets. todo: snd_soc_dapm_new_controls()
+wm9713_add_widgets. todo: snd_soc_dapm_add_routes()
+snd_soc_read. codecName=wm9713-codec, readsReg=0x80, ret=0x0
+snd_soc_read. codecName=wm9713-codec, readsReg=0x80, ret=0x0
+snd_soc_read. codecName=wm9713-codec, readsReg=0x80, ret=0x0
+snd_soc_read. codecName=wm9713-codec, readsReg=0x80, ret=0x0
+snd_soc_read. codecName=wm9713-codec, readsReg=0x80, ret=0x0
+snd_soc_read. codecName=wm9713-codec, readsReg=0x80, ret=0x0
+snd_soc_read. codecName=wm9713-codec, readsReg=0x82, ret=0x0
+snd_soc_read. codecName=wm9713-codec, readsReg=0x82, ret=0x0
+snd_soc_read. codecName=wm9713-codec, readsReg=0x82, ret=0x0
+snd_soc_read. codecName=wm9713-codec, readsReg=0x82, ret=0x0
+snd_soc_read. codecName=wm9713-codec, readsReg=0x82, ret=0x0
+snd_soc_read. codecName=wm9713-codec, readsReg=0x82, ret=0x0
+snd_soc_read. codecName=wm9713-codec, readsReg=0x16, ret=0xAAA0
+snd_soc_read. codecName=wm9713-codec, readsReg=0x18, ret=0xAAA0
+snd_soc_read. codecName=wm9713-codec, readsReg=0x1A, ret=0xAAA0
+snd_soc_read. codecName=wm9713-codec, readsReg=0xA, ret=0xE808
+snd_soc_read. codecName=wm9713-codec, readsReg=0xC, ret=0xE808
+snd_soc_read. codecName=wm9713-codec, readsReg=0x8, ret=0xC880
+snd_soc_read. codecName=wm9713-codec, readsReg=0x16, ret=0xAAA0
+snd_soc_read. codecName=wm9713-codec, readsReg=0x18, ret=0xAAA0
+snd_soc_read. codecName=wm9713-codec, readsReg=0x1A, ret=0xAAA0
+snd_soc_read. codecName=wm9713-codec, readsReg=0xA, ret=0xE808
+snd_soc_read. codecName=wm9713-codec, readsReg=0xC, ret=0xE808
+snd_soc_read. codecName=wm9713-codec, readsReg=0x10, ret=0xDA
+snd_soc_read. codecName=wm9713-codec, readsReg=0x10, ret=0xDA
+snd_soc_read. codecName=wm9713-codec, readsReg=0x1E, ret=0x0
+snd_soc_read. codecName=wm9713-codec, readsReg=0x1E, ret=0x0
+snd_soc_read. codecName=wm9713-codec, readsReg=0x1E, ret=0x0
+snd_soc_read. codecName=wm9713-codec, readsReg=0x1E, ret=0x0
+snd_soc_read. codecName=wm9713-codec, readsReg=0x1E, ret=0x0
+snd_soc_read. codecName=wm9713-codec, readsReg=0x1E, ret=0x0
+snd_soc_read. codecName=wm9713-codec, readsReg=0x1E, ret=0x0
+snd_soc_read. codecName=wm9713-codec, readsReg=0x1E, ret=0x0
+snd_soc_read. codecName=wm9713-codec, readsReg=0x1E, ret=0x0
+snd_soc_read. codecName=wm9713-codec, readsReg=0x1E, ret=0x0
+snd_soc_read. codecName=wm9713-codec, readsReg=0x1C, ret=0x0
+snd_soc_read. codecName=wm9713-codec, readsReg=0x1C, ret=0x0
+snd_soc_read. codecName=wm9713-codec, readsReg=0x1C, ret=0x0
+snd_soc_read. codecName=wm9713-codec, readsReg=0x1C, ret=0x0
+snd_soc_read. codecName=wm9713-codec, readsReg=0x1C, ret=0x0
+snd_soc_read. codecName=wm9713-codec, readsReg=0x1C, ret=0x0
+snd_soc_read. codecName=wm9713-codec, readsReg=0x1C, ret=0x0
+snd_soc_read. codecName=wm9713-codec, readsReg=0x1C, ret=0x0
+snd_soc_read. codecName=wm9713-codec, readsReg=0x1C, ret=0x0
+snd_soc_read. codecName=wm9713-codec, readsReg=0x1C, ret=0x0
+snd_soc_read. codecName=wm9713-codec, readsReg=0x1C, ret=0x0
+snd_soc_read. codecName=wm9713-codec, readsReg=0x1C, ret=0x0
+snd_soc_read. codecName=wm9713-codec, readsReg=0x14, ret=0xD600
+snd_soc_read. codecName=wm9713-codec, readsReg=0x14, ret=0xD600
+snd_soc_read. codecName=wm9713-codec, readsReg=0x14, ret=0xD600
+snd_soc_read. codecName=wm9713-codec, readsReg=0x14, ret=0xD600
+snd_soc_read. codecName=wm9713-codec, readsReg=0x14, ret=0xD600
+snd_soc_read. codecName=wm9713-codec, readsReg=0x14, ret=0xD600
+snd_soc_read. codecName=wm9713-codec, readsReg=0x14, ret=0xD600
+snd_soc_read. codecName=wm9713-codec, readsReg=0x14, ret=0xD600
+snd_soc_read. codecName=wm9713-codec, readsReg=0x14, ret=0xD600
+snd_soc_read. codecName=wm9713-codec, readsReg=0x14, ret=0xD600
+snd_soc_read. codecName=wm9713-codec, readsReg=0x14, ret=0xD600
+snd_soc_read. codecName=wm9713-codec, readsReg=0x14, ret=0xD600
+snd_soc_read. codecName=wm9713-codec, readsReg=0x14, ret=0xD600
+snd_soc_read. codecName=wm9713-codec, readsReg=0x14, ret=0xD600
+snd_soc_read. codecName=wm9713-codec, readsReg=0x22, ret=0x40
+snd_soc_read. codecName=wm9713-codec, readsReg=0x22, ret=0x40
+snd_soc_read. codecName=wm9713-codec, readsReg=0x22, ret=0x40
+snd_soc_read. codecName=wm9713-codec, readsReg=0x14, ret=0xD600
+snd_soc_read. codecName=wm9713-codec, readsReg=0x14, ret=0xD600
+snd_soc_read. codecName=wm9713-codec, readsReg=0x14, ret=0xD600
+snd_soc_read. codecName=wm9713-codec, readsReg=0x14, ret=0xD600
+snd_soc_read. codecName=wm9713-codec, readsReg=0x14, ret=0xD600
+snd_soc_read. codecName=wm9713-codec, readsReg=0x14, ret=0xD600
+soc_probe_dai_link. probe the platform +++++++++++++++++
+soc_probe_dai_link. probe the CODEC DAI +++++++++++++++++
+soc_probe_dai_link. DAPM dai link stream work +++++++++++++++++
+Enter soc_post_component_init
+soc_post_component_init. name=AC97, dai_link->init=>c03ba978 (TODO: smdk6410_ac97_init)
+Enter dapm_power_widgets +++++++++++++++++++++++++
+dapm_power_widgets. Power down widgets first
+Enter dapm_widget_update
+dapm_power_widgets. Now power up ++++++++++++
+Enter snd_soc_dapm_new_widgets
+w->name=Mic (on-board), w->id=12
+snd_soc_read. codecName=wm9713-codec, readsReg=0x0, ret=0x6174
+w->name=VMID, w->id=17
+snd_soc_read. codecName=wm9713-codec, readsReg=0x0, ret=0x6174
+w->name=MIC2B, w->id=0
+snd_soc_read. codecName=wm9713-codec, readsReg=0x0, ret=0x6174
+w->name=MIC2A, w->id=0
+snd_soc_read. codecName=wm9713-codec, readsReg=0x0, ret=0x6174
+w->name=MIC1, w->id=0
+snd_soc_read. codecName=wm9713-codec, readsReg=0x0, ret=0x6174
+w->name=PCBEEP, w->id=0
+snd_soc_read. codecName=wm9713-codec, readsReg=0x0, ret=0x6174
+w->name=MONOIN, w->id=0
+snd_soc_read. codecName=wm9713-codec, readsReg=0x0, ret=0x6174
+w->name=LINER, w->id=0
+snd_soc_read. codecName=wm9713-codec, readsReg=0x0, ret=0x6174
+w->name=LINEL, w->id=0
+snd_soc_read. codecName=wm9713-codec, readsReg=0x0, ret=0x6174
+w->name=OUT4, w->id=1
+snd_soc_read. codecName=wm9713-codec, readsReg=0x0, ret=0x6174
+w->name=OUT3, w->id=1
+snd_soc_read. codecName=wm9713-codec, readsReg=0x0, ret=0x6174
+w->name=SPKR, w->id=1
+snd_soc_read. codecName=wm9713-codec, readsReg=0x0, ret=0x6174
+w->name=SPKL, w->id=1
+snd_soc_read. codecName=wm9713-codec, readsReg=0x0, ret=0x6174
+w->name=HPR, w->id=1
+snd_soc_read. codecName=wm9713-codec, readsReg=0x0, ret=0x6174
+w->name=HPL, w->id=1
+snd_soc_read. codecName=wm9713-codec, readsReg=0x0, ret=0x6174
+w->name=MONO, w->id=1
+snd_soc_read. codecName=wm9713-codec, readsReg=0x0, ret=0x6174
+w->name=Mic Bias, w->id=11
+snd_soc_read. codecName=wm9713-codec, readsReg=0x3E, ret=0xFFFF
+w->name=Mic B Pre Amp, w->id=7
+snd_soc_read. codecName=wm9713-codec, readsReg=0x3E, ret=0xFFFF
+w->name=Mic A Pre Amp, w->id=7
+snd_soc_read. codecName=wm9713-codec, readsReg=0x3E, ret=0xFFFF
+w->name=Mic B PGA, w->id=7
+snd_soc_read. codecName=wm9713-codec, readsReg=0x3E, ret=0xFFFF
+w->name=Mic A PGA, w->id=7
+snd_soc_read. codecName=wm9713-codec, readsReg=0x3E, ret=0xFFFF
+w->name=Mono In, w->id=7
+snd_soc_read. codecName=wm9713-codec, readsReg=0x3E, ret=0xFFFF
+w->name=Right Line In, w->id=7
+snd_soc_read. codecName=wm9713-codec, readsReg=0x3E, ret=0xFFFF
+w->name=Left Line In, w->id=7
+snd_soc_read. codecName=wm9713-codec, readsReg=0x3E, ret=0xFFFF
+w->name=Mono Out, w->id=7
+snd_soc_read. codecName=wm9713-codec, readsReg=0x3E, ret=0xFFFF
+w->name=Out 4, w->id=7
+snd_soc_read. codecName=wm9713-codec, readsReg=0x3E, ret=0xFFFF
+w->name=Out 3, w->id=7
+snd_soc_read. codecName=wm9713-codec, readsReg=0x3E, ret=0xFFFF
+w->name=Right Speaker, w->id=7
+snd_soc_read. codecName=wm9713-codec, readsReg=0x3E, ret=0xFFFF
+w->name=Left Speaker, w->id=7
+snd_soc_read. codecName=wm9713-codec, readsReg=0x3E, ret=0xFFFF
+w->name=Right Headphone, w->id=7
+snd_soc_read. codecName=wm9713-codec, readsReg=0x3E, ret=0xFFFF
+w->name=Left Headphone, w->id=7
+snd_soc_read. codecName=wm9713-codec, readsReg=0x3E, ret=0xFFFF
+w->name=Right Voice ADC, w->id=9
+w->name=Left Voice ADC, w->id=9
+w->name=Right HiFi ADC, w->id=9
+w->name=Left HiFi ADC, w->id=9
+w->name=Right ADC, w->id=7
+snd_soc_read. codecName=wm9713-codec, readsReg=0x3C, ret=0x3AFF
+w->name=Left ADC, w->id=7
+snd_soc_read. codecName=wm9713-codec, readsReg=0x3C, ret=0x3AFF
+w->name=Aux DAC, w->id=10
+snd_soc_read. codecName=wm9713-codec, readsReg=0x3C, ret=0x3AFF
+w->name=Voice DAC, w->id=10
+snd_soc_read. codecName=wm9713-codec, readsReg=0x3C, ret=0x3AFF
+w->name=Capture Mixer, w->id=5
+Enter dapm_new_mixer
+w->name=Line Mixer, w->id=5
+Enter dapm_new_mixer
+w->name=HP Mixer, w->id=5
+Enter dapm_new_mixer
+w->name=AC97 Mixer, w->id=5
+Enter dapm_new_mixer
+w->name=Right DAC, w->id=10
+snd_soc_read. codecName=wm9713-codec, readsReg=0x3C, ret=0x3AFF
+w->name=Left DAC, w->id=10
+snd_soc_read. codecName=wm9713-codec, readsReg=0x3C, ret=0x3AFF
+w->name=Speaker Mixer, w->id=5
+Enter dapm_new_mixer
+usb 1-2: new full speed USB device number 2 using s3c2410-ohci
+dapm_new_mixer path->long_name=Speaker Mixer Beep Playback Switch
+Enter snd_soc_cnew
+dapm_new_mixer path->long_name=Speaker Mixer Voice Playback Switch
+Enter snd_soc_cnew
+dapm_new_mixer path->long_name=Speaker Mixer Aux Playback Switch
+Enter snd_soc_cnew
+dapm_new_mixer path->long_name=Speaker Mixer PCM Playback Switch
+Enter snd_soc_cnew
+dapm_new_mixer path->long_name=Speaker Mixer MonoIn Playback Switch
+Enter snd_soc_cnew
+dapm_new_mixer path->long_name=Speaker Mixer Bypass Playback Switch
+Enter snd_soc_cnew
+snd_soc_read. codecName=wm9713-codec, readsReg=0x3C, ret=0x3AFF
+w->name=Mono Mixer, w->id=5
+Enter dapm_new_mixer
+dapm_new_mixer path->long_name=Mono Mixer Beep Playback Switch
+Enter snd_soc_cnew
+dapm_new_mixer path->long_name=Mono Mixer Voice Playback Switch
+Enter snd_soc_cnew
+dapm_new_mixer path->long_name=Mono Mixer Aux Playback Switch
+Enter snd_soc_cnew
+dapm_new_mixer path->long_name=Mono Mixer PCM Playback Switch
+Enter snd_soc_cnew
+dapm_new_mixer path->long_name=Mono Mixer Bypass Playback Switch
+Enter snd_soc_cnew
+dapm_new_mixer path->long_name=Mono Mixer Mic 1 Sidetone Switch
+Enter snd_soc_cnew
+dapm_new_mixer path->long_name=Mono Mixer Mic 2 Sidetone Switch
+Enter snd_soc_cnew
+snd_soc_read. codecName=wm9713-codec, readsReg=0x3C, ret=0x3AFF
+w->name=Right HP Mixer, w->id=5
+Enter dapm_new_mixer
+dapm_new_mixer path->long_name=Right HP Mixer Beep Playback Switch
+Enter snd_soc_cnew
+dapm_new_mixer path->long_name=Right HP Mixer Voice Playback Switch
+Enter snd_soc_cnew
+dapm_new_mixer path->long_name=Right HP Mixer Aux Playback Switch
+Enter snd_soc_cnew
+dapm_new_mixer path->long_name=Right HP Mixer PCM Playback Switch
+Enter snd_soc_cnew
+dapm_new_mixer path->long_name=Right HP Mixer MonoIn Playback Switch
+Enter snd_soc_cnew
+dapm_new_mixer path->long_name=Right HP Mixer Bypass Playback Switch
+Enter snd_soc_cnew
+snd_soc_read. codecName=wm9713-codec, readsReg=0x3C, ret=0x3AFF
+w->name=Left HP Mixer, w->id=5
+Enter dapm_new_mixer
+dapm_new_mixer path->long_name=Left HP Mixer Beep Playback Switch
+Enter snd_soc_cnew
+dapm_new_mixer path->long_name=Left HP Mixer Voice Playback Switch
+Enter snd_soc_cnew
+dapm_new_mixer path->long_name=Left HP Mixer Aux Playback Switch
+Enter snd_soc_cnew
+dapm_new_mixer path->long_name=Left HP Mixer PCM Playback Switch
+Enter snd_soc_cnew
+dapm_new_mixer path->long_name=Left HP Mixer MonoIn Playback Switch
+Enter snd_soc_cnew
+dapm_new_mixer path->long_name=Left HP Mixer Bypass Playback Switch
+Enter snd_soc_cnew
+snd_soc_read. codecName=wm9713-codec, readsReg=0x3C, ret=0x3AFF
+w->name=Mic B Source, w->id=2
+Enter dapm_new_mux
+Enter snd_soc_cnew
+w->name=Mic A Source, w->id=2
+Enter dapm_new_mux
+Enter snd_soc_cnew
+w->name=Right Capture Source, w->id=2
+Enter dapm_new_mux
+Enter snd_soc_cnew
+w->name=Left Capture Source, w->id=2
+Enter dapm_new_mux
+Enter snd_soc_cnew
+w->name=DAC Inv Mux 2, w->id=2
+Enter dapm_new_mux
+Enter snd_soc_cnew
+w->name=DAC Inv Mux 1, w->id=2
+Enter dapm_new_mux
+Enter snd_soc_cnew
+w->name=Out 4 Mux, w->id=2
+Enter dapm_new_mux
+Enter snd_soc_cnew
+w->name=Out 3 Mux, w->id=2
+Enter dapm_new_mux
+Enter snd_soc_cnew
+w->name=Right Headphone Out Mux, w->id=2
+Enter dapm_new_mux
+Enter snd_soc_cnew
+w->name=Left Headphone Out Mux, w->id=2
+Enter dapm_new_mux
+Enter snd_soc_cnew
+w->name=Right Speaker Out Mux, w->id=2
+Enter dapm_new_mux
+Enter snd_soc_cnew
+w->name=Left Speaker Out Mux, w->id=2
+Enter dapm_new_mux
+Enter snd_soc_cnew
+w->name=Mono Out Mux, w->id=2
+Enter dapm_new_mux
+Enter snd_soc_cnew
+w->name=Capture Mono Mux, w->id=2
+Enter dapm_new_mux
+Enter snd_soc_cnew
+w->name=Sidetone Mux, w->id=2
+Enter dapm_new_mux
+Enter snd_soc_cnew
+w->name=Capture Headphone Mux, w->id=2
+Enter dapm_new_mux
+Enter snd_soc_cnew
+Enter dapm_power_widgets +++++++++++++++++++++++++
+dapm_power_widgets. Power down widgets first
+Enter dapm_widget_update
+dapm_power_widgets. Now power up ++++++++++++
+Enter dapm_power_widgets +++++++++++++++++++++++++
+dapm_power_widgets. Power down widgets first
+Enter dapm_widget_update
+dapm_power_widgets. Now power up ++++++++++++
+soc_probe_dai_link. TODO: create the pcm - soc_new_pcm()+++++++++++++++++
+Enter soc_new_pcm. stream_name="AC97 PCM", codec_dai->name=wm9713-hifi ++++++++++++++++++++++
+soc_new_pcm new_name="AC97 PCM wm9713-hifi-0"
+soc_new_pcm. registered pcm_num=#0, new_name="AC97 PCM wm9713-hifi-0"
+Enter snd_pcm_new id="AC97 PCM wm9713-hifi-0" +++++++
+usb 1-2: device descriptor read/64, error -62
+Enter snd_pcm_new_stream. pcm->name=
+Enter snd_info_register. create proc file. name=pcm0p
+Enter snd_info_register. create proc file. name=info
+Enter snd_info_register. create proc file. name=xrun_debug
+snd_pcm_new_stream. substream->name="subdevice #0"
+Enter snd_pcm_substream_proc_init. name=sub0
+Enter snd_info_register. create proc file. name=sub0
+Enter snd_info_register. create proc file. name=info
+Enter snd_info_register. create proc file. name=hw_params
+Enter snd_info_register. create proc file. name=sw_params
+Enter snd_info_register. create proc file. name=status
+Enter snd_pcm_new_stream. pcm->name=
+Enter snd_info_register. create proc file. name=pcm0c
+Enter snd_info_register. create proc file. name=info
+Enter snd_info_register. create proc file. name=xrun_debug
+snd_pcm_new_stream. substream->name="subdevice #0"
+Enter snd_pcm_substream_proc_init. name=sub0
+Enter snd_info_register. create proc file. name=sub0
+Enter snd_info_register. create proc file. name=info
+Enter snd_info_register. create proc file. name=hw_params
+Enter snd_info_register. create proc file. name=sw_params
+Enter snd_info_register. create proc file. name=status
+soc_new_pcm. platform->driver->pcm_new=>c03ba3a0 (dma_new())
+Entered dma_new. card->id=, dai->name=wm9713-hifi, pcm->name=
+Entered preallocate_dma_buffer
+Entered preallocate_dma_buffer
+soc_new_pcm. asoc: wm9713-hifi <-> samsung-ac97 mapping ok ++++++++++++++++
+soc_probe_dai_link. add platform data for AC97 devices  +++++++++++++++++
+Enter snd_card_register
+Enter snd_info_register. create proc file. name=oss
+Enter snd_info_register. create proc file. name=oss
+snd_ctl_dev_register. name=controlC0
+Enter init_info_for_card
+Enter snd_info_register. create proc file. name=id
+Enter snd_info_register. create proc file. name=oss_mixer
+soc_ac97_dev_register. name=0-0:wm9713-codec
+soc-audio soc-audio: Registered card 'smdk6410-wm9713'
+Enter sound/soc/samsung/smdk_wm9713.c smdk6410_init() end++++++++++++++++++++++
+Enter alsa_sound_last_init. ALSA device list:
+  idx=#0: snd_cards[0]->longname=smdk6410-wm9713
+TCP cubic registered
+NET: Registered protocol family 17
+can: controller area network core (rev 20090105 abi 8)
+NET: Registered protocol family 29
+can: raw protocol (rev 20090105)
+can: broadcast manager protocol (rev 20090105 t)
+lib80211: common routines for IEEE802.11 drivers
+Registering the dns_resolver key type
+s3c-rtc s3c64xx-rtc: setting system clock to 2000-01-01 00:00:03 UTC (946684803)
+yaffs: dev is 32505858 name is "mtdblock2" rw
+yaffs: passed flags ""
+usb 1-2: device descriptor read/64, error -62
+usb 1-2: new full speed USB device number 3 using s3c2410-ohci
+usb 1-2: device descriptor read/64, error -62
+usb 1-2: device descriptor read/64, error -62
+usb 1-2: new full speed USB device number 4 using s3c2410-ohci
+usb 1-2: device not accepting address 4, error -62
+usb 1-2: new full speed USB device number 5 using s3c2410-ohci
+usb 1-2: device not accepting address 5, error -62
+hub 1-0:1.0: unable to enumerate USB device on port 2
+VFS: Mounted root (yaffs2 filesystem) on device 31:2.
+devtmpfs: mounted
+Freeing init memory: 176K
+No state is present for card smdk6410wm9713
+Unknown hardware: "" "" "" "" ""
+Hardware is initialized using a guess method
+snd_soc_read. codecName=wm9713-codec, readsReg=0x4, ret=0x8080
+snd_soc_read. codecName=wm9713-codec, readsReg=0x4, ret=0x8E8E
+snd_soc_read. codecName=wm9713-codec, readsReg=0x2, ret=0x8080
+snd_soc_read. codecName=wm9713-codec, readsReg=0x2, ret=0x8E8E
+snd_soc_read. codecName=wm9713-codec, readsReg=0xC, ret=0xE808
+snd_soc_read. codecName=wm9713-codec, readsReg=0x8, ret=0xC880
+snd_soc_read. codecName=wm9713-codec, readsReg=0x8, ret=0xC88E
+snd_soc_read. codecName=wm9713-codec, readsReg=0x12, ret=0x0
+snd_soc_read. codecName=wm9713-codec, readsReg=0x12, ret=0x1818
+No state is present for card smdk6410wm9713
+Try to bring eth0 interface up......ifconfig: SIOCGIFFLAGS: No such device
+ifconfig: SIOCSIFHWADDR: No such device
+ifconfig: SIOCSIFADDR: No such device
+route: SIOCADDRT: Network is unreachable
+Done
+                                  
+Starting Qtopia2, please waiting...
+
+Please press Enter to activate this console. touch...
+Enter dapm_power_widgets +++++++++++++++++++++++++
+dapm_power_widgets. Power down widgets first
+Enter dapm_widget_update
+dapm_power_widgets. Now power up ++++++++++++

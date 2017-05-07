@@ -369,7 +369,7 @@ static __devinit int s3c_ac97_probe(struct platform_device *pdev)
 	struct s3c_audio_pdata *ac97_pdata;
 	int ret;
 
-	pr_err("Enter %s ++++?????????\n", __func__);
+	pr_info("Enter sound/soc/samsung/ac97.c %s ++++?????????\n", __func__);
 
 	ac97_pdata = pdev->dev.platform_data;
 	if (!ac97_pdata || !ac97_pdata->cfg_gpio) {
@@ -377,6 +377,7 @@ static __devinit int s3c_ac97_probe(struct platform_device *pdev)
 		return -EINVAL;
 	}
 
+	pr_info("%s Now todo: platform_get_resource() ++++++++", __func__);
 	/* Check for availability of necessary resource */
 	dmatx_res = platform_get_resource(pdev, IORESOURCE_DMA, 0);
 	if (!dmatx_res) {
@@ -408,8 +409,7 @@ static __devinit int s3c_ac97_probe(struct platform_device *pdev)
 		return -ENXIO;
 	}
 
-	if (!request_mem_region(mem_res->start,
-				resource_size(mem_res), "ac97")) {
+	if (!request_mem_region(mem_res->start, resource_size(mem_res), "ac97")) {
 		dev_err(&pdev->dev, "Unable to request register region\n");
 		return -EBUSY;
 	}
@@ -445,15 +445,13 @@ static __devinit int s3c_ac97_probe(struct platform_device *pdev)
 		goto err3;
 	}
 
-	ret = request_irq(irq_res->start, s3c_ac97_irq,
-					IRQF_DISABLED, "AC97", NULL);
+	ret = request_irq(irq_res->start, s3c_ac97_irq, IRQF_DISABLED, "AC97", NULL);
 	if (ret < 0) {
 		dev_err(&pdev->dev, "ac97: interrupt request failed.\n");
 		goto err4;
 	}
 
-	ret = snd_soc_register_dais(&pdev->dev, s3c_ac97_dai,
-			ARRAY_SIZE(s3c_ac97_dai));
+	ret = snd_soc_register_dais(&pdev->dev, s3c_ac97_dai, ARRAY_SIZE(s3c_ac97_dai));
 	if (ret)
 		goto err5;
 

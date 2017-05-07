@@ -600,6 +600,8 @@ int snd_info_card_create(struct snd_card *card)
 	char str[8];
 	struct snd_info_entry *entry;
 
+	pr_info("Enter %s\n", __func__);
+
 	if (snd_BUG_ON(!card))
 		return -ENXIO;
 

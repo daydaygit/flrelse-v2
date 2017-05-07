@@ -60,3 +60,8 @@
  git pull
  git push
 
+
+5. daily operation
+  cd flrelse-v2/linux-3.0.1
+  make clean
+  make / make all

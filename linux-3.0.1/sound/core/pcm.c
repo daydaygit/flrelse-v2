@@ -549,6 +549,7 @@ static int snd_pcm_substream_proc_init(struct snd_pcm_substream *substream)
 	card = substream->pcm->card;
 
 	sprintf(name, "sub%i", substream->number);
+	pr_info("Enter %s. name=%s\n", __func__, name);
 	if ((entry = snd_info_create_card_entry(card, name, substream->pstr->proc_root)) == NULL)
 		return -ENOMEM;
 	entry->mode = S_IFDIR | S_IRUGO | S_IXUGO;
@@ -559,8 +560,7 @@ static int snd_pcm_substream_proc_init(struct snd_pcm_substream *substream)
 	substream->proc_root = entry;
 
 	if ((entry = snd_info_create_card_entry(card, "info", substream->proc_root)) != NULL) {
-		snd_info_set_text_ops(entry, substream,
-				      snd_pcm_substream_proc_info_read);
+		snd_info_set_text_ops(entry, substream, snd_pcm_substream_proc_info_read);
 		if (snd_info_register(entry) < 0) {
 			snd_info_free_entry(entry);
 			entry = NULL;
@@ -569,8 +569,7 @@ static int snd_pcm_substream_proc_init(struct snd_pcm_substream *substream)
 	substream->proc_info_entry = entry;
 
 	if ((entry = snd_info_create_card_entry(card, "hw_params", substream->proc_root)) != NULL) {
-		snd_info_set_text_ops(entry, substream,
-				      snd_pcm_substream_proc_hw_params_read);
+		snd_info_set_text_ops(entry, substream, snd_pcm_substream_proc_hw_params_read);
 		if (snd_info_register(entry) < 0) {
 			snd_info_free_entry(entry);
 			entry = NULL;
@@ -579,8 +578,7 @@ static int snd_pcm_substream_proc_init(struct snd_pcm_substream *substream)
 	substream->proc_hw_params_entry = entry;
 
 	if ((entry = snd_info_create_card_entry(card, "sw_params", substream->proc_root)) != NULL) {
-		snd_info_set_text_ops(entry, substream,
-				      snd_pcm_substream_proc_sw_params_read);
+		snd_info_set_text_ops(entry, substream, snd_pcm_substream_proc_sw_params_read);
 		if (snd_info_register(entry) < 0) {
 			snd_info_free_entry(entry);
 			entry = NULL;
@@ -589,8 +587,7 @@ static int snd_pcm_substream_proc_init(struct snd_pcm_substream *substream)
 	substream->proc_sw_params_entry = entry;
 
 	if ((entry = snd_info_create_card_entry(card, "status", substream->proc_root)) != NULL) {
-		snd_info_set_text_ops(entry, substream,
-				      snd_pcm_substream_proc_status_read);
+		snd_info_set_text_ops(entry, substream, snd_pcm_substream_proc_status_read);
 		if (snd_info_register(entry) < 0) {
 			snd_info_free_entry(entry);
 			entry = NULL;
@@ -641,6 +638,8 @@ int snd_pcm_new_stream(struct snd_pcm *pcm, int stream, int substream_count)
 	struct snd_pcm_str *pstr = &pcm->streams[stream];
 	struct snd_pcm_substream *substream, *prev;
 
+	pr_info("Enter %s. pcm->name=%s\n", __func__, pcm->name);
+
 #if defined(CONFIG_SND_PCM_OSS) || defined(CONFIG_SND_PCM_OSS_MODULE)
 	mutex_init(&pstr->oss.setup_mutex);
 #endif
@@ -666,6 +665,7 @@ int snd_pcm_new_stream(struct snd_pcm *pcm, int stream, int substream_count)
 		substream->number = idx;
 		substream->stream = stream;
 		sprintf(substream->name, "subdevice #%i", idx);
+		pr_info("%s. substream->name=\"%s\"\n", __func__, substream->name);
 		substream->buffer_bytes_max = UINT_MAX;
 		if (prev == NULL)
 			pstr->substream = substream;
@@ -724,7 +724,7 @@ int snd_pcm_new(struct snd_card *card,
 		.dev_disconnect = snd_pcm_dev_disconnect,
 	};
 
-	printk(KERN_INFO "%s id=%s +++++++\n", __func__, id);
+	printk(KERN_INFO "Enter %s id=\"%s\" +++++++\n", __func__, id);
 
 	if (snd_BUG_ON(!card))
 		return -ENXIO;

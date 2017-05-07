@@ -53,43 +53,43 @@ static const u16 wm9713_reg[] = {
 #define HPR_MIXER	0x82
 #define MICB_MUX	0x82
 
-static const char *wm9713_mic_mixer[]   = {"Stereo", "Mic 1", "Mic 2", "Mute"};
-static const char *wm9713_rec_mux[]     = {"Stereo", "Left", "Right", "Mute"};
-static const char *wm9713_rec_src[]     = {"Mic 1", "Mic 2", "Line", "Mono In", "Headphone", "Speaker", "Mono Out", "Zh"};
-static const char *wm9713_rec_gain[]    = {"+1.5dB Steps", "+0.75dB Steps"};
-static const char *wm9713_alc_select[]  = {"None", "Left", "Right", "Stereo"};
-static const char *wm9713_mono_pga[]    = {"Vmid", "Zh", "Mono", "Inv", "Mono Vmid", "Inv Vmid"};
-static const char *wm9713_spk_pga[]     = {"Vmid", "Zh", "Headphone", "Speaker", "Inv", "Headphone Vmid", "Speaker Vmid", "Inv Vmid"};
-static const char *wm9713_hp_pga[]      = {"Vmid", "Zh", "Headphone", "Headphone Vmid"};
-static const char *wm9713_out3_pga[]    = {"Vmid", "Zh", "Inv 1", "Inv 1 Vmid"};
-static const char *wm9713_out4_pga[]    = {"Vmid", "Zh", "Inv 2", "Inv 2 Vmid"};
-static const char *wm9713_dac_inv[]     = {"Off", "Mono", "Speaker", "Left Headphone", "Right Headphone", "Headphone Mono", "NC", "Vmid"};
-static const char *wm9713_bass[]        = {"Linear Control", "Adaptive Boost"};
-static const char *wm9713_ng_type[]     = {"Constant Gain", "Mute"};
+static const char *wm9713_mic_mixer[]   = {"Stereo", "Mic 1",  "Mic 2", "Mute"};
+static const char *wm9713_rec_mux[]     = {"Stereo", "Left",   "Right", "Mute"};
+static const char *wm9713_rec_src[]     = {"Mic 1",  "Mic 2",  "Line",  "Mono In", "Headphone", "Speaker", "Mono Out", "Zh"};
+static const char *wm9713_rec_gain[]    = {"+1.5dB Steps",     "+0.75dB Steps"};
+static const char *wm9713_alc_select[]  = {"None",  "Left",    "Right", "Stereo"};
+static const char *wm9713_mono_pga[]    = {"Vmid",  "Zh",      "Mono",  "Inv", "Mono Vmid", "Inv Vmid"};
+static const char *wm9713_spk_pga[]     = {"Vmid",  "Zh",      "Headphone", "Speaker", "Inv", "Headphone Vmid", "Speaker Vmid", "Inv Vmid"};
+static const char *wm9713_hp_pga[]      = {"Vmid",  "Zh",      "Headphone", "Headphone Vmid"};
+static const char *wm9713_out3_pga[]    = {"Vmid",  "Zh",      "Inv 1", "Inv 1 Vmid"};
+static const char *wm9713_out4_pga[]    = {"Vmid",  "Zh",      "Inv 2", "Inv 2 Vmid"};
+static const char *wm9713_dac_inv[]     = {"Off",   "Mono",    "Speaker", "Left Headphone", "Right Headphone", "Headphone Mono", "NC", "Vmid"};
+static const char *wm9713_bass[]        = {"Linear Control",   "Adaptive Boost"};
+static const char *wm9713_ng_type[]     = {"Constant Gain",    "Mute"};
 static const char *wm9713_mic_select[]  = {"Mic 1", "Mic 2 A", "Mic 2 B"};
-static const char *wm9713_micb_select[] = {"MPB", "MPA"};
+static const char *wm9713_micb_select[] = {"MPB",   "MPA"};
 
 static const struct soc_enum wm9713_enum[] = {
-	SOC_ENUM_SINGLE(AC97_LINE, 3, 4, wm9713_mic_mixer), /* record mic mixer 0 */
-	SOC_ENUM_SINGLE(AC97_VIDEO, 14, 4, wm9713_rec_mux), /* record mux hp 1 */
-	SOC_ENUM_SINGLE(AC97_VIDEO, 9, 4, wm9713_rec_mux),  /* record mux mono 2 */
-	SOC_ENUM_SINGLE(AC97_VIDEO, 3, 8, wm9713_rec_src),  /* record mux left 3 */
-	SOC_ENUM_SINGLE(AC97_VIDEO, 0, 8, wm9713_rec_src),  /* record mux right 4*/
-	SOC_ENUM_DOUBLE(AC97_CD, 14, 6, 2, wm9713_rec_gain), /* record step size 5 */
-	SOC_ENUM_SINGLE(AC97_PCI_SVID, 14, 4, wm9713_alc_select), /* alc source select 6*/
-	SOC_ENUM_SINGLE(AC97_REC_GAIN, 14, 4, wm9713_mono_pga), /* mono input select 7 */
-	SOC_ENUM_SINGLE(AC97_REC_GAIN, 11, 8, wm9713_spk_pga), /* speaker left input select 8 */
-	SOC_ENUM_SINGLE(AC97_REC_GAIN, 8, 8, wm9713_spk_pga), /* speaker right input select 9 */
-	SOC_ENUM_SINGLE(AC97_REC_GAIN, 6, 3, wm9713_hp_pga), /* headphone left input 10 */
-	SOC_ENUM_SINGLE(AC97_REC_GAIN, 4, 3, wm9713_hp_pga), /* headphone right input 11 */
-	SOC_ENUM_SINGLE(AC97_REC_GAIN, 2, 4, wm9713_out3_pga), /* out 3 source 12 */
-	SOC_ENUM_SINGLE(AC97_REC_GAIN, 0, 4, wm9713_out4_pga), /* out 4 source 13 */
-	SOC_ENUM_SINGLE(AC97_REC_GAIN_MIC, 13, 8, wm9713_dac_inv), /* dac invert 1 14 */
-	SOC_ENUM_SINGLE(AC97_REC_GAIN_MIC, 10, 8, wm9713_dac_inv), /* dac invert 2 15 */
+	SOC_ENUM_SINGLE(AC97_LINE,             3, 4, wm9713_mic_mixer), /* record mic mixer 0 */
+	SOC_ENUM_SINGLE(AC97_VIDEO,           14, 4, wm9713_rec_mux), /* record mux hp 1 */
+	SOC_ENUM_SINGLE(AC97_VIDEO,            9, 4, wm9713_rec_mux),  /* record mux mono 2 */
+	SOC_ENUM_SINGLE(AC97_VIDEO,            3, 8, wm9713_rec_src),  /* record mux left 3 */
+	SOC_ENUM_SINGLE(AC97_VIDEO,            0, 8, wm9713_rec_src),  /* record mux right 4*/
+	SOC_ENUM_DOUBLE(AC97_CD,              14, 6, 2, wm9713_rec_gain), /* record step size 5 */
+	SOC_ENUM_SINGLE(AC97_PCI_SVID,        14, 4, wm9713_alc_select), /* alc source select 6*/
+	SOC_ENUM_SINGLE(AC97_REC_GAIN,        14, 4, wm9713_mono_pga), /* mono input select 7 */
+	SOC_ENUM_SINGLE(AC97_REC_GAIN,        11, 8, wm9713_spk_pga), /* speaker left input select 8 */
+	SOC_ENUM_SINGLE(AC97_REC_GAIN,         8, 8, wm9713_spk_pga), /* speaker right input select 9 */
+	SOC_ENUM_SINGLE(AC97_REC_GAIN,         6, 3, wm9713_hp_pga), /* headphone left input 10 */
+	SOC_ENUM_SINGLE(AC97_REC_GAIN,         4, 3, wm9713_hp_pga), /* headphone right input 11 */
+	SOC_ENUM_SINGLE(AC97_REC_GAIN,         2, 4, wm9713_out3_pga), /* out 3 source 12 */
+	SOC_ENUM_SINGLE(AC97_REC_GAIN,         0, 4, wm9713_out4_pga), /* out 4 source 13 */
+	SOC_ENUM_SINGLE(AC97_REC_GAIN_MIC,    13, 8, wm9713_dac_inv), /* dac invert 1 14 */
+	SOC_ENUM_SINGLE(AC97_REC_GAIN_MIC,    10, 8, wm9713_dac_inv), /* dac invert 2 15 */
 	SOC_ENUM_SINGLE(AC97_GENERAL_PURPOSE, 15, 2, wm9713_bass), /* bass control 16 */
-	SOC_ENUM_SINGLE(AC97_PCI_SVID, 5, 2, wm9713_ng_type), /* noise gate type 17 */
-	SOC_ENUM_SINGLE(AC97_3D_CONTROL, 12, 3, wm9713_mic_select), /* mic selection 18 */
-	SOC_ENUM_SINGLE(MICB_MUX, 0, 2, wm9713_micb_select), /* mic selection 19 */
+	SOC_ENUM_SINGLE(AC97_PCI_SVID,         5, 2, wm9713_ng_type), /* noise gate type 17 */
+	SOC_ENUM_SINGLE(AC97_3D_CONTROL,      12, 3, wm9713_mic_select), /* mic selection 18 */
+	SOC_ENUM_SINGLE(MICB_MUX,              0, 2, wm9713_micb_select), /* mic selection 19 */
 };
 
 static const DECLARE_TLV_DB_SCALE(out_tlv, -4650, 150, 0);
@@ -102,86 +102,86 @@ static unsigned int mic_tlv[] = {
 };
 
 static const struct snd_kcontrol_new wm9713_snd_ac97_controls[] = {
-	SOC_DOUBLE_TLV("Speaker Playback Volume", AC97_MASTER, 8, 0, 31, 1, out_tlv),
-	SOC_DOUBLE("Speaker Playback Switch", AC97_MASTER, 15, 7, 1, 1),
-	SOC_DOUBLE_TLV("Headphone Playback Volume", AC97_HEADPHONE, 8, 0, 31, 1, out_tlv),
-	SOC_DOUBLE("Headphone Playback Switch", AC97_HEADPHONE, 15, 7, 1, 1),
-	SOC_DOUBLE_TLV("Line In Volume", AC97_PC_BEEP, 8, 0, 31, 1, main_tlv),
-	SOC_DOUBLE_TLV("PCM Playback Volume", AC97_PHONE, 8, 0, 31, 1, main_tlv),
-	SOC_SINGLE_TLV("Mic 1 Volume", AC97_MIC, 8, 31, 1, main_tlv),
-	SOC_SINGLE_TLV("Mic 2 Volume", AC97_MIC, 0, 31, 1, main_tlv),
-	SOC_SINGLE_TLV("Mic 1 Preamp Volume", AC97_3D_CONTROL, 10, 3, 0, mic_tlv),
-	SOC_SINGLE_TLV("Mic 2 Preamp Volume", AC97_3D_CONTROL, 12, 3, 0, mic_tlv),
+	SOC_DOUBLE_TLV("Speaker Playback Volume",		AC97_MASTER,		8,   0,  31,         1,    out_tlv),
+	SOC_DOUBLE("Speaker Playback Switch", 			AC97_MASTER,		15,  7,   1,        1),
+	SOC_DOUBLE_TLV("Headphone Playback Volume",		AC97_HEADPHONE,		8,   0,  31,         1,    out_tlv),
+	SOC_DOUBLE("Headphone Playback Switch", 		AC97_HEADPHONE,		15,  7,   1,        1),
+	SOC_DOUBLE_TLV("Line In Volume",			AC97_PC_BEEP,		8,   0,  31,         1,    main_tlv),
+	SOC_DOUBLE_TLV("PCM Playback Volume",			AC97_PHONE,		8,   0,  31,         1,    main_tlv),
+	SOC_SINGLE_TLV("Mic 1 Volume",				AC97_MIC,		8,  31,   1,  main_tlv),
+	SOC_SINGLE_TLV("Mic 2 Volume",				AC97_MIC,		0,  31,   1,  main_tlv),
+	SOC_SINGLE_TLV("Mic 1 Preamp Volume",			AC97_3D_CONTROL,	10,  3,   0,  mic_tlv),
+	SOC_SINGLE_TLV("Mic 2 Preamp Volume",			AC97_3D_CONTROL,	12,  3,   0,  mic_tlv),
 
-	SOC_SINGLE("Mic Boost (+20dB) Switch", AC97_LINE, 5, 1, 0),
-	SOC_SINGLE("Mic Headphone Mixer Volume", AC97_LINE, 0, 7, 1),
+	SOC_SINGLE("Mic Boost (+20dB) Switch",			AC97_LINE,		5,   1,   0),
+	SOC_SINGLE("Mic Headphone Mixer Volume",		AC97_LINE,		0,   7,   1),
 
-	SOC_SINGLE("Capture Switch", AC97_CD, 15, 1, 1),
-	SOC_ENUM("Capture Volume Steps", wm9713_enum[5]),
-	SOC_DOUBLE("Capture Volume", AC97_CD, 8, 0, 31, 0),
-	SOC_SINGLE("Capture ZC Switch", AC97_CD, 7, 1, 0),
+	SOC_SINGLE("Capture Switch",				AC97_CD,		15,  1,   1),
+	SOC_ENUM("Capture Volume Steps",			wm9713_enum[5]),
+	SOC_DOUBLE("Capture Volume",				AC97_CD,		8,   0,   31,        0),
+	SOC_SINGLE("Capture ZC Switch",				AC97_CD,		7,   1,   0),
 
-	SOC_SINGLE_TLV("Capture to Headphone Volume", AC97_VIDEO, 11, 7, 1, misc_tlv),
-	SOC_SINGLE("Capture to Mono Boost (+20dB) Switch", AC97_VIDEO, 8, 1, 0),
-	SOC_SINGLE("Capture ADC Boost (+20dB) Switch", AC97_VIDEO, 6, 1, 0),
+	SOC_SINGLE_TLV("Capture to Headphone Volume",		AC97_VIDEO,		11,  7,   1,  misc_tlv),
+	SOC_SINGLE("Capture to Mono Boost (+20dB) Switch",	AC97_VIDEO,		8,   1,   0),
+	SOC_SINGLE("Capture ADC Boost (+20dB) Switch",		AC97_VIDEO,		6,   1,   0),
 
-	SOC_SINGLE("ALC Target Volume", AC97_CODEC_CLASS_REV, 12, 15, 0),
-	SOC_SINGLE("ALC Hold Time", AC97_CODEC_CLASS_REV, 8, 15, 0),
-	SOC_SINGLE("ALC Decay Time", AC97_CODEC_CLASS_REV, 4, 15, 0),
-	SOC_SINGLE("ALC Attack Time", AC97_CODEC_CLASS_REV, 0, 15, 0),
-	SOC_ENUM("ALC Function", wm9713_enum[6]),
-	SOC_SINGLE("ALC Max Volume", AC97_PCI_SVID, 11, 7, 0),
-	SOC_SINGLE("ALC ZC Timeout", AC97_PCI_SVID, 9, 3, 0),
-	SOC_SINGLE("ALC ZC Switch", AC97_PCI_SVID, 8, 1, 0),
-	SOC_SINGLE("ALC NG Switch", AC97_PCI_SVID, 7, 1, 0),
-	SOC_ENUM("ALC NG Type", wm9713_enum[17]),
-	SOC_SINGLE("ALC NG Threshold", AC97_PCI_SVID, 0, 31, 0),
+	SOC_SINGLE("ALC Target Volume",				AC97_CODEC_CLASS_REV,	12, 15,   0),
+	SOC_SINGLE("ALC Hold Time",				AC97_CODEC_CLASS_REV,	8,  15,   0),
+	SOC_SINGLE("ALC Decay Time",				AC97_CODEC_CLASS_REV,	4,  15,   0),
+	SOC_SINGLE("ALC Attack Time",				AC97_CODEC_CLASS_REV,	0,  15,   0),
+	SOC_ENUM("ALC Function",				wm9713_enum[6]),
+	SOC_SINGLE("ALC Max Volume",				AC97_PCI_SVID,		11,  7,   0),
+	SOC_SINGLE("ALC ZC Timeout",				AC97_PCI_SVID,		9,   3,   0),
+	SOC_SINGLE("ALC ZC Switch",				AC97_PCI_SVID,		8,   1,   0),
+	SOC_SINGLE("ALC NG Switch",				AC97_PCI_SVID,		7,   1,   0),
+	SOC_ENUM("ALC NG Type",					wm9713_enum[17]),
+	SOC_SINGLE("ALC NG Threshold",				AC97_PCI_SVID,		0,  31,   0),
 
-	SOC_DOUBLE("Speaker Playback ZC Switch", AC97_MASTER, 14, 6, 1, 0),
-	SOC_DOUBLE("Headphone Playback ZC Switch", AC97_HEADPHONE, 14, 6, 1, 0),
+	SOC_DOUBLE("Speaker Playback ZC Switch", 		AC97_MASTER,		14,  6,    1,        0),
+	SOC_DOUBLE("Headphone Playback ZC Switch",		AC97_HEADPHONE,		14,  6,    1,        0),
 
-	SOC_SINGLE("Out4 Playback Switch", AC97_MASTER_MONO, 15, 1, 1),
-	SOC_SINGLE("Out4 Playback ZC Switch", AC97_MASTER_MONO, 14, 1, 0),
-	SOC_SINGLE_TLV("Out4 Playback Volume", AC97_MASTER_MONO, 8, 31, 1, out_tlv),
+	SOC_SINGLE("Out4 Playback Switch",			AC97_MASTER_MONO,	15,  1,    1),
+	SOC_SINGLE("Out4 Playback ZC Switch",			AC97_MASTER_MONO,	14,  1,    0),
+	SOC_SINGLE_TLV("Out4 Playback Volume",			AC97_MASTER_MONO,	8,  31,    1,  out_tlv),
 
-	SOC_SINGLE("Out3 Playback Switch", AC97_MASTER_MONO, 7, 1, 1),
-	SOC_SINGLE("Out3 Playback ZC Switch", AC97_MASTER_MONO, 6, 1, 0),
-	SOC_SINGLE_TLV("Out3 Playback Volume", AC97_MASTER_MONO, 0, 31, 1, out_tlv),
+	SOC_SINGLE("Out3 Playback Switch",			AC97_MASTER_MONO,	7,   1,    1),
+	SOC_SINGLE("Out3 Playback ZC Switch",			AC97_MASTER_MONO,	6,   1,    0),
+	SOC_SINGLE_TLV("Out3 Playback Volume",			AC97_MASTER_MONO,	0,  31,    1,  out_tlv),
 
-	SOC_SINGLE_TLV("Mono Capture Volume", AC97_MASTER_TONE, 8, 31, 1, main_tlv),
-	SOC_SINGLE("Mono Playback Switch", AC97_MASTER_TONE, 7, 1, 1),
-	SOC_SINGLE("Mono Playback ZC Switch", AC97_MASTER_TONE, 6, 1, 0),
-	SOC_SINGLE_TLV("Mono Playback Volume", AC97_MASTER_TONE, 0, 31, 1, out_tlv),
+	SOC_SINGLE_TLV("Mono Capture Volume",			AC97_MASTER_TONE,	8,  31,    1,  main_tlv),
+	SOC_SINGLE("Mono Playback Switch",			AC97_MASTER_TONE,	7,   1,    1),
+	SOC_SINGLE("Mono Playback ZC Switch",			AC97_MASTER_TONE,	6,   1,    0),
+	SOC_SINGLE_TLV("Mono Playback Volume",			AC97_MASTER_TONE,	0,  31,    1,  out_tlv),
 
-	SOC_SINGLE_TLV("Headphone Mixer Beep Playback Volume", AC97_AUX, 12, 7, 1, misc_tlv),
-	SOC_SINGLE_TLV("Speaker Mixer Beep Playback Volume", AC97_AUX, 8, 7, 1, misc_tlv),
-	SOC_SINGLE_TLV("Mono Mixer Beep Playback Volume", AC97_AUX, 4, 7, 1, misc_tlv),
+	SOC_SINGLE_TLV("Headphone Mixer Beep Playback Volume",	AC97_AUX,		12,  7,    1,  misc_tlv),
+	SOC_SINGLE_TLV("Speaker Mixer Beep Playback Volume",	AC97_AUX,		8,   7,    1,  misc_tlv),
+	SOC_SINGLE_TLV("Mono Mixer Beep Playback Volume",	AC97_AUX,		4,   7,    1,  misc_tlv),
 
-	SOC_SINGLE_TLV("Voice Playback Headphone Volume", AC97_PCM, 12, 7, 1, misc_tlv),
-	SOC_SINGLE("Voice Playback Master Volume", AC97_PCM, 8, 7, 1),
-	SOC_SINGLE("Voice Playback Mono Volume", AC97_PCM, 4, 7, 1),
+	SOC_SINGLE_TLV("Voice Playback Headphone Volume",	AC97_PCM,		12,  7,    1,  misc_tlv),
+	SOC_SINGLE("Voice Playback Master Volume",		AC97_PCM,		8,   7,    1),
+	SOC_SINGLE("Voice Playback Mono Volume",		AC97_PCM,		4,   7,    1),
 
-	SOC_SINGLE_TLV("Headphone Mixer Aux Playback Volume", AC97_REC_SEL, 12, 7, 1, misc_tlv),
+	SOC_SINGLE_TLV("Headphone Mixer Aux Playback Volume",	AC97_REC_SEL,		12,  7,    1,  misc_tlv),
 
-	SOC_SINGLE_TLV("Speaker Mixer Voice Playback Volume", AC97_PCM, 8, 7, 1, misc_tlv),
-	SOC_SINGLE_TLV("Speaker Mixer Aux Playback Volume", AC97_REC_SEL, 8, 7, 1, misc_tlv),
+	SOC_SINGLE_TLV("Speaker Mixer Voice Playback Volume",	AC97_PCM,		8,   7,    1,  misc_tlv),
+	SOC_SINGLE_TLV("Speaker Mixer Aux Playback Volume",	AC97_REC_SEL,		8,   7,    1,  misc_tlv),
 
-	SOC_SINGLE_TLV("Mono Mixer Voice Playback Volume", AC97_PCM, 4, 7, 1, misc_tlv),
-	SOC_SINGLE_TLV("Mono Mixer Aux Playback Volume", AC97_REC_SEL, 4, 7, 1, misc_tlv),
+	SOC_SINGLE_TLV("Mono Mixer Voice Playback Volume",	AC97_PCM,		4,   7,    1,  misc_tlv),
+	SOC_SINGLE_TLV("Mono Mixer Aux Playback Volume",	AC97_REC_SEL,		4,   7,    1,  misc_tlv),
 
-	SOC_SINGLE("Aux Playback Headphone Volume", AC97_REC_SEL, 12, 7, 1),
-	SOC_SINGLE("Aux Playback Master Volume", AC97_REC_SEL, 8, 7, 1),
+	SOC_SINGLE("Aux Playback Headphone Volume",		AC97_REC_SEL,		12,  7,    1),
+	SOC_SINGLE("Aux Playback Master Volume",		AC97_REC_SEL,		8,   7,    1),
 
-	SOC_ENUM("Bass Control", wm9713_enum[16]),
-	SOC_SINGLE("Bass Cut-off Switch", AC97_GENERAL_PURPOSE, 12, 1, 1),
-	SOC_SINGLE("Tone Cut-off Switch", AC97_GENERAL_PURPOSE, 4, 1, 1),
-	SOC_SINGLE("Playback Attenuate (-6dB) Switch", AC97_GENERAL_PURPOSE, 6, 1, 0),
-	SOC_SINGLE("Bass Volume", AC97_GENERAL_PURPOSE, 8, 15, 1),
-	SOC_SINGLE("Tone Volume", AC97_GENERAL_PURPOSE, 0, 15, 1),
+	SOC_ENUM("Bass Control",				wm9713_enum[16]),
+	SOC_SINGLE("Bass Cut-off Switch",			AC97_GENERAL_PURPOSE,	12,  1,    1),
+	SOC_SINGLE("Tone Cut-off Switch",			AC97_GENERAL_PURPOSE,	4,   1,    1),
+	SOC_SINGLE("Playback Attenuate (-6dB) Switch",		AC97_GENERAL_PURPOSE,	6,   1,    0),
+	SOC_SINGLE("Bass Volume",				AC97_GENERAL_PURPOSE,	8,  15,    1),
+	SOC_SINGLE("Tone Volume",				AC97_GENERAL_PURPOSE,	0,  15,    1),
 
-	SOC_SINGLE("3D Upper Cut-off Switch", AC97_REC_GAIN_MIC, 5, 1, 0),
-	SOC_SINGLE("3D Lower Cut-off Switch", AC97_REC_GAIN_MIC, 4, 1, 0),
-	SOC_SINGLE("3D Depth", AC97_REC_GAIN_MIC, 0, 15, 1),
+	SOC_SINGLE("3D Upper Cut-off Switch",			AC97_REC_GAIN_MIC,	5,   1,    0),
+	SOC_SINGLE("3D Lower Cut-off Switch",			AC97_REC_GAIN_MIC,	4,   1,    0),
+	SOC_SINGLE("3D Depth",					AC97_REC_GAIN_MIC,	0,  15,    1),
 };
 
 static int wm9713_voice_shutdown(struct snd_soc_dapm_widget *w, struct snd_kcontrol *kcontrol, int event)
@@ -285,24 +285,24 @@ static const struct snd_kcontrol_new wm9713_hp_mic_mux_controls = SOC_DAPM_ENUM(
 
 /* Speaker Mixer */
 static const struct snd_kcontrol_new wm9713_speaker_mixer_controls[] = {
-	SOC_DAPM_SINGLE("Beep Playback Switch", AC97_AUX, 11, 1, 1),
-	SOC_DAPM_SINGLE("Voice Playback Switch", AC97_PCM, 11, 1, 1),
-	SOC_DAPM_SINGLE("Aux Playback Switch", AC97_REC_SEL, 11, 1, 1),
-	SOC_DAPM_SINGLE("PCM Playback Switch", AC97_PHONE, 14, 1, 1),
+	SOC_DAPM_SINGLE("Beep Playback Switch",   AC97_AUX,         11, 1, 1),
+	SOC_DAPM_SINGLE("Voice Playback Switch",  AC97_PCM,         11, 1, 1),
+	SOC_DAPM_SINGLE("Aux Playback Switch",    AC97_REC_SEL,     11, 1, 1),
+	SOC_DAPM_SINGLE("PCM Playback Switch",    AC97_PHONE,       14, 1, 1),
 	SOC_DAPM_SINGLE("MonoIn Playback Switch", AC97_MASTER_TONE, 14, 1, 1),
-	SOC_DAPM_SINGLE("Bypass Playback Switch", AC97_PC_BEEP, 14, 1, 1),
+	SOC_DAPM_SINGLE("Bypass Playback Switch", AC97_PC_BEEP,     14, 1, 1),
 };
 
 /* Mono Mixer */
 static const struct snd_kcontrol_new wm9713_mono_mixer_controls[] = {
-	SOC_DAPM_SINGLE("Beep Playback Switch", AC97_AUX, 7, 1, 1),
-	SOC_DAPM_SINGLE("Voice Playback Switch", AC97_PCM, 7, 1, 1),
-	SOC_DAPM_SINGLE("Aux Playback Switch", AC97_REC_SEL, 7, 1, 1),
-	SOC_DAPM_SINGLE("PCM Playback Switch", AC97_PHONE, 13, 1, 1),
+	SOC_DAPM_SINGLE("Beep Playback Switch",   AC97_AUX,          7, 1, 1),
+	SOC_DAPM_SINGLE("Voice Playback Switch",  AC97_PCM,          7, 1, 1),
+	SOC_DAPM_SINGLE("Aux Playback Switch",    AC97_REC_SEL,      7, 1, 1),
+	SOC_DAPM_SINGLE("PCM Playback Switch",    AC97_PHONE,       13, 1, 1),
 	SOC_DAPM_SINGLE("MonoIn Playback Switch", AC97_MASTER_TONE, 13, 1, 1),
-	SOC_DAPM_SINGLE("Bypass Playback Switch", AC97_PC_BEEP, 13, 1, 1),
-	SOC_DAPM_SINGLE("Mic 1 Sidetone Switch", AC97_LINE, 7, 1, 1),
-	SOC_DAPM_SINGLE("Mic 2 Sidetone Switch", AC97_LINE, 6, 1, 1),
+	SOC_DAPM_SINGLE("Bypass Playback Switch", AC97_PC_BEEP,     13, 1, 1),
+	SOC_DAPM_SINGLE("Mic 1 Sidetone Switch",  AC97_LINE,         7, 1, 1),
+	SOC_DAPM_SINGLE("Mic 2 Sidetone Switch",  AC97_LINE,         6, 1, 1),
 };
 
 /* mono mic mux */
@@ -348,63 +348,55 @@ static const struct snd_kcontrol_new wm9713_mic_sel_mux_controls = SOC_DAPM_ENUM
 static const struct snd_kcontrol_new wm9713_micb_sel_mux_controls = SOC_DAPM_ENUM("Route", wm9713_enum[19]);
 
 static const struct snd_soc_dapm_widget wm9713_dapm_widgets[] = {
-	SND_SOC_DAPM_MUX("Capture Headphone Mux", SND_SOC_NOPM, 0, 0, &wm9713_hp_rec_mux_controls),
-	SND_SOC_DAPM_MUX("Sidetone Mux", SND_SOC_NOPM, 0, 0, &wm9713_hp_mic_mux_controls),
-	SND_SOC_DAPM_MUX("Capture Mono Mux", SND_SOC_NOPM, 0, 0, &wm9713_mono_mic_mux_controls),
-	SND_SOC_DAPM_MUX("Mono Out Mux", SND_SOC_NOPM, 0, 0, &wm9713_mono_mux_controls),
-	SND_SOC_DAPM_MUX("Left Speaker Out Mux", SND_SOC_NOPM, 0, 0, &wm9713_hp_spkl_mux_controls),
-	SND_SOC_DAPM_MUX("Right Speaker Out Mux", SND_SOC_NOPM, 0, 0, &wm9713_hp_spkr_mux_controls),
-	SND_SOC_DAPM_MUX("Left Headphone Out Mux", SND_SOC_NOPM, 0, 0, &wm9713_hpl_out_mux_controls),
-	SND_SOC_DAPM_MUX("Right Headphone Out Mux", SND_SOC_NOPM, 0, 0, &wm9713_hpr_out_mux_controls),
-	SND_SOC_DAPM_MUX("Out 3 Mux", SND_SOC_NOPM, 0, 0, &wm9713_out3_mux_controls),
-	SND_SOC_DAPM_MUX("Out 4 Mux", SND_SOC_NOPM, 0, 0, &wm9713_out4_mux_controls),
-	SND_SOC_DAPM_MUX("DAC Inv Mux 1", SND_SOC_NOPM, 0, 0, &wm9713_dac_inv1_mux_controls),
-	SND_SOC_DAPM_MUX("DAC Inv Mux 2", SND_SOC_NOPM, 0, 0, &wm9713_dac_inv2_mux_controls),
-	SND_SOC_DAPM_MUX("Left Capture Source", SND_SOC_NOPM, 0, 0, &wm9713_rec_srcl_mux_controls),
-	SND_SOC_DAPM_MUX("Right Capture Source", SND_SOC_NOPM, 0, 0, &wm9713_rec_srcr_mux_controls),
-	SND_SOC_DAPM_MUX("Mic A Source", SND_SOC_NOPM, 0, 0, &wm9713_mic_sel_mux_controls),
-	SND_SOC_DAPM_MUX("Mic B Source", SND_SOC_NOPM, 0, 0, &wm9713_micb_sel_mux_controls),
-	SND_SOC_DAPM_MIXER_E("Left HP Mixer", AC97_EXTENDED_MID, 3, 1,
-			&wm9713_hpl_mixer_controls[0], ARRAY_SIZE(wm9713_hpl_mixer_controls),
-			mixer_event, SND_SOC_DAPM_POST_REG),
-	SND_SOC_DAPM_MIXER_E("Right HP Mixer", AC97_EXTENDED_MID, 2, 1,
-			&wm9713_hpr_mixer_controls[0], ARRAY_SIZE(wm9713_hpr_mixer_controls),
-			mixer_event, SND_SOC_DAPM_POST_REG),
-	SND_SOC_DAPM_MIXER("Mono Mixer", AC97_EXTENDED_MID, 0, 1,
-			&wm9713_mono_mixer_controls[0], ARRAY_SIZE(wm9713_mono_mixer_controls)),
-	SND_SOC_DAPM_MIXER("Speaker Mixer", AC97_EXTENDED_MID, 1, 1,
-			&wm9713_speaker_mixer_controls[0],
-			ARRAY_SIZE(wm9713_speaker_mixer_controls)),
-	SND_SOC_DAPM_DAC("Left DAC", "Left HiFi Playback", AC97_EXTENDED_MID, 7, 1),
-	SND_SOC_DAPM_DAC("Right DAC", "Right HiFi Playback", AC97_EXTENDED_MID, 6, 1),
-	SND_SOC_DAPM_MIXER("AC97 Mixer", SND_SOC_NOPM, 0, 0, NULL, 0),
-	SND_SOC_DAPM_MIXER("HP Mixer", SND_SOC_NOPM, 0, 0, NULL, 0),
-	SND_SOC_DAPM_MIXER("Line Mixer", SND_SOC_NOPM, 0, 0, NULL, 0),
-	SND_SOC_DAPM_MIXER("Capture Mixer", SND_SOC_NOPM, 0, 0, NULL, 0),
-	SND_SOC_DAPM_DAC_E("Voice DAC", "Voice Playback", AC97_EXTENDED_MID, 12, 1,
-			   wm9713_voice_shutdown, SND_SOC_DAPM_PRE_PMD),
-	SND_SOC_DAPM_DAC("Aux DAC", "Aux Playback", AC97_EXTENDED_MID, 11, 1),
-	SND_SOC_DAPM_PGA("Left ADC", AC97_EXTENDED_MID, 5, 1, NULL, 0),
-	SND_SOC_DAPM_PGA("Right ADC", AC97_EXTENDED_MID, 4, 1, NULL, 0),
-	SND_SOC_DAPM_ADC("Left HiFi ADC", "Left HiFi Capture", SND_SOC_NOPM, 0, 0),
-	SND_SOC_DAPM_ADC("Right HiFi ADC", "Right HiFi Capture", SND_SOC_NOPM, 0, 0),
-	SND_SOC_DAPM_ADC("Left Voice ADC", "Left Voice Capture", SND_SOC_NOPM, 0, 0),
-	SND_SOC_DAPM_ADC("Right Voice ADC", "Right Voice Capture", SND_SOC_NOPM, 0, 0),
-	SND_SOC_DAPM_PGA("Left Headphone", AC97_EXTENDED_MSTATUS, 10, 1, NULL, 0),
-	SND_SOC_DAPM_PGA("Right Headphone", AC97_EXTENDED_MSTATUS, 9, 1, NULL, 0),
-	SND_SOC_DAPM_PGA("Left Speaker", AC97_EXTENDED_MSTATUS, 8, 1, NULL, 0),
-	SND_SOC_DAPM_PGA("Right Speaker", AC97_EXTENDED_MSTATUS, 7, 1, NULL, 0),
-	SND_SOC_DAPM_PGA("Out 3", AC97_EXTENDED_MSTATUS, 11, 1, NULL, 0),
-	SND_SOC_DAPM_PGA("Out 4", AC97_EXTENDED_MSTATUS, 12, 1, NULL, 0),
-	SND_SOC_DAPM_PGA("Mono Out", AC97_EXTENDED_MSTATUS, 13, 1, NULL, 0),
-	SND_SOC_DAPM_PGA("Left Line In", AC97_EXTENDED_MSTATUS, 6, 1, NULL, 0),
-	SND_SOC_DAPM_PGA("Right Line In", AC97_EXTENDED_MSTATUS, 5, 1, NULL, 0),
-	SND_SOC_DAPM_PGA("Mono In", AC97_EXTENDED_MSTATUS, 4, 1, NULL, 0),
-	SND_SOC_DAPM_PGA("Mic A PGA", AC97_EXTENDED_MSTATUS, 3, 1, NULL, 0),
-	SND_SOC_DAPM_PGA("Mic B PGA", AC97_EXTENDED_MSTATUS, 2, 1, NULL, 0),
-	SND_SOC_DAPM_PGA("Mic A Pre Amp", AC97_EXTENDED_MSTATUS, 1, 1, NULL, 0),
-	SND_SOC_DAPM_PGA("Mic B Pre Amp", AC97_EXTENDED_MSTATUS, 0, 1, NULL, 0),
-	SND_SOC_DAPM_MICBIAS("Mic Bias", AC97_EXTENDED_MSTATUS, 14, 1),
+	SND_SOC_DAPM_MUX("Capture Headphone Mux",   SND_SOC_NOPM,           0, 0, &wm9713_hp_rec_mux_controls),
+	SND_SOC_DAPM_MUX("Sidetone Mux",            SND_SOC_NOPM,           0, 0, &wm9713_hp_mic_mux_controls),
+	SND_SOC_DAPM_MUX("Capture Mono Mux",        SND_SOC_NOPM,           0, 0, &wm9713_mono_mic_mux_controls),
+	SND_SOC_DAPM_MUX("Mono Out Mux",            SND_SOC_NOPM,           0, 0, &wm9713_mono_mux_controls),
+	SND_SOC_DAPM_MUX("Left Speaker Out Mux",    SND_SOC_NOPM,           0, 0, &wm9713_hp_spkl_mux_controls),
+	SND_SOC_DAPM_MUX("Right Speaker Out Mux",   SND_SOC_NOPM,           0, 0, &wm9713_hp_spkr_mux_controls),
+	SND_SOC_DAPM_MUX("Left Headphone Out Mux",  SND_SOC_NOPM,           0, 0, &wm9713_hpl_out_mux_controls),
+	SND_SOC_DAPM_MUX("Right Headphone Out Mux", SND_SOC_NOPM,           0, 0, &wm9713_hpr_out_mux_controls),
+	SND_SOC_DAPM_MUX("Out 3 Mux",               SND_SOC_NOPM,           0, 0, &wm9713_out3_mux_controls),
+	SND_SOC_DAPM_MUX("Out 4 Mux",               SND_SOC_NOPM,           0, 0, &wm9713_out4_mux_controls),
+	SND_SOC_DAPM_MUX("DAC Inv Mux 1",           SND_SOC_NOPM,           0, 0, &wm9713_dac_inv1_mux_controls),
+	SND_SOC_DAPM_MUX("DAC Inv Mux 2",           SND_SOC_NOPM,           0, 0, &wm9713_dac_inv2_mux_controls),
+	SND_SOC_DAPM_MUX("Left Capture Source",     SND_SOC_NOPM,           0, 0, &wm9713_rec_srcl_mux_controls),
+	SND_SOC_DAPM_MUX("Right Capture Source",    SND_SOC_NOPM,           0, 0, &wm9713_rec_srcr_mux_controls),
+	SND_SOC_DAPM_MUX("Mic A Source",            SND_SOC_NOPM,           0, 0, &wm9713_mic_sel_mux_controls),
+	SND_SOC_DAPM_MUX("Mic B Source",            SND_SOC_NOPM,           0, 0, &wm9713_micb_sel_mux_controls),
+	SND_SOC_DAPM_MIXER_E("Left HP Mixer",       AC97_EXTENDED_MID,      3, 1, &wm9713_hpl_mixer_controls[0], ARRAY_SIZE(wm9713_hpl_mixer_controls), mixer_event, SND_SOC_DAPM_POST_REG),
+	SND_SOC_DAPM_MIXER_E("Right HP Mixer",      AC97_EXTENDED_MID,      2, 1, &wm9713_hpr_mixer_controls[0], ARRAY_SIZE(wm9713_hpr_mixer_controls), mixer_event, SND_SOC_DAPM_POST_REG),
+	SND_SOC_DAPM_MIXER("Mono Mixer",            AC97_EXTENDED_MID,      0, 1, &wm9713_mono_mixer_controls[0], ARRAY_SIZE(wm9713_mono_mixer_controls)),
+	SND_SOC_DAPM_MIXER("Speaker Mixer",         AC97_EXTENDED_MID,      1, 1, &wm9713_speaker_mixer_controls[0], ARRAY_SIZE(wm9713_speaker_mixer_controls)),
+	SND_SOC_DAPM_DAC("Left DAC",                "Left HiFi Playback", AC97_EXTENDED_MID, 7, 1),
+	SND_SOC_DAPM_DAC("Right DAC",               "Right HiFi Playback", AC97_EXTENDED_MID, 6, 1),
+	SND_SOC_DAPM_MIXER("AC97 Mixer",            SND_SOC_NOPM,           0, 0, NULL, 0),
+	SND_SOC_DAPM_MIXER("HP Mixer",              SND_SOC_NOPM,           0, 0, NULL, 0),
+	SND_SOC_DAPM_MIXER("Line Mixer",            SND_SOC_NOPM,           0, 0, NULL, 0),
+	SND_SOC_DAPM_MIXER("Capture Mixer",         SND_SOC_NOPM,           0, 0, NULL, 0),
+	SND_SOC_DAPM_DAC_E("Voice DAC",             "Voice Playback",    AC97_EXTENDED_MID, 12, 1, wm9713_voice_shutdown, SND_SOC_DAPM_PRE_PMD),
+	SND_SOC_DAPM_DAC("Aux DAC",                 "Aux Playback",      AC97_EXTENDED_MID, 11, 1),
+	SND_SOC_DAPM_PGA("Left ADC",                AC97_EXTENDED_MID,      5, 1, NULL, 0),
+	SND_SOC_DAPM_PGA("Right ADC",               AC97_EXTENDED_MID,      4, 1, NULL, 0),
+	SND_SOC_DAPM_ADC("Left HiFi ADC",           "Left HiFi Capture",   SND_SOC_NOPM, 0, 0),
+	SND_SOC_DAPM_ADC("Right HiFi ADC",          "Right HiFi Capture",  SND_SOC_NOPM, 0, 0),
+	SND_SOC_DAPM_ADC("Left Voice ADC",          "Left Voice Capture",  SND_SOC_NOPM, 0, 0),
+	SND_SOC_DAPM_ADC("Right Voice ADC",         "Right Voice Capture", SND_SOC_NOPM, 0, 0),
+	SND_SOC_DAPM_PGA("Left Headphone",          AC97_EXTENDED_MSTATUS, 10, 1, NULL, 0),
+	SND_SOC_DAPM_PGA("Right Headphone",         AC97_EXTENDED_MSTATUS,  9, 1, NULL, 0),
+	SND_SOC_DAPM_PGA("Left Speaker",            AC97_EXTENDED_MSTATUS,  8, 1, NULL, 0),
+	SND_SOC_DAPM_PGA("Right Speaker",           AC97_EXTENDED_MSTATUS,  7, 1, NULL, 0),
+	SND_SOC_DAPM_PGA("Out 3",                   AC97_EXTENDED_MSTATUS, 11, 1, NULL, 0),
+	SND_SOC_DAPM_PGA("Out 4",                   AC97_EXTENDED_MSTATUS, 12, 1, NULL, 0),
+	SND_SOC_DAPM_PGA("Mono Out",                AC97_EXTENDED_MSTATUS, 13, 1, NULL, 0),
+	SND_SOC_DAPM_PGA("Left Line In",            AC97_EXTENDED_MSTATUS,  6, 1, NULL, 0),
+	SND_SOC_DAPM_PGA("Right Line In",           AC97_EXTENDED_MSTATUS,  5, 1, NULL, 0),
+	SND_SOC_DAPM_PGA("Mono In",                 AC97_EXTENDED_MSTATUS,  4, 1, NULL, 0),
+	SND_SOC_DAPM_PGA("Mic A PGA",               AC97_EXTENDED_MSTATUS,  3, 1, NULL, 0),
+	SND_SOC_DAPM_PGA("Mic B PGA",               AC97_EXTENDED_MSTATUS,  2, 1, NULL, 0),
+	SND_SOC_DAPM_PGA("Mic A Pre Amp",           AC97_EXTENDED_MSTATUS,  1, 1, NULL, 0),
+	SND_SOC_DAPM_PGA("Mic B Pre Amp",           AC97_EXTENDED_MSTATUS,  0, 1, NULL, 0),
+	SND_SOC_DAPM_MICBIAS("Mic Bias",            AC97_EXTENDED_MSTATUS, 14, 1),
 	SND_SOC_DAPM_OUTPUT("MONO"),
 	SND_SOC_DAPM_OUTPUT("HPL"),
 	SND_SOC_DAPM_OUTPUT("HPR"),
@@ -583,17 +575,26 @@ static int wm9713_add_widgets(struct snd_soc_codec *codec)
 {
 	struct snd_soc_dapm_context *dapm = &codec->dapm;
 
+	pr_info("Enter %s\n", __func__);
+
+	pr_info("%s. todo: snd_soc_dapm_new_controls()\n", __func__);
 	snd_soc_dapm_new_controls(dapm, wm9713_dapm_widgets, ARRAY_SIZE(wm9713_dapm_widgets));
 
+	pr_info("%s. todo: snd_soc_dapm_add_routes()\n", __func__);
 	snd_soc_dapm_add_routes(dapm, audio_map, ARRAY_SIZE(audio_map));
 
 	return 0;
 }
 
-static unsigned int ac97_read(struct snd_soc_codec *codec,
-	unsigned int reg)
+static unsigned int ac97_read(struct snd_soc_codec *codec, unsigned int reg)
 {
 	u16 *cache = codec->reg_cache;
+	static char n=1;
+
+	if (n) {
+		n = 0; pr_info("Enter %s. codec->name=%s, soc_ac97_ops.read=>%p, reg=0x%X\n", __func__, codec->name, soc_ac97_ops.read, reg);
+	}
+
 
 	if (reg == AC97_RESET || reg == AC97_GPIO_STATUS || reg == AC97_VENDOR_ID1 || reg == AC97_VENDOR_ID2 || reg == AC97_CD)
 		return soc_ac97_ops.read(codec->ac97, reg);
@@ -1030,6 +1031,8 @@ static struct snd_soc_dai_driver wm9713_dai[] = {
 
 int wm9713_reset(struct snd_soc_codec *codec, int try_warm)
 {
+	pr_err("Enter %s.codec->name=%s, try_warm=%d\n", __func__, codec->name, try_warm);
+
 	if (try_warm && soc_ac97_ops.warm_reset) {
 		soc_ac97_ops.warm_reset(codec->ac97);
 		if (ac97_read(codec, 0) == wm9713_reg[0])
@@ -1051,19 +1054,27 @@ static int wm9713_set_bias_level(struct snd_soc_codec *codec, enum snd_soc_bias_
 
 	switch (level) {
 	case SND_SOC_BIAS_ON:
+		pr_info("Enter %s. level=%s\n", __func__, "SND_SOC_BIAS_ON");
+
 		/* enable thermal shutdown */
 		reg = ac97_read(codec, AC97_EXTENDED_MID) & 0x1bff;
 		ac97_write(codec, AC97_EXTENDED_MID, reg);
 		break;
 	case SND_SOC_BIAS_PREPARE:
+		pr_info("Enter %s. level=%s\n", __func__, "SND_SOC_BIAS_PREPARE");
+
 		break;
 	case SND_SOC_BIAS_STANDBY:
+		pr_info("Enter %s. level=%s\n", __func__, "SND_SOC_BIAS_STANDBY");
+
 		/* enable master bias and vmid */
 		reg = ac97_read(codec, AC97_EXTENDED_MID) & 0x3bff;
 		ac97_write(codec, AC97_EXTENDED_MID, reg);
 		ac97_write(codec, AC97_POWERDOWN, 0x0000);
 		break;
 	case SND_SOC_BIAS_OFF:
+		pr_info("Enter %s. level=%s\n", __func__, "SND_SOC_BIAS_OFF");
+
 		/* disable everything including AC link */
 		ac97_write(codec, AC97_EXTENDED_MID, 0xffff);
 		ac97_write(codec, AC97_EXTENDED_MSTATUS, 0xffff);

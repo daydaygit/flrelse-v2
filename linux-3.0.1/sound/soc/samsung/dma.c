@@ -390,13 +390,12 @@ static int preallocate_dma_buffer(struct snd_pcm *pcm, int stream)
 	struct snd_dma_buffer *buf = &substream->dma_buffer;
 	size_t size = dma_hardware.buffer_bytes_max;
 
-	pr_debug("Entered %s\n", __func__);
+	pr_info("Entered %s\n", __func__);
 
 	buf->dev.type = SNDRV_DMA_TYPE_DEV;
 	buf->dev.dev = pcm->card->dev;
 	buf->private_data = NULL;
-	buf->area = dma_alloc_writecombine(pcm->card->dev, size,
-					   &buf->addr, GFP_KERNEL);
+	buf->area = dma_alloc_writecombine(pcm->card->dev, size, &buf->addr, GFP_KERNEL);
 	if (!buf->area)
 		return -ENOMEM;
 	buf->bytes = size;
@@ -428,12 +427,11 @@ static void dma_free_dma_buffers(struct snd_pcm *pcm)
 
 static u64 dma_mask = DMA_BIT_MASK(32);
 
-static int dma_new(struct snd_card *card,
-	struct snd_soc_dai *dai, struct snd_pcm *pcm)
+static int dma_new(struct snd_card *card, struct snd_soc_dai *dai, struct snd_pcm *pcm)
 {
 	int ret = 0;
 
-	pr_debug("Entered %s\n", __func__);
+	pr_info("Entered %s. card->id=%s, dai->name=%s, pcm->name=%s\n", __func__, card->id, dai->name, pcm->name);
 
 	if (!card->dev->dma_mask)
 		card->dev->dma_mask = &dma_mask;
@@ -441,15 +439,13 @@ static int dma_new(struct snd_card *card,
 		card->dev->coherent_dma_mask = 0xffffffff;
 
 	if (dai->driver->playback.channels_min) {
-		ret = preallocate_dma_buffer(pcm,
-			SNDRV_PCM_STREAM_PLAYBACK);
+		ret = preallocate_dma_buffer(pcm, SNDRV_PCM_STREAM_PLAYBACK);
 		if (ret)
 			goto out;
 	}
 
 	if (dai->driver->capture.channels_min) {
-		ret = preallocate_dma_buffer(pcm,
-			SNDRV_PCM_STREAM_CAPTURE);
+		ret = preallocate_dma_buffer(pcm, SNDRV_PCM_STREAM_CAPTURE);
 		if (ret)
 			goto out;
 	}
@@ -487,6 +483,7 @@ static struct platform_driver asoc_dma_driver = {
 
 static int __init samsung_asoc_init(void)
 {
+	pr_info("Enter: %s+++++++++\n", __func__);
 	return platform_driver_register(&asoc_dma_driver);
 }
 module_init(samsung_asoc_init);

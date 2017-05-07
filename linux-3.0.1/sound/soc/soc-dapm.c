@@ -371,6 +371,8 @@ static int dapm_new_mixer(struct snd_soc_dapm_context *dapm,
 	struct snd_soc_dapm_path *path;
 	struct snd_card *card = dapm->codec->card->snd_card;
 
+	pr_info("Enter %s\n", __func__);
+
 	/* add kcontrol */
 	for (i = 0; i < w->num_kcontrols; i++) {
 
@@ -398,24 +400,20 @@ static int dapm_new_mixer(struct snd_soc_dapm_context *dapm,
 
 			switch (w->id) {
 			default:
-				snprintf(path->long_name, name_len, "%s %s",
-					 w->name, w->kcontrols[i].name);
+				snprintf(path->long_name, name_len, "%s %s", w->name, w->kcontrols[i].name);
 				break;
 			case snd_soc_dapm_mixer_named_ctl:
-				snprintf(path->long_name, name_len, "%s",
-					 w->kcontrols[i].name);
+				snprintf(path->long_name, name_len, "%s", w->kcontrols[i].name);
 				break;
 			}
 
 			path->long_name[name_len - 1] = '\0';
 
-			path->kcontrol = snd_soc_cnew(&w->kcontrols[i], w,
-				path->long_name);
+			pr_info("%s path->long_name=%s\n", __func__, path->long_name);
+			path->kcontrol = snd_soc_cnew(&w->kcontrols[i], w, path->long_name);
 			ret = snd_ctl_add(card, path->kcontrol);
 			if (ret < 0) {
-				dev_err(dapm->dev,
-					"asoc: failed to add dapm kcontrol %s: %d\n",
-					path->long_name, ret);
+				pr_err("asoc: failed to add dapm kcontrol %s: %d\n", path->long_name, ret);
 				kfree(path->long_name);
 				path->long_name = NULL;
 				return ret;
@@ -433,6 +431,8 @@ static int dapm_new_mux(struct snd_soc_dapm_context *dapm,
 	struct snd_kcontrol *kcontrol;
 	struct snd_card *card = dapm->codec->card->snd_card;
 	int ret = 0;
+
+	pr_info("Enter %s\n", __func__);
 
 	if (!w->num_kcontrols) {
 		dev_err(dapm->dev, "asoc: mux %s has no controls\n", w->name);
@@ -456,12 +456,10 @@ err:
 }
 
 /* create new dapm volume control */
-static int dapm_new_pga(struct snd_soc_dapm_context *dapm,
-	struct snd_soc_dapm_widget *w)
+static int dapm_new_pga(struct snd_soc_dapm_context *dapm, struct snd_soc_dapm_widget *w)
 {
 	if (w->num_kcontrols)
-		dev_err(w->dapm->dev,
-			"asoc: PGA controls not supported: '%s'\n", w->name);
+		dev_err(w->dapm->dev, "asoc: PGA controls not supported: '%s'\n", w->name);
 
 	return 0;
 }
@@ -997,7 +995,7 @@ static int dapm_power_widgets(struct snd_soc_dapm_context *dapm, int event)
 	int ret = 0;
 	int power;
 
-	printk(KERN_INFO "%s\n", __func__);
+	pr_info("Enter %s +++++++++++++++++++++++++\n", __func__);
 
 	trace_snd_soc_dapm_start(card);
 
@@ -1010,33 +1008,23 @@ static int dapm_power_widgets(struct snd_soc_dapm_context *dapm, int event)
 	 */
 	list_for_each_entry(w, &card->widgets, list) {
 		switch (w->id) {
-		case snd_soc_dapm_pre:
-			dapm_seq_insert(w, &down_list, dapm_down_seq);
-			break;
-		case snd_soc_dapm_post:
-			dapm_seq_insert(w, &up_list, dapm_up_seq);
-			break;
+		case snd_soc_dapm_pre:			dapm_seq_insert(w, &down_list, dapm_down_seq);	break;
+		case snd_soc_dapm_post:			dapm_seq_insert(w, &up_list, dapm_up_seq);	break;
 
 		default:
-			if (!w->power_check)
-				continue;
+			if (!w->power_check)		continue;
 
-			if (!w->force)
-				power = w->power_check(w);
-			else
-				power = 1;
-			if (power)
-				w->dapm->dev_power = 1;
+			if (!w->force)			power = w->power_check(w);
+			else				power = 1;
 
-			if (w->power == power)
-				continue;
+			if (power)			w->dapm->dev_power = 1;
+
+			if (w->power == power)		continue;
 
 			trace_snd_soc_dapm_widget_power(w, power);
 
-			if (power)
-				dapm_seq_insert(w, &up_list, dapm_up_seq);
-			else
-				dapm_seq_insert(w, &down_list, dapm_down_seq);
+			if (power)			dapm_seq_insert(w, &up_list, dapm_up_seq);
+			else				dapm_seq_insert(w, &down_list, dapm_down_seq);
 
 			w->power = power;
 			break;
@@ -1047,28 +1035,17 @@ static int dapm_power_widgets(struct snd_soc_dapm_context *dapm, int event)
 	if (!dapm->n_widgets) {
 		switch (event) {
 		case SND_SOC_DAPM_STREAM_START:
-		case SND_SOC_DAPM_STREAM_RESUME:
-			dapm->dev_power = 1;
-			break;
-		case SND_SOC_DAPM_STREAM_STOP:
-			dapm->dev_power = !!dapm->codec->active;
-			break;
-		case SND_SOC_DAPM_STREAM_SUSPEND:
-			dapm->dev_power = 0;
-			break;
+		case SND_SOC_DAPM_STREAM_RESUME:	dapm->dev_power = 1;				break;
+		case SND_SOC_DAPM_STREAM_STOP:		dapm->dev_power = !!dapm->codec->active;	break;
+		case SND_SOC_DAPM_STREAM_SUSPEND:	dapm->dev_power = 0;				break;
 		case SND_SOC_DAPM_STREAM_NOP:
 			switch (dapm->bias_level) {
 				case SND_SOC_BIAS_STANDBY:
-				case SND_SOC_BIAS_OFF:
-					dapm->dev_power = 0;
-					break;
-				default:
-					dapm->dev_power = 1;
-					break;
+				case SND_SOC_BIAS_OFF:		dapm->dev_power = 0;			break;
+				default:			dapm->dev_power = 1;			break;
 			}
 			break;
-		default:
-			break;
+		default:										break;
 		}
 	}
 
@@ -1084,17 +1061,18 @@ static int dapm_power_widgets(struct snd_soc_dapm_context *dapm, int event)
 		    (!d->dev_power && d->bias_level == SND_SOC_BIAS_ON)) {
 			ret = snd_soc_dapm_set_bias_level(card, d, SND_SOC_BIAS_PREPARE);
 			if (ret != 0)
-				dev_err(d->dev,
-					"Failed to prepare bias: %d\n", ret);
+				dev_err(d->dev, "Failed to prepare bias: %d\n", ret);
 		}
 	}
 
 	/* Power down widgets first; try to avoid amplifying pops. */
+	printk(KERN_INFO "%s. Power down widgets first\n", __func__);
 	dapm_seq_run(dapm, &down_list, event, dapm_down_seq);
 
 	dapm_widget_update(dapm);
 
 	/* Now power up. */
+	printk(KERN_INFO "%s. Now power up ++++++++++++\n", __func__);
 	dapm_seq_run(dapm, &up_list, event, dapm_up_seq);
 
 	list_for_each_entry(d, &dapm->card->dapm_list, list) {
@@ -1622,49 +1600,45 @@ int snd_soc_dapm_new_widgets(struct snd_soc_dapm_context *dapm)
 {
 	struct snd_soc_dapm_widget *w;
 	unsigned int val;
-	printk(KERN_ERR "%s\n", __func__);
+
+	pr_info("Enter %s\n", __func__);
+
 	list_for_each_entry(w, &dapm->card->widgets, list)
 	{
 		if (w->new)
 			continue;
 
+		pr_err("w->name=%s, w->id=%d\n", w->name, w->id);
+
 		switch(w->id) {
 		case snd_soc_dapm_switch:
 		case snd_soc_dapm_mixer:
-		case snd_soc_dapm_mixer_named_ctl:
-			w->power_check = dapm_generic_check_power;
-			dapm_new_mixer(dapm, w);
-			break;
+		case snd_soc_dapm_mixer_named_ctl:  w->power_check = dapm_generic_check_power;
+						dapm_new_mixer(dapm, w);
+						break;
 		case snd_soc_dapm_mux:
 		case snd_soc_dapm_virt_mux:
-		case snd_soc_dapm_value_mux:
-			w->power_check = dapm_generic_check_power;
-			dapm_new_mux(dapm, w);
-			break;
+		case snd_soc_dapm_value_mux:   	w->power_check = dapm_generic_check_power;
+						dapm_new_mux(dapm, w);
+						break;
 		case snd_soc_dapm_adc:
-		case snd_soc_dapm_aif_out:
-			w->power_check = dapm_adc_check_power;
-			break;
+		case snd_soc_dapm_aif_out:   	w->power_check = dapm_adc_check_power;
+						break;
 		case snd_soc_dapm_dac:
-		case snd_soc_dapm_aif_in:
-			w->power_check = dapm_dac_check_power;
-			break;
+		case snd_soc_dapm_aif_in:   	w->power_check = dapm_dac_check_power;
+						break;
 		case snd_soc_dapm_pga:
-		case snd_soc_dapm_out_drv:
-			w->power_check = dapm_generic_check_power;
-			dapm_new_pga(dapm, w);
-			break;
+		case snd_soc_dapm_out_drv:   	w->power_check = dapm_generic_check_power;
+						dapm_new_pga(dapm, w);
+						break;
 		case snd_soc_dapm_input:
 		case snd_soc_dapm_output:
 		case snd_soc_dapm_micbias:
 		case snd_soc_dapm_spk:
 		case snd_soc_dapm_hp:
 		case snd_soc_dapm_mic:
-		case snd_soc_dapm_line:
-			w->power_check = dapm_generic_check_power;
-			break;
-		case snd_soc_dapm_supply:
-			w->power_check = dapm_supply_check_power;
+		case snd_soc_dapm_line:		w->power_check = dapm_generic_check_power;	break;
+		case snd_soc_dapm_supply:	w->power_check = dapm_supply_check_power;  	/* No break ? */
 		case snd_soc_dapm_vmid:
 		case snd_soc_dapm_pre:
 		case snd_soc_dapm_post:
@@ -1675,11 +1649,9 @@ int snd_soc_dapm_new_widgets(struct snd_soc_dapm_context *dapm)
 		if (w->reg >= 0) {
 			val = snd_soc_read(w->codec, w->reg);
 			val &= 1 << w->shift;
-			if (w->invert)
-				val = !val;
+			if (w->invert)		val = !val;
 
-			if (val)
-				w->power = 1;
+			if (val)		w->power = 1;
 		}
 
 		w->new = 1;

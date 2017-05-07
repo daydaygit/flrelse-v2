@@ -1575,8 +1575,7 @@ int snd_soc_cache_init(struct snd_soc_codec *codec)
 
 	/* Fall back to flat compression */
 	if (i == ARRAY_SIZE(cache_types)) {
-		dev_warn(codec->dev, "Could not match compress type: %d\n",
-			 codec->compress_type);
+		dev_warn(codec->dev, "Could not match compress type: %d\n", codec->compress_type);
 		i = 0;
 	}
 
@@ -1585,8 +1584,8 @@ int snd_soc_cache_init(struct snd_soc_codec *codec)
 
 	if (codec->cache_ops->init) {
 		if (codec->cache_ops->name)
-			dev_dbg(codec->dev, "Initializing %s cache for %s codec\n",
-				codec->cache_ops->name, codec->name);
+			pr_info("%s. Initializing cache:%s for codec:%s. codec->cache_ops->init=>%p (snd_soc_flat_cache_init)\n",
+					__func__, codec->cache_ops->name, codec->name, codec->cache_ops->init);
 		return codec->cache_ops->init(codec);
 	}
 	return -EINVAL;

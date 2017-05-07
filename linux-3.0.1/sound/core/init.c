@@ -151,7 +151,10 @@ int snd_card_create(int idx, const char *xid, struct module *module, int extra_s
 	struct snd_card *card;
 	int err, idx2;
 
-	printk(KERN_INFO "Enter %s\n", __func__);
+	printk(KERN_INFO "Enter %s +++++++++++++++++++++++++++++\n", __func__);
+
+	if((*card_ret)->shortname)
+		pr_info("%s. (*card_ret)->id=%s, idx=%d *********************\n", __func__, (*card_ret)->id, idx);
 
 	if (snd_BUG_ON(!card_ret))
 		return -EINVAL;
@@ -200,7 +203,7 @@ int snd_card_create(int idx, const char *xid, struct module *module, int extra_s
 	}
 	snd_cards_lock |= 1 << idx;		/* lock it */
 	if (idx >= snd_ecards_limit)
-		snd_ecards_limit = idx + 1; /* increase the limit */
+		snd_ecards_limit = idx + 1; 	/* increase the limit */
 	mutex_unlock(&snd_card_mutex);
 	card->number = idx;
 	card->module = module;
@@ -741,8 +744,7 @@ void snd_card_info_read_oss(struct snd_info_buffer *buffer)
 
 #ifdef MODULE
 static struct snd_info_entry *snd_card_module_info_entry;
-static void snd_card_module_info_read(struct snd_info_entry *entry,
-				      struct snd_info_buffer *buffer)
+static void snd_card_module_info_read(struct snd_info_entry *entry, struct snd_info_buffer *buffer)
 {
 	int idx;
 	struct snd_card *card;
@@ -750,8 +752,7 @@ static void snd_card_module_info_read(struct snd_info_entry *entry,
 	for (idx = 0; idx < SNDRV_CARDS; idx++) {
 		mutex_lock(&snd_card_mutex);
 		if ((card = snd_cards[idx]) != NULL)
-			snd_iprintf(buffer, "%2i %s\n",
-				    idx, card->module->name);
+			snd_iprintf(buffer, "%2i %s\n", idx, card->module->name);
 		mutex_unlock(&snd_card_mutex);
 	}
 }
@@ -760,6 +761,8 @@ static void snd_card_module_info_read(struct snd_info_entry *entry,
 int __init snd_card_info_init(void)
 {
 	struct snd_info_entry *entry;
+
+	printk(KERN_INFO "Enter: %s ++++++++++++++++++++\n", __func__);
 
 	entry = snd_info_create_module_entry(THIS_MODULE, "cards", NULL);
 	if (! entry)
