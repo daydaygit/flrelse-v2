@@ -1,0 +1,213 @@
+diff --git a/linux-3.0.1/sound/core/pcm_native.c b/linux-3.0.1/sound/core/pcm_native.c
+index 4be45e7..3caafdb 100644
+--- a/linux-3.0.1/sound/core/pcm_native.c
++++ b/linux-3.0.1/sound/core/pcm_native.c
+@@ -1333,13 +1333,14 @@ static struct action_ops snd_pcm_action_prepare = {
+  * @substream: the PCM substream instance
+  * @file: file to refer f_flags
+  */
+-static int snd_pcm_prepare(struct snd_pcm_substream *substream,
+-			   struct file *file)
++static int snd_pcm_prepare(struct snd_pcm_substream *substream, struct file *file)
+ {
+ 	int res;
+ 	struct snd_card *card = substream->pcm->card;
+ 	int f_flags;
+ 
++	pr_err("Enter %s\n", __func__);
++
+ 	if (file)
+ 		f_flags = file->f_flags;
+ 	else
+@@ -1347,8 +1348,7 @@ static int snd_pcm_prepare(struct snd_pcm_substream *substream,
+ 
+ 	snd_power_lock(card);
+ 	if ((res = snd_power_wait(card, SNDRV_CTL_POWER_D0)) >= 0)
+-		res = snd_pcm_action_nonatomic(&snd_pcm_action_prepare,
+-					       substream, f_flags);
++		res = snd_pcm_action_nonatomic(&snd_pcm_action_prepare, substream, f_flags);
+ 	snd_power_unlock(card);
+ 	return res;
+ }
+diff --git a/linux-3.0.1/sound/soc/soc-core.c b/linux-3.0.1/sound/soc/soc-core.c
+index 99b9d9a..8e7276b 100644
+--- a/linux-3.0.1/sound/soc/soc-core.c
++++ b/linux-3.0.1/sound/soc/soc-core.c
+@@ -1282,7 +1282,7 @@ find_platform:
+ 	if (rtd->platform) {
+ 		goto out;
+ 	}
+-	/* no, then find CPU DAI from registered DAIs*/
++	/* no, then find platform from registered DAIs*/
+ 	list_for_each_entry(platform, &platform_list, list) {
+ 		pr_err("%s. ------- platform->name=%s, dai_link->platform_name=%s\n",__func__, platform->name, dai_link->platform_name);
+ 		if (!strcmp(platform->name, dai_link->platform_name)) {
+@@ -1806,8 +1806,7 @@ static void snd_soc_instantiate_card(struct snd_soc_card *card)
+ 	for (i = 0; i < card->num_links; i++) {
+ 		ret = soc_probe_dai_link(card, i);
+ 		if (ret < 0) {
+-			pr_err("asoc: failed to instantiate card %s: %d\n",
+-			       card->name, ret);
++			pr_err("asoc: failed to instantiate card %s: %d\n", card->name, ret);
+ 			goto probe_dai_err;
+ 		}
+ 	}
+@@ -1815,8 +1814,7 @@ static void snd_soc_instantiate_card(struct snd_soc_card *card)
+ 	for (i = 0; i < card->num_aux_devs; i++) {
+ 		ret = soc_probe_aux_dev(card, i);
+ 		if (ret < 0) {
+-			pr_err("asoc: failed to add auxiliary devices %s: %d\n",
+-			       card->name, ret);
++			pr_err("asoc: failed to add auxiliary devices %s: %d\n", card->name, ret);
+ 			goto probe_aux_dev_err;
+ 		}
+ 	}
+@@ -2131,7 +2129,7 @@ EXPORT_SYMBOL_GPL(snd_soc_read);
+ unsigned int snd_soc_write(struct snd_soc_codec *codec,
+ 			   unsigned int reg, unsigned int val)
+ {
+-	dev_dbg(codec->dev, "write %x = %x\n", reg, val);
++	pr_info("write %x = %x\n", reg, val);
+ 	trace_snd_soc_reg_write(codec, reg, val);
+ 	return codec->write(codec, reg, val);
+ }
+diff --git a/linux-3.0.1/sound/soc/soc-dapm.c b/linux-3.0.1/sound/soc/soc-dapm.c
+index abd551a..993fbdd 100644
+--- a/linux-3.0.1/sound/soc/soc-dapm.c
++++ b/linux-3.0.1/sound/soc/soc-dapm.c
+@@ -137,39 +137,29 @@ static int snd_soc_dapm_set_bias_level(struct snd_soc_card *card, struct snd_soc
+ 	int ret = 0;
+ 
+ 	switch (level) {
+-	case SND_SOC_BIAS_ON:
+-		dev_info(dapm->dev, "Setting full bias\n");
+-		break;
+-	case SND_SOC_BIAS_PREPARE:
+-		dev_info(dapm->dev, "Setting bias prepare\n");
+-		break;
+-	case SND_SOC_BIAS_STANDBY:
+-		dev_info(dapm->dev, "Setting standby bias\n");
+-		break;
+-	case SND_SOC_BIAS_OFF:
+-		dev_info(dapm->dev, "Setting bias off\n");
+-		break;
+-	default:
+-		dev_err(dapm->dev, "Setting invalid bias %d\n", level);
+-		return -EINVAL;
++	case SND_SOC_BIAS_ON:       pr_info("Setting full bias\n");             break;
++	case SND_SOC_BIAS_PREPARE:  pr_info("Setting bias prepare\n");          break;
++	case SND_SOC_BIAS_STANDBY:  pr_info("Setting standby bias\n");          break;
++	case SND_SOC_BIAS_OFF:      pr_info("Setting bias off\n");              break;
++	default:                    pr_err("Setting invalid bias %d\n", level); return -EINVAL;
+ 	}
+ 
+ 	trace_snd_soc_bias_level_start(card, level);
+ 
+ 	if (card && card->set_bias_level) {
+-		dev_info(dapm->dev, "level=%d, card->set_bias_level=>%p\n", level, card->set_bias_level);
++		pr_info("level=%d, card->set_bias_level=>%p\n", level, card->set_bias_level);
+ 		ret = card->set_bias_level(card, level);
+ 	}
+ 	if (ret == 0) {
+ 		if (dapm->codec && dapm->codec->driver->set_bias_level) {
+-			dev_info(dapm->dev, "dapm->codec->driver->set_bias_level=>%p\n", dapm->codec->driver->set_bias_level);
++			pr_info("dapm->codec->driver->set_bias_level=>%p\n", dapm->codec->driver->set_bias_level);
+ 			ret = dapm->codec->driver->set_bias_level(dapm->codec, level);
+ 		} else
+ 			dapm->bias_level = level;
+ 	}
+ 	if (ret == 0) {
+ 		if (card && card->set_bias_level_post) {
+-			dev_info(dapm->dev, "card->set_bias_level_post=>%p\n", card->set_bias_level_post);
++			pr_info("card->set_bias_level_post=>%p\n", card->set_bias_level_post);
+ 			ret = card->set_bias_level_post(card, level);
+ 		}
+ 	}
+@@ -736,20 +726,15 @@ static int dapm_seq_compare(struct snd_soc_dapm_widget *a,
+ 			    struct snd_soc_dapm_widget *b,
+ 			    int sort[])
+ {
+-	if (sort[a->id] != sort[b->id])
+-		return sort[a->id] - sort[b->id];
+-	if (a->reg != b->reg)
+-		return a->reg - b->reg;
+-	if (a->dapm != b->dapm)
+-		return (unsigned long)a->dapm - (unsigned long)b->dapm;
++	if (sort[a->id] != sort[b->id])  return sort[a->id] - sort[b->id];
++	if (a->reg != b->reg)            return a->reg - b->reg;
++	if (a->dapm != b->dapm)          return (unsigned long)a->dapm - (unsigned long)b->dapm;
+ 
+ 	return 0;
+ }
+ 
+ /* Insert a widget in order into a DAPM power sequence. */
+-static void dapm_seq_insert(struct snd_soc_dapm_widget *new_widget,
+-			    struct list_head *list,
+-			    int sort[])
++static void dapm_seq_insert(struct snd_soc_dapm_widget *new_widget, struct list_head *list, int sort[])
+ {
+ 	struct snd_soc_dapm_widget *w;
+ 
+@@ -864,8 +849,7 @@ static void dapm_seq_run_coalesced(struct snd_soc_dapm_context *dapm,
+  * Currently anything that requires more than a single write is not
+  * handled.
+  */
+-static void dapm_seq_run(struct snd_soc_dapm_context *dapm,
+-			 struct list_head *list, int event, int sort[])
++static void dapm_seq_run(struct snd_soc_dapm_context *dapm, struct list_head *list, int event, int sort[])
+ {
+ 	struct snd_soc_dapm_widget *w, *n;
+ 	LIST_HEAD(pending);
+@@ -892,28 +876,22 @@ static void dapm_seq_run(struct snd_soc_dapm_context *dapm,
+ 		switch (w->id) {
+ 		case snd_soc_dapm_pre:
+ 			if (!w->event)
+-				list_for_each_entry_safe_continue(w, n, list,
+-								  power_list);
++				list_for_each_entry_safe_continue(w, n, list, power_list);
+ 
+ 			if (event == SND_SOC_DAPM_STREAM_START)
+-				ret = w->event(w,
+-					       NULL, SND_SOC_DAPM_PRE_PMU);
++				ret = w->event(w, NULL, SND_SOC_DAPM_PRE_PMU);
+ 			else if (event == SND_SOC_DAPM_STREAM_STOP)
+-				ret = w->event(w,
+-					       NULL, SND_SOC_DAPM_PRE_PMD);
++				ret = w->event(w, NULL, SND_SOC_DAPM_PRE_PMD);
+ 			break;
+ 
+ 		case snd_soc_dapm_post:
+ 			if (!w->event)
+-				list_for_each_entry_safe_continue(w, n, list,
+-								  power_list);
++				list_for_each_entry_safe_continue(w, n, list, power_list);
+ 
+ 			if (event == SND_SOC_DAPM_STREAM_START)
+-				ret = w->event(w,
+-					       NULL, SND_SOC_DAPM_POST_PMU);
++				ret = w->event(w, NULL, SND_SOC_DAPM_POST_PMU);
+ 			else if (event == SND_SOC_DAPM_STREAM_STOP)
+-				ret = w->event(w,
+-					       NULL, SND_SOC_DAPM_POST_PMD);
++				ret = w->event(w, NULL, SND_SOC_DAPM_POST_PMD);
+ 			break;
+ 
+ 		case snd_soc_dapm_input:
+@@ -936,8 +914,7 @@ static void dapm_seq_run(struct snd_soc_dapm_context *dapm,
+ 		}
+ 
+ 		if (ret < 0)
+-			dev_err(w->dapm->dev,
+-				"Failed to apply widget power: %d\n", ret);
++			dev_err(w->dapm->dev, "Failed to apply widget power: %d\n", ret);
+ 	}
+ 
+ 	if (!list_empty(&pending))
+@@ -1010,7 +987,6 @@ static int dapm_power_widgets(struct snd_soc_dapm_context *dapm, int event)
+ 		switch (w->id) {
+ 		case snd_soc_dapm_pre:			dapm_seq_insert(w, &down_list, dapm_down_seq);	break;
+ 		case snd_soc_dapm_post:			dapm_seq_insert(w, &up_list, dapm_up_seq);	break;
+-
+ 		default:
+ 			if (!w->power_check)		continue;
+ 
