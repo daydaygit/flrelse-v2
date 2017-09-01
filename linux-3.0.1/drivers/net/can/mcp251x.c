@@ -309,6 +309,8 @@ static int mcp251x_spi_trans(struct spi_device *spi, int len)
 	struct spi_message m;
 	int ret;
 
+	pr_err("%s(). len=%d ++++\n", __func__, len);
+
 	spi_message_init(&m);
 
 	if (mcp251x_enable_dma) {
@@ -319,6 +321,7 @@ static int mcp251x_spi_trans(struct spi_device *spi, int len)
 
 	spi_message_add_tail(&t, &m);
 
+	pr_err("%s(). todo:spi_sync()  ++++\n", __func__);
 	ret = spi_sync(spi, &m);
 	if (ret)
 		dev_err(&spi->dev, "spi transfer failed: ret = %d\n", ret);
@@ -980,9 +983,7 @@ static int __devinit mcp251x_can_probe(struct spi_device *spi)
 	struct mcp251x_platform_data *pdata = spi->dev.platform_data;
 	int ret = -ENODEV;
 
-	printk("\n@@@@@@@@@@@@@@@@@@@@\n");
-	printk("mcp251x probe 1111111111111111");
-	printk("\n@@@@@@@@@@@@@@@@@@@@\n");
+	pr_err("mcp251x_can_probe() +++++\n");
 
 	if (!pdata)
 		/* Platform data is required for osc freq */
@@ -1007,12 +1008,6 @@ static int __devinit mcp251x_can_probe(struct spi_device *spi)
 	priv->model = spi_get_device_id(spi)->driver_data;
 	priv->net = net;
 	dev_set_drvdata(&spi->dev, priv);
-
-
-
-
-
-
 
 	priv->spi = spi;
 	mutex_init(&priv->mcp_lock);
@@ -1059,6 +1054,7 @@ static int __devinit mcp251x_can_probe(struct spi_device *spi)
 		pdata->power_enable(1);
 
 	/* Call out to platform specific setup */
+	pr_err("mcp251x_can_probe() todo: board_specific_setup() +++++\n");
 	if (pdata->board_specific_setup)
 		pdata->board_specific_setup(spi);
 
@@ -1067,6 +1063,7 @@ static int __devinit mcp251x_can_probe(struct spi_device *spi)
 	/* Configure the SPI bus */
 	spi->mode = SPI_MODE_0;
 	spi->bits_per_word = 8;
+	pr_err("mcp251x_can_probe() mode=%d, bits_per_word=%d. todo spi_setup() +++++\n", spi->mode, spi->bits_per_word);
 	spi_setup(spi);
 
 	/* Here is OK to not lock the MCP, no one knows about it yet */
@@ -1211,6 +1208,7 @@ static struct spi_driver mcp251x_can_driver = {
 
 static int __init mcp251x_can_init(void)
 {
+	pr_err("%s() +++++\n", __func__);
 	return spi_register_driver(&mcp251x_can_driver);
 }
 

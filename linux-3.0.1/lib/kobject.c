@@ -221,12 +221,12 @@ int kobject_set_name_vargs(struct kobject *kobj, const char *fmt,
 	if (kobj->name && !fmt)
 		return 0;
 
-	kobj->name = kvasprintf(GFP_KERNEL, fmt, vargs);
+	kobj->name = kvasprintf(GFP_KERNEL, fmt, vargs);  /* 拼接字符串*/
 	if (!kobj->name)
 		return -ENOMEM;
 
 	/* ewww... some of these buggers have '/' in the name ... */
-	while ((s = strchr(kobj->name, '/')))
+	while ((s = strchr(kobj->name, '/')))  /*查找字符串Str中首次出现字符Val的位置*/
 		s[0] = '!';
 
 	kfree(old_name);

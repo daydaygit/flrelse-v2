@@ -103,11 +103,12 @@ static void spidev_complete(void *arg)
 	complete(arg);
 }
 
-static ssize_t
-spidev_sync(struct spidev_data *spidev, struct spi_message *message)
+static ssize_t spidev_sync(struct spidev_data *spidev, struct spi_message *message)
 {
 	DECLARE_COMPLETION_ONSTACK(done);
 	int status;
+
+	pr_err("%s. ++++++\n", __func__);
 
 	message->complete = spidev_complete;
 	message->context = &done;
@@ -128,8 +129,7 @@ spidev_sync(struct spidev_data *spidev, struct spi_message *message)
 	return status;
 }
 
-static inline ssize_t
-spidev_sync_write(struct spidev_data *spidev, size_t len)
+static inline ssize_t spidev_sync_write(struct spidev_data *spidev, size_t len)
 {
 	struct spi_transfer	t = {
 			.tx_buf		= spidev->buffer,
@@ -142,8 +142,7 @@ spidev_sync_write(struct spidev_data *spidev, size_t len)
 	return spidev_sync(spidev, &m);
 }
 
-static inline ssize_t
-spidev_sync_read(struct spidev_data *spidev, size_t len)
+static inline ssize_t spidev_sync_read(struct spidev_data *spidev, size_t len)
 {
 	struct spi_transfer	t = {
 			.rx_buf		= spidev->buffer,
@@ -159,11 +158,12 @@ spidev_sync_read(struct spidev_data *spidev, size_t len)
 /*-------------------------------------------------------------------------*/
 
 /* Read-only message with current device setup */
-static ssize_t
-spidev_read(struct file *filp, char __user *buf, size_t count, loff_t *f_pos)
+static ssize_t spidev_read(struct file *filp, char __user *buf, size_t count, loff_t *f_pos)
 {
 	struct spidev_data	*spidev;
 	ssize_t			status = 0;
+
+	pr_err("%s. ++++++\n", __func__);
 
 	/* chipselect only toggles at start or end of operation */
 	if (count > bufsiz)
@@ -188,13 +188,13 @@ spidev_read(struct file *filp, char __user *buf, size_t count, loff_t *f_pos)
 }
 
 /* Write-only message with current device setup */
-static ssize_t
-spidev_write(struct file *filp, const char __user *buf,
-		size_t count, loff_t *f_pos)
+static ssize_t spidev_write(struct file *filp, const char __user *buf, size_t count, loff_t *f_pos)
 {
 	struct spidev_data	*spidev;
 	ssize_t			status = 0;
 	unsigned long		missing;
+
+	pr_err("%s. ++++++\n", __func__);
 
 	/* chipselect only toggles at start or end of operation */
 	if (count > bufsiz)
@@ -213,8 +213,7 @@ spidev_write(struct file *filp, const char __user *buf,
 	return status;
 }
 
-static int spidev_message(struct spidev_data *spidev,
-		struct spi_ioc_transfer *u_xfers, unsigned n_xfers)
+static int spidev_message(struct spidev_data *spidev, struct spi_ioc_transfer *u_xfers, unsigned n_xfers)
 {
 	struct spi_message	msg;
 	struct spi_transfer	*k_xfers;
@@ -223,6 +222,8 @@ static int spidev_message(struct spidev_data *spidev,
 	unsigned		n, total;
 	u8			*buf;
 	int			status = -EFAULT;
+
+	pr_err("%s. ++++++\n", __func__);
 
 	spi_message_init(&msg);
 	k_xfers = kcalloc(n_xfers, sizeof(*k_tmp), GFP_KERNEL);
@@ -304,8 +305,7 @@ done:
 	return status;
 }
 
-static long
-spidev_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
+static long spidev_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
 {
 	int			err = 0;
 	int			retval = 0;
@@ -314,6 +314,8 @@ spidev_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
 	u32			tmp;
 	unsigned		n_ioc;
 	struct spi_ioc_transfer	*ioc;
+
+	pr_err("%s. cmd=%d, arg=%ld ++++++\n", __func__, cmd, arg);
 
 	/* Check type and command number */
 	if (_IOC_TYPE(cmd) != SPI_IOC_MAGIC)
@@ -487,6 +489,8 @@ static int spidev_open(struct inode *inode, struct file *filp)
 	struct spidev_data	*spidev;
 	int			status = -ENXIO;
 
+	pr_err("%s. ++++++\n", __func__);
+
 	mutex_lock(&device_list_lock);
 
 	list_for_each_entry(spidev, &device_list, device_entry) {
@@ -520,6 +524,7 @@ static int spidev_release(struct inode *inode, struct file *filp)
 	struct spidev_data	*spidev;
 	int			status = 0;
 
+	pr_err("%s. ++++++\n", __func__);
 	mutex_lock(&device_list_lock);
 	spidev = filp->private_data;
 	filp->private_data = NULL;
@@ -577,6 +582,7 @@ static int __devinit spidev_probe(struct spi_device *spi)
 	int			status;
 	unsigned long		minor;
 
+	pr_err("%s. ++++++\n", __func__);
 	/* Allocate driver data */
 	spidev = kzalloc(sizeof(*spidev), GFP_KERNEL);
 	if (!spidev)
@@ -624,6 +630,7 @@ static int __devexit spidev_remove(struct spi_device *spi)
 {
 	struct spidev_data	*spidev = spi_get_drvdata(spi);
 
+	pr_err("%s. ++++++\n", __func__);
 	/* make sure ops on existing fds can abort cleanly */
 	spin_lock_irq(&spidev->spi_lock);
 	spidev->spi = NULL;
@@ -663,6 +670,7 @@ static int __init spidev_init(void)
 {
 	int status;
 
+	pr_err("%s. ++++++\n", __func__);
 	/* Claim our 256 reserved device numbers.  Then register a class
 	 * that will key udev/mdev to add/remove /dev nodes.  Last, register
 	 * the driver which manages those device numbers.
@@ -689,6 +697,7 @@ module_init(spidev_init);
 
 static void __exit spidev_exit(void)
 {
+	pr_err("%s. ++++++\n", __func__);
 	spi_unregister_driver(&spidev_spi_driver);
 	class_destroy(spidev_class);
 	unregister_chrdev(SPIDEV_MAJOR, spidev_spi_driver.driver.name);

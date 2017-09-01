@@ -1,0 +1,2145 @@
+diff --git a/linux-3.0.1/arch/arm/mach-s3c64xx/dma.c b/linux-3.0.1/arch/arm/mach-s3c64xx/dma.c
+index 204bfaf..00cf698 100755
+--- a/linux-3.0.1/arch/arm/mach-s3c64xx/dma.c
++++ b/linux-3.0.1/arch/arm/mach-s3c64xx/dma.c
+@@ -51,7 +51,7 @@ static unsigned char debug_show_buffs = 0;
+ 
+ static void dbg_showchan(struct s3c2410_dma_chan *chan)
+ {
+-	pr_debug("DMA%d: %08x->%08x L %08x C %08x,%08x S %08x\n",
++	pr_err("dbg_showchan() DMA%d: %08x->%08x L %08x C %08x,%08x S %08x\n",
+ 		 chan->number,
+ 		 readl(chan->regs + PL080_CH_SRC_ADDR),
+ 		 readl(chan->regs + PL080_CH_DST_ADDR),
+@@ -63,7 +63,7 @@ static void dbg_showchan(struct s3c2410_dma_chan *chan)
+ 
+ static void show_lli(struct pl080s_lli *lli)
+ {
+-	pr_debug("LLI[%p] %08x->%08x, NL %08x C %08x,%08x\n",
++	pr_err("LLI[%p] %08x->%08x, NL %08x C %08x,%08x\n",
+ 		 lli, lli->src_addr, lli->dst_addr, lli->next_lli,
+ 		 lli->control0, lli->control1);
+ }
+@@ -102,6 +102,7 @@ static struct s3c2410_dma_chan *s3c64xx_dma_map_channel(unsigned int channel)
+ 
+ 	for (offs = 0; offs < 8; offs++) {
+ 		chan = &s3c2410_chans[start + offs];
++		pr_err("%s ch_num=%d, in_use=%d\n", __func__, chan->number, chan->in_use);
+ 		if (!chan->in_use)
+ 			goto found;
+ 	}
+@@ -135,6 +136,8 @@ int s3c2410_dma_config(enum dma_ch channel, int xferunit)
+ 		return -EINVAL;
+ 	}
+ 
++	pr_err("%s() channel=%d, xferunit=%d, hw_width=%d +++++\n", __func__, channel, xferunit, chan->hw_width);
++
+ 	return 0;
+ }
+ EXPORT_SYMBOL(s3c2410_dma_config);
+@@ -146,6 +149,8 @@ static void s3c64xx_dma_fill_lli(struct s3c2410_dma_chan *chan,
+ 	dma_addr_t src, dst;
+ 	u32 control0, control1;
+ 
++	pr_err("%s() chan->source=%d +++++\n", __func__, chan->source);
++
+ 	switch (chan->source) {
+ 	case S3C2410_DMASRC_HW:
+ 		src = chan->dev_addr;
+@@ -202,19 +207,19 @@ static int s3c64xx_dma_start(struct s3c2410_dma_chan *chan)
+ 
+ 	dbg_showchan(chan);
+ 
+-	pr_debug("%s: clearing interrupts\n", __func__);
++	pr_err("%s: clearing interrupts\n", __func__);
+ 
+ 	/* clear interrupts */
+ 	writel(bit, dmac->regs + PL080_TC_CLEAR);
+ 	writel(bit, dmac->regs + PL080_ERR_CLEAR);
+ 
+-	pr_debug("%s: starting channel\n", __func__);
++	pr_err("%s: starting channel\n", __func__);
+ 
+ 	config = readl(chan->regs + PL080S_CH_CONFIG);
+ 	config |= PL080_CONFIG_ENABLE;
+ 	config &= ~PL080_CONFIG_HALT;
+ 
+-	pr_debug("%s: writing config %08x\n", __func__, config);
++	pr_err("%s: writing config %08x\n", __func__, config);
+ 	writel(config, chan->regs + PL080S_CH_CONFIG);
+ 
+ 	return 0;
+@@ -341,6 +346,8 @@ int s3c2410_dma_enqueue(enum dma_ch channel, void *id,
+ 	unsigned long flags;
+ 	int ret;
+ 
++	pr_err("%s() channel=%d, chan->number=%d, size=%d +++++\n", __func__, channel, chan->number, size);
++
+ 	WARN_ON(!chan);
+ 	if (!chan)
+ 		return -EINVAL;
+@@ -358,7 +365,7 @@ int s3c2410_dma_enqueue(enum dma_ch channel, void *id,
+ 		goto err_buff;
+ 	}
+ 
+-	pr_debug("%s: buff %p, dp %08x lli (%p, %08x) %d\n",
++	pr_err("%s: buff %p, dp %08x lli (%p, %08x) %d\n",
+ 		 __func__, buff, data, lli, (u32)buff->lli_dma, size);
+ 
+ 	buff->lli = lli;
+@@ -415,16 +422,15 @@ err_buff:
+ EXPORT_SYMBOL(s3c2410_dma_enqueue);
+ 
+ 
+-int s3c2410_dma_devconfig(enum dma_ch channel,
++int s3c2410_dma_devconfig(enum dma_ch  channel,
+ 			  enum s3c2410_dmasrc source,
+-			  unsigned long devaddr)
++			  unsigned long       devaddr)
+ {
+ 	struct s3c2410_dma_chan *chan = s3c_dma_lookup_channel(channel);
+ 	u32 peripheral;
+ 	u32 config = 0;
+ 
+-	pr_debug("%s: channel %d, source %d, dev %08lx, chan %p\n",
+-		 __func__, channel, source, devaddr, chan);
++	pr_err("%s: channel=%d, source=%d, dev=%08lx, chan=%p\n",__func__, channel, source, devaddr, chan);
+ 
+ 	WARN_ON(!chan);
+ 	if (!chan)
+@@ -434,7 +440,7 @@ int s3c2410_dma_devconfig(enum dma_ch channel,
+ 	chan->source = source;
+ 	chan->dev_addr = devaddr;
+ 
+-	pr_debug("%s: peripheral %d\n", __func__, peripheral);
++	pr_err("%s: peripheral %d\n", __func__, peripheral);
+ 
+ 	switch (source) {
+ 	case S3C2410_DMASRC_HW:
+@@ -454,10 +460,10 @@ int s3c2410_dma_devconfig(enum dma_ch channel,
+ 	config |= PL080_CONFIG_TC_IRQ_MASK;
+ 	config |= PL080_CONFIG_ERR_IRQ_MASK;
+ 
+-	pr_debug("%s: config %08x\n", __func__, config);
+-
+ 	writel(config, chan->regs + PL080S_CH_CONFIG);
+ 
++	pr_err("%s: config=0x%08X, reg_addr=0x%08X\n", __func__, config, (u32)(chan->regs + PL080S_CH_CONFIG));
++
+ 	return 0;
+ }
+ EXPORT_SYMBOL(s3c2410_dma_devconfig);
+@@ -488,14 +494,14 @@ EXPORT_SYMBOL(s3c2410_dma_getposition);
+ */
+ 
+ int s3c2410_dma_request(enum dma_ch channel,
+-			struct s3c2410_dma_client *client,
+-			void *dev)
++			      struct s3c2410_dma_client *client,
++			      void *dev)
+ {
+ 	struct s3c2410_dma_chan *chan;
+ 	unsigned long flags;
+ 
+-	pr_debug("dma%d: s3c2410_request_dma: client=%s, dev=%p\n",
+-		 channel, client->name, dev);
++	pr_err("%s. dma_chan=%d: s3c2410_request_dma: client='%s', dev=%p\n",
++		__func__,channel,client->name, dev ? dev : "NULL");
+ 
+ 	local_irq_save(flags);
+ 
+@@ -514,12 +520,10 @@ int s3c2410_dma_request(enum dma_ch channel,
+ 	local_irq_restore(flags);
+ 
+ 	/* need to setup */
+-
+-	pr_debug("%s: channel initialised, %p\n", __func__, chan);
++	pr_err("%s: channel initialised, %p\n", __func__, chan);
+ 
+ 	return chan->number | DMACH_LOW_LEVEL;
+ }
+-
+ EXPORT_SYMBOL(s3c2410_dma_request);
+ 
+ /* s3c2410_dma_free
+diff --git a/linux-3.0.1/arch/arm/mach-s3c64xx/mach-smdk6410.c b/linux-3.0.1/arch/arm/mach-s3c64xx/mach-smdk6410.c
+index 31a916c..6d9df1a 100755
+--- a/linux-3.0.1/arch/arm/mach-s3c64xx/mach-smdk6410.c
++++ b/linux-3.0.1/arch/arm/mach-s3c64xx/mach-smdk6410.c
+@@ -203,7 +203,7 @@ static struct s3c64xx_spi_csinfo s3c64xx_spi1_csinfo = {
+ 
+ static int mcp251x_ioSetup(struct spi_device *spi)
+ {
+-	printk(KERN_INFO "mcp251x: setup gpio pins CS and External Int\n");
++	printk(KERN_INFO "%s. mcp251x: setup gpio pins CS and External Int\n", __func__);
+ 	s3c_gpio_setpull(S3C64XX_GPL(8), S3C_GPIO_PULL_UP);		// External interrupt from CAN controller
+ 	s3c_gpio_cfgpin(S3C64XX_GPL(8), S3C_GPIO_SFN(3)); 		// External interrupt from CAN controller (hopefully external interrupt)
+ 	//s3c_gpio_cfgpin(S3C64XX_GPL(8), S3C_GPIO_INPUT);		// External interrupt from CAN controller
+@@ -219,7 +219,7 @@ static struct mcp251x_platform_data mcp251x_info = {
+ 	.power_enable = NULL,
+ };
+ 
+-static struct spi_board_info __initdata forlinx6410_mc251x_info[]  = {
++static struct spi_board_info __initdata forlinx6410_mc251x_info[]  = {  /* drivers/net/can/mcp251x.c */
+ 	{
+ 		.modalias = "mcp2515",	
+ 		.platform_data = &mcp251x_info,
+@@ -1040,6 +1040,8 @@ static void __init smdk6410_machine_init(void)
+ {
+ 	u32 cs1;
+ 
++	printk(KERN_ERR "smdk6410_machine_init() @arch/arm/mach-s3c64xx/mach-smdk6410.c\n");
++
+ 	s3c_i2c0_set_platdata(NULL);
+ 	//s3c_i2c1_set_platdata(NULL);
+ 	s3c_fb_set_platdata(&smdk6410_lcd_pdata);
+diff --git a/linux-3.0.1/arch/arm/plat-samsung/dma.c b/linux-3.0.1/arch/arm/plat-samsung/dma.c
+index 6143aa1..bfc2d86 100755
+--- a/linux-3.0.1/arch/arm/plat-samsung/dma.c
++++ b/linux-3.0.1/arch/arm/plat-samsung/dma.c
+@@ -31,6 +31,8 @@ struct s3c2410_dma_chan *s3c_dma_chan_map[DMACH_MAX];
+ 
+ struct s3c2410_dma_chan *s3c_dma_lookup_channel(unsigned int channel)
+ {
++	pr_err("%s: channel=%d @arch/arm/plat-samsung/dma.c ++++\n", __func__, channel);
++
+ 	if (channel & DMACH_LOW_LEVEL)
+ 		return &s3c2410_chans[channel & ~DMACH_LOW_LEVEL];
+ 	else
+@@ -63,7 +65,7 @@ int s3c2410_dma_set_buffdone_fn(enum dma_ch channel, s3c2410_dma_cbfn_t rtn)
+ 	if (chan == NULL)
+ 		return -EINVAL;
+ 
+-	pr_debug("%s: chan=%p, callback rtn=%p\n", __func__, chan, rtn);
++	pr_err("%s: channel=%d, chan=%p, callback rtn=%p @plat-samsung/dma.c +++\n", __func__, channel, chan, rtn);
+ 
+ 	chan->callback_fn = rtn;
+ 
+diff --git a/linux-3.0.1/arch/arm/plat-samsung/s3c-pl330.c b/linux-3.0.1/arch/arm/plat-samsung/s3c-pl330.c
+index f85638c..6dc5d77 100755
+--- a/linux-3.0.1/arch/arm/plat-samsung/s3c-pl330.c
++++ b/linux-3.0.1/arch/arm/plat-samsung/s3c-pl330.c
+@@ -942,6 +942,8 @@ int s3c2410_dma_set_buffdone_fn(enum dma_ch id, s3c2410_dma_cbfn_t rtn)
+ 	unsigned long flags;
+ 	int ret = 0;
+ 
++	pr_err("%s: id=%p, rtn=%p @plat-samsung/s3c-pl330.c +++\n", __func__, id, rtn);
++
+ 	spin_lock_irqsave(&res_lock, flags);
+ 
+ 	ch = id_to_chan(id);
+diff --git a/linux-3.0.1/drivers/base/bus.c b/linux-3.0.1/drivers/base/bus.c
+index 000e7b2..95a567b 100755
+--- a/linux-3.0.1/drivers/base/bus.c
++++ b/linux-3.0.1/drivers/base/bus.c
+@@ -317,8 +317,9 @@ EXPORT_SYMBOL_GPL(bus_for_each_dev);
+  * return to the caller and not iterate over any more devices.
+  */
+ struct device *bus_find_device(struct bus_type *bus,
+-			       struct device *start, void *data,
+-			       int (*match)(struct device *dev, void *data))
++			           struct device *start,
++			           void *data,
++			           int (*match)(struct device *dev, void *data)) /* º¯ÊýÖ¸Õë,Ã»ÓÐÎÊÌâ*/
+ {
+ 	struct klist_iter i;
+ 	struct device *dev;
+@@ -326,11 +327,14 @@ struct device *bus_find_device(struct bus_type *bus,
+ 	if (!bus)
+ 		return NULL;
+ 
+-	klist_iter_init_node(&bus->p->klist_devices, &i,
+-			     (start ? &start->p->knode_bus : NULL));
+-	while ((dev = next_device(&i)))
+-		if (match(dev, data) && get_device(dev))
++	pr_err("%s. match=>%p (match_name)++++\n", __func__, match);  /* c02444e4 = match_name */
++
++	klist_iter_init_node(&bus->p->klist_devices, &i, (start ? &start->p->knode_bus : NULL));
++	while ((dev = next_device(&i))) {
++		pr_err("%s. next_device=>%p ++++\n", __func__, next_device);
++		if (match(dev, data) && get_device(dev))  /* Ñ°ÕÒbusÉè±¸Á´±íÖÐµÄÄ³¸öÉè±¸£¬Ê¹ÓÃÖ¸¶¨µÄÆ¥Åäº¯Êý */
+ 			break;
++	}
+ 	klist_iter_exit(&i);
+ 	return dev;
+ }
+@@ -340,6 +344,7 @@ static int match_name(struct device *dev, void *data)
+ {
+ 	const char *name = data;
+ 
++	pr_err("%s. name=%s, dev_name(dev)=%s ++++\n", __func__, name, dev_name(dev));
+ 	return sysfs_streq(name, dev_name(dev));
+ }
+ 
+@@ -353,9 +358,10 @@ static int match_name(struct device *dev, void *data)
+  * searching by a name automatically, no need to write another strcmp matching
+  * function.
+  */
+-struct device *bus_find_device_by_name(struct bus_type *bus,
+-				       struct device *start, const char *name)
++struct device *bus_find_device_by_name(struct bus_type *bus, struct device *start, const char *name)
+ {
++	pr_err("%s. bus->name=%s, dev_name(&spi->dev)=%s\n", __func__,bus->name, name);
++
+ 	return bus_find_device(bus, start, (void *)name, match_name);
+ }
+ EXPORT_SYMBOL_GPL(bus_find_device_by_name);
+diff --git a/linux-3.0.1/drivers/base/core.c b/linux-3.0.1/drivers/base/core.c
+index bc8729d..632e8c3 100755
+--- a/linux-3.0.1/drivers/base/core.c
++++ b/linux-3.0.1/drivers/base/core.c
+@@ -918,7 +918,7 @@ int device_add(struct device *dev)
+ 		goto name_error;
+ 	}
+ 
+-	pr_debug("device: '%s': %s\n", dev_name(dev), __func__);
++	pr_err("%s() dev_name='%s' @drivers/base/core.c +++\n", __func__, dev_name(dev));
+ 
+ 	parent = get_device(dev->parent);
+ 	setup_parent(dev, parent);
+diff --git a/linux-3.0.1/drivers/net/can/mcp251x.c b/linux-3.0.1/drivers/net/can/mcp251x.c
+index e6bdb70..965ac8a 100755
+--- a/linux-3.0.1/drivers/net/can/mcp251x.c
++++ b/linux-3.0.1/drivers/net/can/mcp251x.c
+@@ -309,6 +309,8 @@ static int mcp251x_spi_trans(struct spi_device *spi, int len)
+ 	struct spi_message m;
+ 	int ret;
+ 
++	pr_err("%s(). len=%d ++++\n", __func__, len);
++
+ 	spi_message_init(&m);
+ 
+ 	if (mcp251x_enable_dma) {
+@@ -319,6 +321,7 @@ static int mcp251x_spi_trans(struct spi_device *spi, int len)
+ 
+ 	spi_message_add_tail(&t, &m);
+ 
++	pr_err("%s(). todo:spi_sync()  ++++\n", __func__);
+ 	ret = spi_sync(spi, &m);
+ 	if (ret)
+ 		dev_err(&spi->dev, "spi transfer failed: ret = %d\n", ret);
+@@ -980,9 +983,7 @@ static int __devinit mcp251x_can_probe(struct spi_device *spi)
+ 	struct mcp251x_platform_data *pdata = spi->dev.platform_data;
+ 	int ret = -ENODEV;
+ 
+-	printk("\n@@@@@@@@@@@@@@@@@@@@\n");
+-	printk("mcp251x probe 1111111111111111");
+-	printk("\n@@@@@@@@@@@@@@@@@@@@\n");
++	pr_err("mcp251x_can_probe() +++++\n");
+ 
+ 	if (!pdata)
+ 		/* Platform data is required for osc freq */
+@@ -1008,12 +1009,6 @@ static int __devinit mcp251x_can_probe(struct spi_device *spi)
+ 	priv->net = net;
+ 	dev_set_drvdata(&spi->dev, priv);
+ 
+-
+-
+-
+-
+-
+-
+ 	priv->spi = spi;
+ 	mutex_init(&priv->mcp_lock);
+ 	
+@@ -1059,6 +1054,7 @@ static int __devinit mcp251x_can_probe(struct spi_device *spi)
+ 		pdata->power_enable(1);
+ 
+ 	/* Call out to platform specific setup */
++	pr_err("mcp251x_can_probe() todo: board_specific_setup() +++++\n");
+ 	if (pdata->board_specific_setup)
+ 		pdata->board_specific_setup(spi);
+ 
+@@ -1067,6 +1063,7 @@ static int __devinit mcp251x_can_probe(struct spi_device *spi)
+ 	/* Configure the SPI bus */
+ 	spi->mode = SPI_MODE_0;
+ 	spi->bits_per_word = 8;
++	pr_err("mcp251x_can_probe() mode=%d, bits_per_word=%d. todo spi_setup() +++++\n", spi->mode, spi->bits_per_word);
+ 	spi_setup(spi);
+ 
+ 	/* Here is OK to not lock the MCP, no one knows about it yet */
+@@ -1211,6 +1208,7 @@ static struct spi_driver mcp251x_can_driver = {
+ 
+ static int __init mcp251x_can_init(void)
+ {
++	pr_err("%s() +++++\n", __func__);
+ 	return spi_register_driver(&mcp251x_can_driver);
+ }
+ 
+diff --git a/linux-3.0.1/drivers/of/of_spi.c b/linux-3.0.1/drivers/of/of_spi.c
+index 1dbce58..dd5f5ea 100755
+--- a/linux-3.0.1/drivers/of/of_spi.c
++++ b/linux-3.0.1/drivers/of/of_spi.c
+@@ -27,6 +27,8 @@ void of_register_spi_devices(struct spi_master *master)
+ 	int rc;
+ 	int len;
+ 
++	pr_err("%s. +++++\n", __func__);
++
+ 	if (!master->dev.of_node)
+ 		return;
+ 
+@@ -41,10 +43,9 @@ void of_register_spi_devices(struct spi_master *master)
+ 		}
+ 
+ 		/* Select device driver */
+-		if (of_modalias_node(nc, spi->modalias,
+-				     sizeof(spi->modalias)) < 0) {
+-			dev_err(&master->dev, "cannot find modalias for %s\n",
+-				nc->full_name);
++		pr_err("%s. spi->modalias=%s +++++\n", __func__, spi->modalias);
++		if (of_modalias_node(nc, spi->modalias, sizeof(spi->modalias)) < 0) {
++			dev_err(&master->dev, "cannot find modalias for %s\n", nc->full_name);
+ 			spi_dev_put(spi);
+ 			continue;
+ 		}
+@@ -52,33 +53,32 @@ void of_register_spi_devices(struct spi_master *master)
+ 		/* Device address */
+ 		prop = of_get_property(nc, "reg", &len);
+ 		if (!prop || len < sizeof(*prop)) {
+-			dev_err(&master->dev, "%s has no 'reg' property\n",
+-				nc->full_name);
++			dev_err(&master->dev, "%s has no 'reg' property\n", nc->full_name);
+ 			spi_dev_put(spi);
+ 			continue;
+ 		}
+ 		spi->chip_select = be32_to_cpup(prop);
++		pr_err("%s. chip_select=%d +++++\n", __func__, chip_select);
+ 
+ 		/* Mode (clock phase/polarity/etc.) */
+-		if (of_find_property(nc, "spi-cpha", NULL))
+-			spi->mode |= SPI_CPHA;
+-		if (of_find_property(nc, "spi-cpol", NULL))
+-			spi->mode |= SPI_CPOL;
+-		if (of_find_property(nc, "spi-cs-high", NULL))
+-			spi->mode |= SPI_CS_HIGH;
++		if (of_find_property(nc, "spi-cpha", NULL))      spi->mode |= SPI_CPHA;
++		if (of_find_property(nc, "spi-cpol", NULL))      spi->mode |= SPI_CPOL;
++		if (of_find_property(nc, "spi-cs-high", NULL))   spi->mode |= SPI_CS_HIGH;
++		pr_err("%s. spi->mode=%d +++++\n", __func__, spi->mode);
+ 
+ 		/* Device speed */
+ 		prop = of_get_property(nc, "spi-max-frequency", &len);
+ 		if (!prop || len < sizeof(*prop)) {
+-			dev_err(&master->dev, "%s has no 'spi-max-frequency' property\n",
+-				nc->full_name);
++			dev_err(&master->dev, "%s has no 'spi-max-frequency' property\n",nc->full_name);
+ 			spi_dev_put(spi);
+ 			continue;
+ 		}
+ 		spi->max_speed_hz = be32_to_cpup(prop);
++		pr_err("%s. max_speed_hz=%d +++++\n", __func__, spi->max_speed_hz);
+ 
+ 		/* IRQ */
+ 		spi->irq = irq_of_parse_and_map(nc, 0);
++		pr_err("%s. spi->irq=%d +++++\n", __func__, spi->irq);
+ 
+ 		/* Store a pointer to the node in the device structure */
+ 		of_node_get(nc);
+@@ -88,8 +88,7 @@ void of_register_spi_devices(struct spi_master *master)
+ 		request_module(spi->modalias);
+ 		rc = spi_add_device(spi);
+ 		if (rc) {
+-			dev_err(&master->dev, "spi_device register error %s\n",
+-				nc->full_name);
++			dev_err(&master->dev, "spi_device register error %s\n",nc->full_name);
+ 			spi_dev_put(spi);
+ 		}
+ 
+diff --git a/linux-3.0.1/drivers/spi/spi.c b/linux-3.0.1/drivers/spi/spi.c
+index dae7739..eda7932 100755
+--- a/linux-3.0.1/drivers/spi/spi.c
++++ b/linux-3.0.1/drivers/spi/spi.c
+@@ -252,6 +252,7 @@ static void spi_drv_shutdown(struct device *dev)
+  */
+ int spi_register_driver(struct spi_driver *sdrv)
+ {
++	pr_err("%s() +++++\n", __func__);
+ 	sdrv->driver.bus = &spi_bus_type;
+ 	if (sdrv->probe)
+ 		sdrv->driver.probe = spi_drv_probe;
+@@ -307,6 +308,8 @@ struct spi_device *spi_alloc_device(struct spi_master *master)
+ 	struct spi_device	*spi;
+ 	struct device		*dev = master->dev.parent;
+ 
++        pr_err("%s. ++++++\n", __func__);
++
+ 	if (!spi_master_get(master))
+ 		return NULL;
+ 
+@@ -342,6 +345,8 @@ int spi_add_device(struct spi_device *spi)
+ 	struct device *d;
+ 	int status;
+ 
++	pr_err("spi_add_device() +++++\n");
++
+ 	/* Chipselects are numbered 0..max; validate. */
+ 	if (spi->chip_select >= spi->master->num_chipselect) {
+ 		dev_err(dev, "cs%d >= max %d\n",
+@@ -351,9 +356,9 @@ int spi_add_device(struct spi_device *spi)
+ 	}
+ 
+ 	/* Set the bus ID string */
+-	dev_set_name(&spi->dev, "%s.%u", dev_name(&spi->master->dev),
+-			spi->chip_select);
+-
++	dev_set_name(&spi->dev, "%s.%u", dev_name(&spi->master->dev), spi->chip_select);
++	pr_err("%s(). &spi->master->dev=%s, spi->chip_select=%u ++++\n",
++		__func__, dev_name(&spi->master->dev), spi->chip_select);
+ 
+ 	/* We need to make sure there's no other device with this
+ 	 * chipselect **BEFORE** we call setup(), else we'll trash
+@@ -363,8 +368,7 @@ int spi_add_device(struct spi_device *spi)
+ 
+ 	d = bus_find_device_by_name(&spi_bus_type, NULL, dev_name(&spi->dev));
+ 	if (d != NULL) {
+-		dev_err(dev, "chipselect %d already in use\n",
+-				spi->chip_select);
++ 		dev_err(dev, "chipselect %d already in use\n", spi->chip_select);
+ 		put_device(d);
+ 		status = -EBUSY;
+ 		goto done;
+@@ -409,10 +413,9 @@ EXPORT_SYMBOL_GPL(spi_add_device);
+  *
+  * Returns the new device, or NULL.
+  */
+-struct spi_device *spi_new_device(struct spi_master *master,
+-				  struct spi_board_info *chip)
++struct spi_device *spi_new_device(struct spi_master *master, struct spi_board_info *chip)
+ {
+-	struct spi_device	*proxy;
++	struct spi_device	*proxy;   /*spi_device ¾ÍÊÇ´ÓÕâÀïÃ°³öÀ´µÄå**/
+ 	int			status;
+ 
+ 	/* NOTE:  caller did any chip->bus_num checks necessary.
+@@ -422,6 +425,8 @@ struct spi_device *spi_new_device(struct spi_master *master,
+ 	 * suggests syslogged diagnostics are best here (ugh).
+ 	 */
+ 
++        pr_err("%s. ++++++\n", __func__);
++
+ 	proxy = spi_alloc_device(master);
+ 	if (!proxy)
+ 		return NULL;
+@@ -447,18 +452,18 @@ struct spi_device *spi_new_device(struct spi_master *master,
+ }
+ EXPORT_SYMBOL_GPL(spi_new_device);
+ 
+-static void spi_match_master_to_boardinfo(struct spi_master *master,
+-				struct spi_board_info *bi)
++static void spi_match_master_to_boardinfo(struct spi_master *master, struct spi_board_info *bi)
+ {
+ 	struct spi_device *dev;
+ 
++        pr_err("%s. master->bus_num=%d, bi->bus_num=%d ++++++\n", __func__,master->bus_num, bi->bus_num);
++
+ 	if (master->bus_num != bi->bus_num)
+ 		return;
+ 
+ 	dev = spi_new_device(master, bi);
+ 	if (!dev)
+-		dev_err(master->dev.parent, "can't create new device for %s\n",
+-			bi->modalias);
++		dev_err(master->dev.parent, "can't create new device for %s\n", bi->modalias);
+ }
+ 
+ /**
+@@ -480,12 +485,13 @@ static void spi_match_master_to_boardinfo(struct spi_master *master,
+  * The board info passed can safely be __initdata ... but be careful of
+  * any embedded pointers (platform_data, etc), they're copied as-is.
+  */
+-int __init
+-spi_register_board_info(struct spi_board_info const *info, unsigned n)
++int __init spi_register_board_info(struct spi_board_info const *info, unsigned n)
+ {
+ 	struct boardinfo *bi;
+ 	int i;
+ 
++        pr_err("spi.c %s. ++++++\n", __func__);
++
+ 	bi = kzalloc(n * sizeof(*bi), GFP_KERNEL);
+ 	if (!bi)
+ 		return -ENOMEM;
+@@ -544,6 +550,8 @@ struct spi_master *spi_alloc_master(struct device *dev, unsigned size)
+ {
+ 	struct spi_master	*master;
+ 
++        pr_err("%s. ++++++\n", __func__);
++
+ 	if (!dev)
+ 		return NULL;
+ 
+@@ -554,7 +562,7 @@ struct spi_master *spi_alloc_master(struct device *dev, unsigned size)
+ 	device_initialize(&master->dev);
+ 	master->dev.class = &spi_master_class;
+ 	master->dev.parent = get_device(dev);
+-	spi_master_set_devdata(master, &master[1]);
++	spi_master_set_devdata(master, &master[1]);  // (&master->dev)->p->driver_data = data;
+ 
+ 	return master;
+ }
+@@ -580,6 +588,9 @@ EXPORT_SYMBOL_GPL(spi_alloc_master);
+  * After a successful return, the caller is responsible for calling
+  * spi_unregister_master().
+  */
++
++/* Since SPI does not directly support dynamic device identification, 
++ *  boards need configuration tables telling which chip is at which address.*/
+ int spi_register_master(struct spi_master *master)
+ {
+ 	static atomic_t		dyn_bus_id = ATOMIC_INIT((1<<15) - 1);
+@@ -588,6 +599,8 @@ int spi_register_master(struct spi_master *master)
+ 	int			status = -ENODEV;
+ 	int			dynamic = 0;
+ 
++        pr_err("%s. ++++++\n", __func__);
++
+ 	if (!dev)
+ 		return -ENODEV;
+ 
+@@ -614,11 +627,12 @@ int spi_register_master(struct spi_master *master)
+ 	 * registration fails if the bus ID is in use.
+ 	 */
+ 	dev_set_name(&master->dev, "spi%u", master->bus_num);
++	pr_err("%s() create name=%s ++++\n", __func__, (&((&master->dev)->kobj))->name);
++
+ 	status = device_add(&master->dev);
+ 	if (status < 0)
+ 		goto done;
+-	dev_dbg(dev, "registered master %s%s\n", dev_name(&master->dev),
+-			dynamic ? " (dynamic)" : "");
++	pr_err("%s() registered master %s%s +++\n", __func__, dev_name(&master->dev), dynamic ? " (dynamic)" : "");
+ 
+ 	mutex_lock(&board_lock);
+ 	list_add_tail(&master->list, &spi_master_list);
+@@ -689,8 +703,9 @@ struct spi_master *spi_busnum_to_master(u16 bus_num)
+ 	struct device		*dev;
+ 	struct spi_master	*master = NULL;
+ 
+-	dev = class_find_device(&spi_master_class, NULL, &bus_num,
+-				__spi_master_match);
++        pr_err("%s. ++++++\n", __func__);
++
++	dev = class_find_device(&spi_master_class, NULL, &bus_num, __spi_master_match);
+ 	if (dev)
+ 		master = container_of(dev, struct spi_master, dev);
+ 	/* reference got in class_find_device */
+@@ -737,24 +752,30 @@ int spi_setup(struct spi_device *spi)
+ 			bad_bits);
+ 		return -EINVAL;
+ 	}
++	pr_err("%s(). spi->mode=0x%x, spi->master->mode_bits=0x%x, bad_bits=0x%x +++\n",
++	       __func__, spi->mode, spi->master->mode_bits, bad_bits);
++
+ 
+ 	if (!spi->bits_per_word)
+ 		spi->bits_per_word = 8;
++	pr_err("%s(). bits_per_word=%d +++\n", __func__, spi->bits_per_word);
+ 
++	pr_err("%s(). spi->master->setup=>%p +++\n", __func__, spi->master->setup); /* s3c64xx_spi_setup */
+ 	status = spi->master->setup(spi);
+ 
+-	dev_dbg(&spi->dev, "setup mode %d, %s%s%s%s"
+-				"%u bits/w, %u Hz max --> %d\n",
++	pr_err("%s(). setup modeALL=%d, %s%s%s%s%u bits/w, max_speed_hz=%u Hz max --> status=%d\n",
++		        __func__,
+ 			(int) (spi->mode & (SPI_CPOL | SPI_CPHA)),
+ 			(spi->mode & SPI_CS_HIGH) ? "cs_high, " : "",
+ 			(spi->mode & SPI_LSB_FIRST) ? "lsb, " : "",
+ 			(spi->mode & SPI_3WIRE) ? "3wire, " : "",
+ 			(spi->mode & SPI_LOOP) ? "loopback, " : "",
+-			spi->bits_per_word, spi->max_speed_hz,
++			spi->bits_per_word,
++			spi->max_speed_hz,
+ 			status);
+-	printk("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\n");
+-	printk("setup status = %d",status);
+-	printk("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\n");
++	pr_err("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\n");
++	pr_err("setup status = %d\n",status);
++	pr_err("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\n");
+ 	return status;
+ }
+ EXPORT_SYMBOL_GPL(spi_setup);
+@@ -763,13 +784,14 @@ static int __spi_async(struct spi_device *spi, struct spi_message *message)
+ {
+ 	struct spi_master *master = spi->master;
+ 
++	pr_err("%s. master->transfer=>%p ++++++\n", __func__, master->transfer); /* s3c64xx_spi_transfer */
++
+ 	/* Half-duplex links include original MicroWire, and ones with
+ 	 * only one data pin like SPI_3WIRE (switches direction) or where
+ 	 * either MOSI or MISO is missing.  They can also be caused by
+ 	 * software limitations.
+ 	 */
+-	if ((master->flags & SPI_MASTER_HALF_DUPLEX)
+-			|| (spi->mode & SPI_3WIRE)) {
++	if ((master->flags & SPI_MASTER_HALF_DUPLEX) || (spi->mode & SPI_3WIRE)) {
+ 		struct spi_transfer *xfer;
+ 		unsigned flags = master->flags;
+ 
+@@ -785,7 +807,8 @@ static int __spi_async(struct spi_device *spi, struct spi_message *message)
+ 
+ 	message->spi = spi;
+ 	message->status = -EINPROGRESS;
+-	return master->transfer(spi, message);
++	return master->transfer(spi, message); /* s3c64xx_spi_transfer */
++	                                       /* not: s3c24xx_spi_setupxfer + spi_bitbang_setup_transfer??*/
+ }
+ 
+ /**
+@@ -823,6 +846,8 @@ int spi_async(struct spi_device *spi, struct spi_message *message)
+ 	int ret;
+ 	unsigned long flags;
+ 
++        pr_err("%s. ++++++\n", __func__);
++
+ 	spin_lock_irqsave(&master->bus_lock_spinlock, flags);
+ 
+ 	if (master->bus_lock_flag)
+@@ -895,20 +920,21 @@ static void spi_complete(void *arg)
+ 	complete(arg);
+ }
+ 
+-static int __spi_sync(struct spi_device *spi, struct spi_message *message,
+-		      int bus_locked)
++static int __spi_sync(struct spi_device *spi, struct spi_message *message, int bus_locked)
+ {
+ 	DECLARE_COMPLETION_ONSTACK(done);
+ 	int status;
+ 	struct spi_master *master = spi->master;
+ 
++        pr_err("%s. spi->modalias='%s'  ++++++\n", __func__, (spi->modalias != NULL ) ? spi->modalias : "");
++
+ 	message->complete = spi_complete;
+ 	message->context = &done;
+ 
+ 	if (!bus_locked)
+ 		mutex_lock(&master->bus_lock_mutex);
+ 
+-	status = spi_async_locked(spi, message);
++	status = spi_async_locked(spi, message);  /* !!! */
+ 
+ 	if (!bus_locked)
+ 		mutex_unlock(&master->bus_lock_mutex);
+@@ -1059,6 +1085,7 @@ int spi_write_then_read(struct spi_device *spi,
+ 	struct spi_transfer	x[2];
+ 	u8			*local_buf;
+ 
++        pr_err("%s. n_tx=%d, n_rx=%d ++++++\n", __func__, n_tx, n_rx);
+ 	/* Use preallocated DMA-safe buffer.  We can't avoid copying here,
+ 	 * (as a pure convenience thing), but we can keep heap costs
+ 	 * out of the hot path ...
+@@ -1109,6 +1136,7 @@ static int __init spi_init(void)
+ {
+ 	int	status;
+ 
++        pr_err("spi.c %s. ++++++\n", __func__);
+ 	buf = kmalloc(SPI_BUFSIZ, GFP_KERNEL);
+ 	if (!buf) {
+ 		status = -ENOMEM;
+diff --git a/linux-3.0.1/drivers/spi/spi_bitbang.c b/linux-3.0.1/drivers/spi/spi_bitbang.c
+index 14a63f6..07d4ee0 100755
+--- a/linux-3.0.1/drivers/spi/spi_bitbang.c
++++ b/linux-3.0.1/drivers/spi/spi_bitbang.c
+@@ -144,6 +144,8 @@ int spi_bitbang_setup_transfer(struct spi_device *spi, struct spi_transfer *t)
+ 	u8			bits_per_word;
+ 	u32			hz;
+ 
++	pr_err("%s, i think will not run ????\n", __func__);
++
+ 	if (t) {
+ 		bits_per_word = t->bits_per_word;
+ 		hz = t->speed_hz;
+@@ -187,6 +189,8 @@ int spi_bitbang_setup(struct spi_device *spi)
+ 	int			retval;
+ 	unsigned long		flags;
+ 
++	pr_err("%s. will not run ????\n", __func__);
++
+ 	bitbang = spi_master_get_devdata(spi->master);
+ 
+ 	if (!cs) {
+@@ -235,9 +239,12 @@ EXPORT_SYMBOL_GPL(spi_bitbang_cleanup);
+ 
+ static int spi_bitbang_bufs(struct spi_device *spi, struct spi_transfer *t)
+ {
++
+ 	struct spi_bitbang_cs	*cs = spi->controller_state;
+ 	unsigned		nsecs = cs->nsecs;
+ 
++	pr_err("%s. ++++\n", __func__);
++
+ 	return cs->txrx_bufs(spi, cs->txrx_word, nsecs, t);
+ }
+ 
+@@ -256,10 +263,11 @@ static int spi_bitbang_bufs(struct spi_device *spi, struct spi_transfer *t)
+  */
+ static void bitbang_work(struct work_struct *work)
+ {
+-	struct spi_bitbang	*bitbang =
+-		container_of(work, struct spi_bitbang, work);
++	struct spi_bitbang	*bitbang = container_of(work, struct spi_bitbang, work);
+ 	unsigned long		flags;
+ 
++	pr_err("%s. ++++\n", __func__);
++
+ 	spin_lock_irqsave(&bitbang->lock, flags);
+ 	bitbang->busy = 1;
+ 	while (!list_empty(&bitbang->queue)) {
+@@ -272,8 +280,7 @@ static void bitbang_work(struct work_struct *work)
+ 		int			status;
+ 		int			do_setup = -1;
+ 
+-		m = container_of(bitbang->queue.next, struct spi_message,
+-				queue);
++		m = container_of(bitbang->queue.next, struct spi_message, queue);
+ 		list_del_init(&m->queue);
+ 		spin_unlock_irqrestore(&bitbang->lock, flags);
+ 
+@@ -284,9 +291,9 @@ static void bitbang_work(struct work_struct *work)
+ 		nsecs = 100;
+ 
+ 		spi = m->spi;
+-		tmp = 0;
++		tmp       = 0;
+ 		cs_change = 1;
+-		status = 0;
++		status    = 0;
+ 
+ 		list_for_each_entry (t, &m->transfers, transfer_list) {
+ 
+@@ -386,6 +393,8 @@ int spi_bitbang_transfer(struct spi_device *spi, struct spi_message *m)
+ 	unsigned long		flags;
+ 	int			status = 0;
+ 
++	pr_err("%s. ++++\n", __func__);
++
+ 	m->actual_length = 0;
+ 	m->status = -EINPROGRESS;
+ 
+@@ -433,10 +442,12 @@ int spi_bitbang_start(struct spi_bitbang *bitbang)
+ {
+ 	int	status;
+ 
++	pr_err("%s. ++++\n", __func__);
++
+ 	if (!bitbang->master || !bitbang->chipselect)
+ 		return -EINVAL;
+ 
+-	INIT_WORK(&bitbang->work, bitbang_work);
++	INIT_WORK(&bitbang->work, bitbang_work);  /* spi_bitbang_transfer(): queue_work(bitbang->workqueue, &bitbang->work); */
+ 	spin_lock_init(&bitbang->lock);
+ 	INIT_LIST_HEAD(&bitbang->queue);
+ 
+@@ -449,22 +460,21 @@ int spi_bitbang_start(struct spi_bitbang *bitbang)
+ 		bitbang->use_dma = 0;
+ 		bitbang->txrx_bufs = spi_bitbang_bufs;
+ 		if (!bitbang->master->setup) {
++			pr_err("I think will not run ++++\n");
+ 			if (!bitbang->setup_transfer)
+-				bitbang->setup_transfer =
+-					 spi_bitbang_setup_transfer;
++				bitbang->setup_transfer = spi_bitbang_setup_transfer;
+ 			bitbang->master->setup = spi_bitbang_setup;
+ 			bitbang->master->cleanup = spi_bitbang_cleanup;
+ 		}
+ 	} else if (!bitbang->master->setup)
+ 		return -EINVAL;
+-	if (bitbang->master->transfer == spi_bitbang_transfer &&
+-			!bitbang->setup_transfer)
++
++	if (bitbang->master->transfer == spi_bitbang_transfer && !bitbang->setup_transfer)
+ 		return -EINVAL;
+ 
+ 	/* this task is the only thing to touch the SPI bits */
+ 	bitbang->busy = 0;
+-	bitbang->workqueue = create_singlethread_workqueue(
+-			dev_name(bitbang->master->dev.parent));
++	bitbang->workqueue = create_singlethread_workqueue(dev_name(bitbang->master->dev.parent));
+ 	if (bitbang->workqueue == NULL) {
+ 		status = -EBUSY;
+ 		goto err1;
+@@ -491,6 +501,8 @@ EXPORT_SYMBOL_GPL(spi_bitbang_start);
+  */
+ int spi_bitbang_stop(struct spi_bitbang *bitbang)
+ {
++        pr_err("%s. ++++++\n", __func__);
++
+ 	spi_unregister_master(bitbang->master);
+ 
+ 	WARN_ON(!list_empty(&bitbang->queue));
+diff --git a/linux-3.0.1/drivers/spi/spi_s3c24xx.c b/linux-3.0.1/drivers/spi/spi_s3c24xx.c
+index 1a5fcab..e74951c 100755
+--- a/linux-3.0.1/drivers/spi/spi_s3c24xx.c
++++ b/linux-3.0.1/drivers/spi/spi_s3c24xx.c
+@@ -121,8 +121,7 @@ static void s3c24xx_spi_chipsel(struct spi_device *spi, int value)
+ 	}
+ }
+ 
+-static int s3c24xx_spi_update_state(struct spi_device *spi,
+-				    struct spi_transfer *t)
++static int s3c24xx_spi_update_state(struct spi_device *spi, struct spi_transfer *t)
+ {
+ 	struct s3c24xx_spi *hw = to_hw(spi);
+ 	struct s3c24xx_spi_devstate *cs = spi->controller_state;
+@@ -131,6 +130,8 @@ static int s3c24xx_spi_update_state(struct spi_device *spi,
+ 	unsigned int div;
+ 	unsigned long clk;
+ 
++	pr_err("%s. ++++++\n", __func__);
++
+ 	bpw = t ? t->bits_per_word : spi->bits_per_word;
+ 	hz  = t ? t->speed_hz : spi->max_speed_hz;
+ 
+@@ -182,6 +183,8 @@ static int s3c24xx_spi_setupxfer(struct spi_device *spi,
+ 	struct s3c24xx_spi *hw = to_hw(spi);
+ 	int ret;
+ 
++	pr_err("%s. ++++++\n", __func__);
++
+ 	ret = s3c24xx_spi_update_state(spi, t);
+ 	if (!ret)
+ 		writeb(cs->sppre, hw->regs + S3C2410_SPPRE);
+@@ -189,7 +192,7 @@ static int s3c24xx_spi_setupxfer(struct spi_device *spi,
+ 	return ret;
+ }
+ 
+-static int s3c24xx_spi_setup(struct spi_device *spi)
++static int s3c24xx_spi_setup(struct spi_device *spi)  /* struct spi_device */
+ {
+ 	struct s3c24xx_spi_devstate *cs = spi->controller_state;
+ 	struct s3c24xx_spi *hw = to_hw(spi);
+@@ -215,7 +218,7 @@ static int s3c24xx_spi_setup(struct spi_device *spi)
+ 
+ 	spin_lock(&hw->bitbang.lock);
+ 	if (!hw->bitbang.busy) {
+-		hw->bitbang.chipselect(spi, BITBANG_CS_INACTIVE);
++		hw->bitbang.chipselect(spi, BITBANG_CS_INACTIVE);  // spi_s3c24xx.c:556:	hw->bitbang.chipselect     = s3c24xx_spi_chipsel;
+ 		/* need to ndelay for 0.5 clocktick ? */
+ 	}
+ 	spin_unlock(&hw->bitbang.lock);
+@@ -514,6 +517,8 @@ static int __init s3c24xx_spi_probe(struct platform_device *pdev)
+ 	struct resource *res;
+ 	int err = 0;
+ 
++	pr_err("%s() +++++\n", __func__);
++
+ 	master = spi_alloc_master(&pdev->dev, sizeof(struct s3c24xx_spi));
+ 	if (master == NULL) {
+ 		dev_err(&pdev->dev, "No memory for spi_master\n");
+@@ -570,9 +575,7 @@ static int __init s3c24xx_spi_probe(struct platform_device *pdev)
+ 		goto err_no_iores;
+ 	}
+ 
+-	hw->ioarea = request_mem_region(res->start, resource_size(res),
+-					pdev->name);
+-
++	hw->ioarea = request_mem_region(res->start, resource_size(res), pdev->name);
+ 	if (hw->ioarea == NULL) {
+ 		dev_err(&pdev->dev, "Cannot reserve region\n");
+ 		err = -ENXIO;
+@@ -599,7 +602,7 @@ static int __init s3c24xx_spi_probe(struct platform_device *pdev)
+ 		goto err_no_irq;
+ 	}
+ 
+-	hw->clk = clk_get(&pdev->dev, "spi");
++	hw->clk = clk_get(&pdev->dev, "spi");  // arch/arm/mach-s3c64xx/clock.c struct clk init_clocks_disable[] = {}
+ 	if (IS_ERR(hw->clk)) {
+ 		dev_err(&pdev->dev, "No clock for device\n");
+ 		err = PTR_ERR(hw->clk);
+@@ -614,13 +617,13 @@ static int __init s3c24xx_spi_probe(struct platform_device *pdev)
+ 			goto err_register;
+ 		}
+ 
+-		err = gpio_request(pdata->pin_cs, dev_name(&pdev->dev));
++		err = gpio_request(pdata->pin_cs, dev_name(&pdev->dev)); /* where is pin_cs ?? */
+ 		if (err) {
+ 			dev_err(&pdev->dev, "Failed to get gpio for cs\n");
+ 			goto err_register;
+ 		}
+ 
+-		hw->set_cs = s3c24xx_spi_gpiocs;
++		hw->set_cs = s3c24xx_spi_gpiocs;  /* void s3c24xx_spi_gpiocs() ?? */
+ 		gpio_direction_output(pdata->pin_cs, 1);
+ 	} else
+ 		hw->set_cs = pdata->set_cs;
+@@ -722,7 +725,7 @@ MODULE_ALIAS("platform:s3c2410-spi");
+ static struct platform_driver s3c24xx_spi_driver = {
+ 	.remove		= __exit_p(s3c24xx_spi_remove),
+ 	.driver		= {
+-		.name	= "s3c2410-spi",
++		.name	= "s3c2410-spi",   // same name as struct platform_device s3c_device_spix @arch/arm/plat-s3c24xx/devs.c
+ 		.owner	= THIS_MODULE,
+ 		.pm	= S3C24XX_SPI_PMOPS,
+ 	},
+diff --git a/linux-3.0.1/drivers/spi/spi_s3c64xx.c b/linux-3.0.1/drivers/spi/spi_s3c64xx.c
+index 17023b4..1726cf0 100755
+--- a/linux-3.0.1/drivers/spi/spi_s3c64xx.c
++++ b/linux-3.0.1/drivers/spi/spi_s3c64xx.c
+@@ -185,6 +185,8 @@ static void flush_fifo(struct s3c64xx_spi_driver_data *sdd)
+ 	unsigned long loops;
+ 	u32 val;
+ 
++	pr_err("%s() @spi_s3c64xx.c +++++\n", __func__);
++
+ 	writel(0, regs + S3C64XX_SPI_PACKET_CNT);
+ 
+ 	val = readl(regs + S3C64XX_SPI_CH_CFG);
+@@ -235,6 +237,8 @@ static void enable_datapath(struct s3c64xx_spi_driver_data *sdd,
+ 	void __iomem *regs = sdd->regs;
+ 	u32 modecfg, chcfg;
+ 
++	pr_err("%s() dma_mode=%d +++++\n", __func__, dma_mode);
++
+ 	modecfg = readl(regs + S3C64XX_SPI_MODE_CFG);
+ 	modecfg &= ~(S3C64XX_SPI_MODE_TXDMA_ON | S3C64XX_SPI_MODE_RXDMA_ON);
+ 
+@@ -249,9 +253,8 @@ static void enable_datapath(struct s3c64xx_spi_driver_data *sdd,
+ 		 * as exactly needed.
+ 		 */
+ 		chcfg |= S3C64XX_SPI_CH_RXCH_ON;
+-		writel(((xfer->len * 8 / sdd->cur_bpw) & 0xffff)
+-					| S3C64XX_SPI_PACKET_CNT_EN,
+-					regs + S3C64XX_SPI_PACKET_CNT);
++		writel(((xfer->len * 8 / sdd->cur_bpw) & 0xffff) | S3C64XX_SPI_PACKET_CNT_EN,
++			regs + S3C64XX_SPI_PACKET_CNT);
+ 	}
+ 
+ 	if (xfer->tx_buf != NULL) {
+@@ -260,22 +263,18 @@ static void enable_datapath(struct s3c64xx_spi_driver_data *sdd,
+ 		if (dma_mode) {
+ 			modecfg |= S3C64XX_SPI_MODE_TXDMA_ON;
+ 			s3c2410_dma_config(sdd->tx_dmach, sdd->cur_bpw / 8);
+-			s3c2410_dma_enqueue(sdd->tx_dmach, (void *)sdd,
+-						xfer->tx_dma, xfer->len);
++			s3c2410_dma_enqueue(sdd->tx_dmach, (void *)sdd, xfer->tx_dma, xfer->len);
+ 			s3c2410_dma_ctrl(sdd->tx_dmach, S3C2410_DMAOP_START);
+ 		} else {
+ 			switch (sdd->cur_bpw) {
+ 			case 32:
+-				iowrite32_rep(regs + S3C64XX_SPI_TX_DATA,
+-					xfer->tx_buf, xfer->len / 4);
++				iowrite32_rep(regs + S3C64XX_SPI_TX_DATA, xfer->tx_buf, xfer->len / 4);
+ 				break;
+ 			case 16:
+-				iowrite16_rep(regs + S3C64XX_SPI_TX_DATA,
+-					xfer->tx_buf, xfer->len / 2);
++				iowrite16_rep(regs + S3C64XX_SPI_TX_DATA, xfer->tx_buf, xfer->len / 2);
+ 				break;
+ 			default:
+-				iowrite8_rep(regs + S3C64XX_SPI_TX_DATA,
+-					xfer->tx_buf, xfer->len);
++				iowrite8_rep(regs + S3C64XX_SPI_TX_DATA, xfer->tx_buf, xfer->len);
+ 				break;
+ 			}
+ 		}
+@@ -284,19 +283,16 @@ static void enable_datapath(struct s3c64xx_spi_driver_data *sdd,
+ 	if (xfer->rx_buf != NULL) {
+ 		sdd->state |= RXBUSY;
+ 
+-		if (sci->high_speed && sdd->cur_speed >= 30000000UL
+-					&& !(sdd->cur_mode & SPI_CPHA))
++		if (sci->high_speed && sdd->cur_speed >= 30000000UL && !(sdd->cur_mode & SPI_CPHA))
+ 			chcfg |= S3C64XX_SPI_CH_HS_EN;
+ 
+ 		if (dma_mode) {
+ 			modecfg |= S3C64XX_SPI_MODE_RXDMA_ON;
+ 			chcfg |= S3C64XX_SPI_CH_RXCH_ON;
+-			writel(((xfer->len * 8 / sdd->cur_bpw) & 0xffff)
+-					| S3C64XX_SPI_PACKET_CNT_EN,
+-					regs + S3C64XX_SPI_PACKET_CNT);
++			writel(((xfer->len * 8 / sdd->cur_bpw) & 0xffff) | S3C64XX_SPI_PACKET_CNT_EN,
++				regs + S3C64XX_SPI_PACKET_CNT);
+ 			s3c2410_dma_config(sdd->rx_dmach, sdd->cur_bpw / 8);
+-			s3c2410_dma_enqueue(sdd->rx_dmach, (void *)sdd,
+-						xfer->rx_dma, xfer->len);
++			s3c2410_dma_enqueue(sdd->rx_dmach, (void *)sdd, xfer->rx_dma, xfer->len);
+ 			s3c2410_dma_ctrl(sdd->rx_dmach, S3C2410_DMAOP_START);
+ 		}
+ 	}
+@@ -306,32 +302,37 @@ static void enable_datapath(struct s3c64xx_spi_driver_data *sdd,
+ }
+ 
+ static inline void enable_cs(struct s3c64xx_spi_driver_data *sdd,
+-						struct spi_device *spi)
++				struct spi_device *spi)
+ {
+ 	struct s3c64xx_spi_csinfo *cs;
+ 
+-	if (sdd->tgl_spi != NULL) { /* If last device toggled after mssg */
+-		if (sdd->tgl_spi != spi) { /* if last mssg on diff device */
+-			/* Deselect the last toggled device */
++	if (sdd->tgl_spi != NULL) {			/* If last device toggled after mssg */
++		if (sdd->tgl_spi != spi) {		/* if last mssg on diff device */
++							/* Deselect the last toggled device */
+ 			cs = sdd->tgl_spi->controller_data;
+-			cs->set_level(cs->line,
+-					spi->mode & SPI_CS_HIGH ? 0 : 1);
++			cs->set_level(cs->line, spi->mode & SPI_CS_HIGH ? 0 : 1);
+ 		}
+ 		sdd->tgl_spi = NULL;
+ 	}
+ 
+ 	cs = spi->controller_data;
++
++	/*cs->set_levelÀ´×Ôarch/arm/mach-s3c64xx/mach-smdk6410.cÖÐstruct spi_board_infoÊý¾Ý*/
++	pr_err("%s() cs->set_level=>%p +++++\n", __func__, cs->set_level);  /* c0042e00  cs_set_level */
+ 	cs->set_level(cs->line, spi->mode & SPI_CS_HIGH ? 1 : 0);
+ }
+ 
+ static int wait_for_xfer(struct s3c64xx_spi_driver_data *sdd,
+-				struct spi_transfer *xfer, int dma_mode)
++	                   struct spi_transfer *xfer,
++	                   int dma_mode)
+ {
+ 	struct s3c64xx_spi_info *sci = sdd->cntrlr_info;
+ 	void __iomem *regs = sdd->regs;
+ 	unsigned long val;
+ 	int ms;
+ 
++	pr_err("%s() dma_mode=%d +++++\n", __func__, dma_mode);
++
+ 	/* millisecs to xfer 'len' bytes @ 'cur_speed' */
+ 	ms = xfer->len * 8 * 1000 / sdd->cur_speed;
+ 	ms += 10; /* some tolerance */
+@@ -363,9 +364,7 @@ static int wait_for_xfer(struct s3c64xx_spi_driver_data *sdd,
+ 		if (xfer->rx_buf == NULL) {
+ 			val = msecs_to_loops(10);
+ 			status = readl(regs + S3C64XX_SPI_STATUS);
+-			while ((TX_FIFO_LVL(status, sci)
+-				|| !S3C64XX_SPI_ST_TX_DONE(status, sci))
+-					&& --val) {
++			while ((TX_FIFO_LVL(status, sci) || !S3C64XX_SPI_ST_TX_DONE(status, sci)) && --val) {
+ 				cpu_relax();
+ 				status = readl(regs + S3C64XX_SPI_STATUS);
+ 			}
+@@ -381,18 +380,9 @@ static int wait_for_xfer(struct s3c64xx_spi_driver_data *sdd,
+ 		}
+ 
+ 		switch (sdd->cur_bpw) {
+-		case 32:
+-			ioread32_rep(regs + S3C64XX_SPI_RX_DATA,
+-				xfer->rx_buf, xfer->len / 4);
+-			break;
+-		case 16:
+-			ioread16_rep(regs + S3C64XX_SPI_RX_DATA,
+-				xfer->rx_buf, xfer->len / 2);
+-			break;
+-		default:
+-			ioread8_rep(regs + S3C64XX_SPI_RX_DATA,
+-				xfer->rx_buf, xfer->len);
+-			break;
++		  case 32: ioread32_rep(regs + S3C64XX_SPI_RX_DATA, xfer->rx_buf, xfer->len / 4); break;
++		  case 16: ioread16_rep(regs + S3C64XX_SPI_RX_DATA, xfer->rx_buf, xfer->len / 2); break;
++		  default: ioread8_rep(regs + S3C64XX_SPI_RX_DATA, xfer->rx_buf, xfer->len);      break;
+ 		}
+ 		sdd->state &= ~RXBUSY;
+ 	}
+@@ -417,6 +407,8 @@ static void s3c64xx_spi_config(struct s3c64xx_spi_driver_data *sdd)
+ 	void __iomem *regs = sdd->regs;
+ 	u32 val;
+ 
++	pr_err("%s() +++++\n", __func__);
++
+ 	/* Disable Clock */
+ 	if (sci->clk_from_cmu) {
+ 		clk_disable(sdd->src_clk);
+@@ -428,9 +420,7 @@ static void s3c64xx_spi_config(struct s3c64xx_spi_driver_data *sdd)
+ 
+ 	/* Set Polarity and Phase */
+ 	val = readl(regs + S3C64XX_SPI_CH_CFG);
+-	val &= ~(S3C64XX_SPI_CH_SLAVE |
+-			S3C64XX_SPI_CPOL_L |
+-			S3C64XX_SPI_CPHA_B);
++	val &= ~(S3C64XX_SPI_CH_SLAVE | S3C64XX_SPI_CPOL_L | S3C64XX_SPI_CPHA_B);
+ 
+ 	if (sdd->cur_mode & SPI_CPOL)
+ 		val |= S3C64XX_SPI_CPOL_L;
+@@ -442,8 +432,7 @@ static void s3c64xx_spi_config(struct s3c64xx_spi_driver_data *sdd)
+ 
+ 	/* Set Channel & DMA Mode */
+ 	val = readl(regs + S3C64XX_SPI_MODE_CFG);
+-	val &= ~(S3C64XX_SPI_MODE_BUS_TSZ_MASK
+-			| S3C64XX_SPI_MODE_CH_TSZ_MASK);
++	val &= ~(S3C64XX_SPI_MODE_BUS_TSZ_MASK | S3C64XX_SPI_MODE_CH_TSZ_MASK);
+ 
+ 	switch (sdd->cur_bpw) {
+ 	case 32:
+@@ -472,8 +461,7 @@ static void s3c64xx_spi_config(struct s3c64xx_spi_driver_data *sdd)
+ 		/* Configure Clock */
+ 		val = readl(regs + S3C64XX_SPI_CLK_CFG);
+ 		val &= ~S3C64XX_SPI_PSR_MASK;
+-		val |= ((clk_get_rate(sdd->src_clk) / sdd->cur_speed / 2 - 1)
+-				& S3C64XX_SPI_PSR_MASK);
++		val |= ((clk_get_rate(sdd->src_clk) / sdd->cur_speed / 2 - 1) & S3C64XX_SPI_PSR_MASK);
+ 		writel(val, regs + S3C64XX_SPI_CLK_CFG);
+ 
+ 		/* Enable Clock */
+@@ -489,8 +477,12 @@ static void s3c64xx_spi_dma_rxcb(struct s3c2410_dma_chan *chan, void *buf_id,
+ 	struct s3c64xx_spi_driver_data *sdd = buf_id;
+ 	unsigned long flags;
+ 
++	pr_err("%s() +++++\n", __func__);
++
+ 	spin_lock_irqsave(&sdd->lock, flags);
+ 
++	pr_err("%s chan->number=%d, size=%d ++++\n", __func__, chan->number, size);
++
+ 	if (res == S3C2410_RES_OK)
+ 		sdd->state &= ~RXBUSY;
+ 	else
+@@ -509,6 +501,8 @@ static void s3c64xx_spi_dma_txcb(struct s3c2410_dma_chan *chan, void *buf_id,
+ 	struct s3c64xx_spi_driver_data *sdd = buf_id;
+ 	unsigned long flags;
+ 
++	pr_err("%s() +++++\n", __func__);
++
+ 	spin_lock_irqsave(&sdd->lock, flags);
+ 
+ 	if (res == S3C2410_RES_OK)
+@@ -526,53 +520,55 @@ static void s3c64xx_spi_dma_txcb(struct s3c2410_dma_chan *chan, void *buf_id,
+ #define XFER_DMAADDR_INVALID DMA_BIT_MASK(32)
+ 
+ static int s3c64xx_spi_map_mssg(struct s3c64xx_spi_driver_data *sdd,
+-						struct spi_message *msg)
++					struct spi_message *msg)
+ {
+-	struct s3c64xx_spi_info *sci = sdd->cntrlr_info;
+-	struct device *dev = &sdd->pdev->dev;
+-	struct spi_transfer *xfer;
+-
+-	if (msg->is_dma_mapped)
+-		return 0;
+-
+-	/* First mark all xfer unmapped */
+-	list_for_each_entry(xfer, &msg->transfers, transfer_list) {
+-		xfer->rx_dma = XFER_DMAADDR_INVALID;
+-		xfer->tx_dma = XFER_DMAADDR_INVALID;
+-	}
+-
+-	/* Map until end or first fail */
+-	list_for_each_entry(xfer, &msg->transfers, transfer_list) {
+-
+-		if (xfer->len <= ((sci->fifo_lvl_mask >> 1) + 1))
+-			continue;
+-
+-		if (xfer->tx_buf != NULL) {
+-			xfer->tx_dma = dma_map_single(dev,
+-					(void *)xfer->tx_buf, xfer->len,
+-					DMA_TO_DEVICE);
+-			if (dma_mapping_error(dev, xfer->tx_dma)) {
+-				dev_err(dev, "dma_map_single Tx failed\n");
+-				xfer->tx_dma = XFER_DMAADDR_INVALID;
+-				return -ENOMEM;
+-			}
+-		}
+-
+-		if (xfer->rx_buf != NULL) {
+-			xfer->rx_dma = dma_map_single(dev, xfer->rx_buf,
+-						xfer->len, DMA_FROM_DEVICE);
+-			if (dma_mapping_error(dev, xfer->rx_dma)) {
+-				dev_err(dev, "dma_map_single Rx failed\n");
+-				dma_unmap_single(dev, xfer->tx_dma,
+-						xfer->len, DMA_TO_DEVICE);
+-				xfer->tx_dma = XFER_DMAADDR_INVALID;
+-				xfer->rx_dma = XFER_DMAADDR_INVALID;
+-				return -ENOMEM;
+-			}
+-		}
+-	}
+-
+-	return 0;
++    struct s3c64xx_spi_info *sci = sdd->cntrlr_info;
++    struct device *dev = &sdd->pdev->dev;
++    struct spi_transfer *xfer;
++
++    pr_err("%s() +++++\n", __func__);
++
++    if (msg->is_dma_mapped)
++        return 0;
++
++    /* First mark all xfer unmapped */
++    list_for_each_entry(xfer, &msg->transfers, transfer_list) {
++        xfer->rx_dma = XFER_DMAADDR_INVALID;
++        xfer->tx_dma = XFER_DMAADDR_INVALID;
++    }
++
++    /* Map until end or first fail */
++    list_for_each_entry(xfer, &msg->transfers, transfer_list) {
++        if (xfer->len <= ((sci->fifo_lvl_mask >> 1) + 1))
++            continue;
++
++        if (xfer->tx_buf != NULL) {
++            xfer->tx_dma = dma_map_single(dev, (void *)xfer->tx_buf, xfer->len, DMA_TO_DEVICE);
++            if (dma_mapping_error(dev, xfer->tx_dma)) {
++                dev_err(dev, "dma_map_single Tx failed\n");
++                xfer->tx_dma = XFER_DMAADDR_INVALID;
++                return -ENOMEM;
++            }
++        }
++
++        if (xfer->rx_buf != NULL) {
++            xfer->rx_dma = dma_map_single(dev, xfer->rx_buf, xfer->len, DMA_FROM_DEVICE);
++            if (dma_mapping_error(dev, xfer->rx_dma)) {
++                dev_err(dev, "dma_map_single Rx failed\n");
++                dma_unmap_single(dev, xfer->tx_dma, xfer->len, DMA_TO_DEVICE);
++                xfer->tx_dma = XFER_DMAADDR_INVALID;
++                xfer->rx_dma = XFER_DMAADDR_INVALID;
++                return -ENOMEM;
++            }
++        }
++
++        if(xfer->tx_buf != NULL)
++            pr_err("%s() xfer->tx_dma=0x%X\n",__func__, xfer->tx_dma);
++        if(xfer->rx_buf != NULL)
++            pr_err("%s() xfer->rx_dma=0x%X\n",__func__, xfer->rx_dma);
++    }
++
++    return 0;
+ }
+ 
+ static void s3c64xx_spi_unmap_mssg(struct s3c64xx_spi_driver_data *sdd,
+@@ -602,8 +598,7 @@ static void s3c64xx_spi_unmap_mssg(struct s3c64xx_spi_driver_data *sdd,
+ 	}
+ }
+ 
+-static void handle_msg(struct s3c64xx_spi_driver_data *sdd,
+-					struct spi_message *msg)
++static void handle_msg(struct s3c64xx_spi_driver_data *sdd, struct spi_message *msg)
+ {
+ 	struct s3c64xx_spi_info *sci = sdd->cntrlr_info;
+ 	struct spi_device *spi = msg->spi;
+@@ -613,20 +608,21 @@ static void handle_msg(struct s3c64xx_spi_driver_data *sdd,
+ 	u32 speed;
+ 	u8 bpw;
+ 
++	pr_err("%s() @spi_s3c64xx.c +++++\n", __func__); /* Ã»ÓÐspiÉè±¸¾Í²»»áµ÷ÓÃÂð£¬shellÖÐ¿ÉÒÔ°É */
++
+ 	/* If Master's(controller) state differs from that needed by Slave */
+ 	if (sdd->cur_speed != spi->max_speed_hz
+-			|| sdd->cur_mode != spi->mode
+-			|| sdd->cur_bpw != spi->bits_per_word) {
+-		sdd->cur_bpw = spi->bits_per_word;
++	 || sdd->cur_mode != spi->mode
++	 || sdd->cur_bpw  != spi->bits_per_word) {
++		sdd->cur_bpw   = spi->bits_per_word;
+ 		sdd->cur_speed = spi->max_speed_hz;
+-		sdd->cur_mode = spi->mode;
++		sdd->cur_mode  = spi->mode;
+ 		s3c64xx_spi_config(sdd);
+ 	}
+ 
+ 	/* Map all the transfers if needed */
+ 	if (s3c64xx_spi_map_mssg(sdd, msg)) {
+-		dev_err(&spi->dev,
+-			"Xfer: Unable to map message buffers!\n");
++		dev_err(&spi->dev, "Xfer: Unable to map message buffers!\n");
+ 		status = -ENOMEM;
+ 		goto out;
+ 	}
+@@ -646,9 +642,7 @@ static void handle_msg(struct s3c64xx_spi_driver_data *sdd,
+ 		speed = xfer->speed_hz ? : spi->max_speed_hz;
+ 
+ 		if (xfer->len % (bpw / 8)) {
+-			dev_err(&spi->dev,
+-				"Xfer length(%u) not a multiple of word size(%u)\n",
+-				xfer->len, bpw / 8);
++			dev_err(&spi->dev, "Xfer length(%u) not a multiple of word size(%u)\n", xfer->len, bpw / 8);
+ 			status = -EIO;
+ 			goto out;
+ 		}
+@@ -656,6 +650,7 @@ static void handle_msg(struct s3c64xx_spi_driver_data *sdd,
+ 		if (bpw != sdd->cur_bpw || speed != sdd->cur_speed) {
+ 			sdd->cur_bpw = bpw;
+ 			sdd->cur_speed = speed;
++			pr_err("%s() reconfig bpw=%d, cur_speed=%d\n", __func__, sdd->cur_bpw, sdd->cur_speed);
+ 			s3c64xx_spi_config(sdd);
+ 		}
+ 
+@@ -678,14 +673,17 @@ static void handle_msg(struct s3c64xx_spi_driver_data *sdd,
+ 
+ 		/* Start the signals */
+ 		S3C64XX_SPI_ACT(sdd);
+-
++#if 0
++		pr_err("%s() sdd->regs=0x%X", __func__, sdd->regs);
++#endif
+ 		spin_unlock_irqrestore(&sdd->lock, flags);
+ 
+-		status = wait_for_xfer(sdd, xfer, use_dma);
++		status = wait_for_xfer(sdd, xfer, use_dma); /* ·Ç³£ÖØÒª*/
+ 
+ 		/* Quiese the signals */
+ 		S3C64XX_SPI_DEACT(sdd);
+ 
++		pr_err("%s() status=%d, use_dma=%d +++\n", __func__, status, use_dma);
+ 		if (status) {
+ 			dev_err(&spi->dev, "I/O Error: "
+ 				"rx-%d tx-%d res:rx-%c tx-%c len-%d\n",
+@@ -695,14 +693,10 @@ static void handle_msg(struct s3c64xx_spi_driver_data *sdd,
+ 				xfer->len);
+ 
+ 			if (use_dma) {
+-				if (xfer->tx_buf != NULL
+-						&& (sdd->state & TXBUSY))
+-					s3c2410_dma_ctrl(sdd->tx_dmach,
+-							S3C2410_DMAOP_FLUSH);
+-				if (xfer->rx_buf != NULL
+-						&& (sdd->state & RXBUSY))
+-					s3c2410_dma_ctrl(sdd->rx_dmach,
+-							S3C2410_DMAOP_FLUSH);
++				if (xfer->tx_buf != NULL && (sdd->state & TXBUSY))
++					s3c2410_dma_ctrl(sdd->tx_dmach, S3C2410_DMAOP_FLUSH);
++				if (xfer->rx_buf != NULL && (sdd->state & RXBUSY))
++					s3c2410_dma_ctrl(sdd->rx_dmach, S3C2410_DMAOP_FLUSH);
+ 			}
+ 
+ 			goto out;
+@@ -712,10 +706,8 @@ static void handle_msg(struct s3c64xx_spi_driver_data *sdd,
+ 			udelay(xfer->delay_usecs);
+ 
+ 		if (xfer->cs_change) {
+-			/* Hint that the next mssg is gonna be
+-			   for the same device */
+-			if (list_is_last(&xfer->transfer_list,
+-						&msg->transfers))
++			/* Hint that the next mssg is gonna be for the same device */
++			if (list_is_last(&xfer->transfer_list, &msg->transfers))
+ 				cs_toggle = 1;
+ 			else
+ 				disable_cs(sdd, spi);
+@@ -723,10 +715,11 @@ static void handle_msg(struct s3c64xx_spi_driver_data *sdd,
+ 
+ 		msg->actual_length += xfer->len;
+ 
++		pr_err("%s() actual_length=%d, xfer->len=%d. todo:flush_fifo() @spi_s3c64xx.c\n", __func__, msg->actual_length, xfer->len);
+ 		flush_fifo(sdd);
+ 	}
+-
+ out:
++	pr_err("%s() run: out\n", __func__);
+ 	if (!cs_toggle || status)
+ 		disable_cs(sdd, spi);
+ 	else
+@@ -742,42 +735,40 @@ out:
+ 
+ static int acquire_dma(struct s3c64xx_spi_driver_data *sdd)
+ {
+-	if (s3c2410_dma_request(sdd->rx_dmach,
+-					&s3c64xx_spi_dma_client, NULL) < 0) {
++	pr_err("%s() +++++\n", __func__);
++
++	if (s3c2410_dma_request(sdd->rx_dmach, &s3c64xx_spi_dma_client, NULL) < 0) {
+ 		dev_err(&sdd->pdev->dev, "cannot get RxDMA\n");
+ 		return 0;
+ 	}
+ 	s3c2410_dma_set_buffdone_fn(sdd->rx_dmach, s3c64xx_spi_dma_rxcb);
+-	s3c2410_dma_devconfig(sdd->rx_dmach, S3C2410_DMASRC_HW,
+-					sdd->sfr_start + S3C64XX_SPI_RX_DATA);
++	s3c2410_dma_devconfig(sdd->rx_dmach, S3C2410_DMASRC_HW, sdd->sfr_start + S3C64XX_SPI_RX_DATA);
+ 
+-	if (s3c2410_dma_request(sdd->tx_dmach,
+-					&s3c64xx_spi_dma_client, NULL) < 0) {
++	if (s3c2410_dma_request(sdd->tx_dmach,&s3c64xx_spi_dma_client, NULL) < 0) {
+ 		dev_err(&sdd->pdev->dev, "cannot get TxDMA\n");
+ 		s3c2410_dma_free(sdd->rx_dmach, &s3c64xx_spi_dma_client);
+ 		return 0;
+ 	}
+ 	s3c2410_dma_set_buffdone_fn(sdd->tx_dmach, s3c64xx_spi_dma_txcb);
+-	s3c2410_dma_devconfig(sdd->tx_dmach, S3C2410_DMASRC_MEM,
+-					sdd->sfr_start + S3C64XX_SPI_TX_DATA);
++	s3c2410_dma_devconfig(sdd->tx_dmach, S3C2410_DMASRC_MEM, sdd->sfr_start + S3C64XX_SPI_TX_DATA);
+ 
+ 	return 1;
+ }
+ 
+ static void s3c64xx_spi_work(struct work_struct *work)
+ {
+-	struct s3c64xx_spi_driver_data *sdd = container_of(work,
+-					struct s3c64xx_spi_driver_data, work);
++	struct s3c64xx_spi_driver_data *sdd = container_of(work, struct s3c64xx_spi_driver_data, work);
+ 	unsigned long flags;
+ 
++	pr_err("%s() +++++\n", __func__);
++
+ 	/* Acquire DMA channels */
+ 	while (!acquire_dma(sdd))
+ 		msleep(10);
+ 
+ 	spin_lock_irqsave(&sdd->lock, flags);
+ 
+-	while (!list_empty(&sdd->queue)
+-				&& !(sdd->state & SUSPND)) {
++	while (!list_empty(&sdd->queue) && !(sdd->state & SUSPND)) {
+ 
+ 		struct spi_message *msg;
+ 
+@@ -790,6 +781,7 @@ static void s3c64xx_spi_work(struct work_struct *work)
+ 
+ 		spin_unlock_irqrestore(&sdd->lock, flags);
+ 
++		pr_err("%s() TODO: handle_msg() +++++\n", __func__);
+ 		handle_msg(sdd, msg);
+ 
+ 		spin_lock_irqsave(&sdd->lock, flags);
+@@ -804,14 +796,23 @@ static void s3c64xx_spi_work(struct work_struct *work)
+ 	s3c2410_dma_free(sdd->rx_dmach, &s3c64xx_spi_dma_client);
+ }
+ 
+-static int s3c64xx_spi_transfer(struct spi_device *spi,
+-						struct spi_message *msg)
++static int s3c64xx_spi_transfer(struct spi_device *spi, struct spi_message *msg)
+ {
+ 	struct s3c64xx_spi_driver_data *sdd;
+ 	unsigned long flags;
+ 
++	pr_err("%s() ++++\n", __func__);
++
+ 	sdd = spi_master_get_devdata(spi->master);
+ 
++	pr_err("%s() state=%d, cur_mode=%d, cur_bpw=%d, cur_speed=%d, rx_dmach=%d, tx_dmach=%d  ++++\n", __func__,
++		sdd->state,
++		sdd->cur_mode,
++		sdd->cur_bpw,
++		sdd->cur_speed,
++		sdd->rx_dmach,
++		sdd->tx_dmach);
++
+ 	spin_lock_irqsave(&sdd->lock, flags);
+ 
+ 	if (sdd->state & SUSPND) {
+@@ -846,11 +847,15 @@ static int s3c64xx_spi_setup(struct spi_device *spi)
+ 	unsigned long flags;
+ 	int err = 0;
+ 
++	pr_err("%s() 00 ++++\n", __func__);
++
+ 	if (cs == NULL || cs->set_level == NULL) {
+ 		dev_err(&spi->dev, "No CS for SPI(%d)\n", spi->chip_select);
+ 		return -ENODEV;
+ 	}
+ 
++	pr_err("%s() 11 ++++\n", __func__);
++
+ 	sdd = spi_master_get_devdata(spi->master);
+ 	sci = sdd->cntrlr_info;
+ 
+@@ -859,8 +864,7 @@ static int s3c64xx_spi_setup(struct spi_device *spi)
+ 	list_for_each_entry(msg, &sdd->queue, queue) {
+ 		/* Is some mssg is already queued for this device */
+ 		if (msg->spi == spi) {
+-			dev_err(&spi->dev,
+-				"setup: attempt while mssg in queue!\n");
++			dev_err(&spi->dev, "setup: attempt while mssg in queue!\n");
+ 			spin_unlock_irqrestore(&sdd->lock, flags);
+ 			return -EBUSY;
+ 		}
+@@ -868,18 +872,16 @@ static int s3c64xx_spi_setup(struct spi_device *spi)
+ 
+ 	if (sdd->state & SUSPND) {
+ 		spin_unlock_irqrestore(&sdd->lock, flags);
+-		dev_err(&spi->dev,
+-			"setup: SPI-%d not active!\n", spi->master->bus_num);
++		dev_err(&spi->dev, "setup: SPI-%d not active!\n", spi->master->bus_num);
+ 		return -ESHUTDOWN;
+ 	}
+ 
+ 	spin_unlock_irqrestore(&sdd->lock, flags);
+ 
+ 	if (spi->bits_per_word != 8
+-			&& spi->bits_per_word != 16
+-			&& spi->bits_per_word != 32) {
+-		dev_err(&spi->dev, "setup: %dbits/wrd not supported!\n",
+-							spi->bits_per_word);
++	 && spi->bits_per_word != 16
++	 && spi->bits_per_word != 32) {
++		dev_err(&spi->dev, "setup: %dbits/wrd not supported!\n", spi->bits_per_word);
+ 		err = -EINVAL;
+ 		goto setup_exit;
+ 	}
+@@ -910,6 +912,7 @@ static int s3c64xx_spi_setup(struct spi_device *spi)
+ 		}
+ 
+ 		speed = clk_get_rate(sdd->src_clk) / 2 / (psr + 1);
++		pr_err("%s() speed=%d ++++\n", __func__, speed);
+ 		if (spi->max_speed_hz >= speed)
+ 			spi->max_speed_hz = speed;
+ 		else
+@@ -930,22 +933,22 @@ static void s3c64xx_spi_hwinit(struct s3c64xx_spi_driver_data *sdd, int channel)
+ 	void __iomem *regs = sdd->regs;
+ 	unsigned int val;
+ 
++	pr_err("%s() ++++\n", __func__);
++
+ 	sdd->cur_speed = 0;
+ 
+ 	S3C64XX_SPI_DEACT(sdd);
+ 
+ 	/* Disable Interrupts - we use Polling if not DMA mode */
+-	writel(0, regs + S3C64XX_SPI_INT_EN);
++	writel(0, regs + S3C64XX_SPI_INT_EN);		// S3C64XX_SPI_INT_EN  0x10
+ 
+ 	if (!sci->clk_from_cmu)
+-		writel(sci->src_clk_nr << S3C64XX_SPI_CLKSEL_SRCSHFT,
+-				regs + S3C64XX_SPI_CLK_CFG);
++		writel(sci->src_clk_nr << S3C64XX_SPI_CLKSEL_SRCSHFT, regs + S3C64XX_SPI_CLK_CFG);
+ 	writel(0, regs + S3C64XX_SPI_MODE_CFG);
+ 	writel(0, regs + S3C64XX_SPI_PACKET_CNT);
+ 
+ 	/* Clear any irq pending bits */
+-	writel(readl(regs + S3C64XX_SPI_PENDING_CLR),
+-				regs + S3C64XX_SPI_PENDING_CLR);
++	writel(readl(regs + S3C64XX_SPI_PENDING_CLR), regs + S3C64XX_SPI_PENDING_CLR);
+ 
+ 	writel(0, regs + S3C64XX_SPI_SWAP_CFG);
+ 
+@@ -965,12 +968,11 @@ static int __init s3c64xx_spi_probe(struct platform_device *pdev)
+ 	struct s3c64xx_spi_info *sci;
+ 	struct spi_master *master;
+ 	int ret;
+-		printk("\n@@@@@@@@@@@@@@@@@@@@\n");
+-	printk("s3c64xx_spi_probe 1111111111111111");
+-	printk("\n@@@@@@@@@@@@@@@@@@@@\n");
++
++	pr_err("s3c64xx_spi_probe() ++++\n");
++
+ 	if (pdev->id < 0) {
+-		dev_err(&pdev->dev,
+-				"Invalid platform device id-%d\n", pdev->id);
++		dev_err(&pdev->dev, "Invalid platform device id-%d\n", pdev->id);
+ 		return -ENODEV;
+ 	}
+ 
+@@ -981,8 +983,7 @@ static int __init s3c64xx_spi_probe(struct platform_device *pdev)
+ 
+ 	sci = pdev->dev.platform_data;
+ 	if (!sci->src_clk_name) {
+-		dev_err(&pdev->dev,
+-			"Board init must call s3c64xx_spi_set_info()\n");
++		dev_err(&pdev->dev,"Board init must call s3c64xx_spi_set_info()\n");
+ 		return -EINVAL;
+ 	}
+ 
+@@ -1006,8 +1007,7 @@ static int __init s3c64xx_spi_probe(struct platform_device *pdev)
+ 		return -ENXIO;
+ 	}
+ 
+-	master = spi_alloc_master(&pdev->dev,
+-				sizeof(struct s3c64xx_spi_driver_data));
++	master = spi_alloc_master(&pdev->dev, sizeof(struct s3c64xx_spi_driver_data));
+ 	if (master == NULL) {
+ 		dev_err(&pdev->dev, "Unable to allocate SPI Master\n");
+ 		return -ENOMEM;
+@@ -1016,25 +1016,24 @@ static int __init s3c64xx_spi_probe(struct platform_device *pdev)
+ 	platform_set_drvdata(pdev, master);
+ 
+ 	sdd = spi_master_get_devdata(master);
+-	sdd->master = master;
++	sdd->master      = master;
+ 	sdd->cntrlr_info = sci;
+-	sdd->pdev = pdev;
+-	sdd->sfr_start = mem_res->start;
+-	sdd->tx_dmach = dmatx_res->start;
+-	sdd->rx_dmach = dmarx_res->start;
++	sdd->pdev        = pdev;
++	sdd->sfr_start   = mem_res->start;
++	sdd->tx_dmach    = dmatx_res->start;
++	sdd->rx_dmach    = dmarx_res->start;
+ 
+-	sdd->cur_bpw = 8;
++	sdd->cur_bpw     = 8;
+ 
+-	master->bus_num = pdev->id;
+-	master->setup = s3c64xx_spi_setup;
+-	master->transfer = s3c64xx_spi_transfer;
++	master->bus_num        = pdev->id;
++	master->setup          = s3c64xx_spi_setup;
++	master->transfer       = s3c64xx_spi_transfer;
+ 	master->num_chipselect = sci->num_cs;
+-	master->dma_alignment = 8;
++	master->dma_alignment  = 8;
+ 	/* the spi->mode bits understood by this driver: */
+ 	master->mode_bits = SPI_CPOL | SPI_CPHA | SPI_CS_HIGH;
+ 
+-	if (request_mem_region(mem_res->start,
+-			resource_size(mem_res), pdev->name) == NULL) {
++	if (request_mem_region(mem_res->start, resource_size(mem_res), pdev->name) == NULL) {
+ 		dev_err(&pdev->dev, "Req mem region failed\n");
+ 		ret = -ENXIO;
+ 		goto err0;
+@@ -1076,14 +1075,12 @@ static int __init s3c64xx_spi_probe(struct platform_device *pdev)
+ 	}
+ 
+ 	if (clk_enable(sdd->src_clk)) {
+-		dev_err(&pdev->dev, "Couldn't enable clock '%s'\n",
+-							sci->src_clk_name);
++		dev_err(&pdev->dev, "Couldn't enable clock '%s'\n", sci->src_clk_name);
+ 		ret = -EBUSY;
+ 		goto err6;
+ 	}
+ 
+-	sdd->workqueue = create_singlethread_workqueue(
+-						dev_name(master->dev.parent));
++	sdd->workqueue = create_singlethread_workqueue(dev_name(master->dev.parent));
+ 	if (sdd->workqueue == NULL) {
+ 		dev_err(&pdev->dev, "Unable to create workqueue\n");
+ 		ret = -ENOMEM;
+@@ -1104,12 +1101,14 @@ static int __init s3c64xx_spi_probe(struct platform_device *pdev)
+ 		goto err8;
+ 	}
+ 
+-	dev_dbg(&pdev->dev, "Samsung SoC SPI Driver loaded for Bus SPI-%d "
+-					"with %d Slaves attached\n",
+-					pdev->id, master->num_chipselect);
+-	dev_dbg(&pdev->dev, "\tIOmem=[0x%x-0x%x]\tDMA=[Rx-%d, Tx-%d]\n",
+-					mem_res->end, mem_res->start,
+-					sdd->rx_dmach, sdd->tx_dmach);
++	pr_err("%s() Samsung SoC SPI Driver loaded for Bus SPI-%d(id) with %d(num_chipselect) Slaves attached", __func__,
++					pdev->id,
++					master->num_chipselect);
++	pr_err("  IOmem=[0x%x-0x%x]\tDMA=[Rx-%d, Tx-%d]\n",
++					mem_res->end,
++					mem_res->start,
++					sdd->rx_dmach,
++					sdd->tx_dmach);
+ 
+ 	return 0;
+ 
+diff --git a/linux-3.0.1/drivers/spi/spidev.c b/linux-3.0.1/drivers/spi/spidev.c
+index d9fd862..d43fd8b 100755
+--- a/linux-3.0.1/drivers/spi/spidev.c
++++ b/linux-3.0.1/drivers/spi/spidev.c
+@@ -103,12 +103,13 @@ static void spidev_complete(void *arg)
+ 	complete(arg);
+ }
+ 
+-static ssize_t
+-spidev_sync(struct spidev_data *spidev, struct spi_message *message)
++static ssize_t spidev_sync(struct spidev_data *spidev, struct spi_message *message)
+ {
+ 	DECLARE_COMPLETION_ONSTACK(done);
+ 	int status;
+ 
++	pr_err("%s. ++++++\n", __func__);
++
+ 	message->complete = spidev_complete;
+ 	message->context = &done;
+ 
+@@ -128,8 +129,7 @@ spidev_sync(struct spidev_data *spidev, struct spi_message *message)
+ 	return status;
+ }
+ 
+-static inline ssize_t
+-spidev_sync_write(struct spidev_data *spidev, size_t len)
++static inline ssize_t spidev_sync_write(struct spidev_data *spidev, size_t len)
+ {
+ 	struct spi_transfer	t = {
+ 			.tx_buf		= spidev->buffer,
+@@ -142,8 +142,7 @@ spidev_sync_write(struct spidev_data *spidev, size_t len)
+ 	return spidev_sync(spidev, &m);
+ }
+ 
+-static inline ssize_t
+-spidev_sync_read(struct spidev_data *spidev, size_t len)
++static inline ssize_t spidev_sync_read(struct spidev_data *spidev, size_t len)
+ {
+ 	struct spi_transfer	t = {
+ 			.rx_buf		= spidev->buffer,
+@@ -159,12 +158,13 @@ spidev_sync_read(struct spidev_data *spidev, size_t len)
+ /*-------------------------------------------------------------------------*/
+ 
+ /* Read-only message with current device setup */
+-static ssize_t
+-spidev_read(struct file *filp, char __user *buf, size_t count, loff_t *f_pos)
++static ssize_t spidev_read(struct file *filp, char __user *buf, size_t count, loff_t *f_pos)
+ {
+ 	struct spidev_data	*spidev;
+ 	ssize_t			status = 0;
+ 
++	pr_err("%s. ++++++\n", __func__);
++
+ 	/* chipselect only toggles at start or end of operation */
+ 	if (count > bufsiz)
+ 		return -EMSGSIZE;
+@@ -188,14 +188,14 @@ spidev_read(struct file *filp, char __user *buf, size_t count, loff_t *f_pos)
+ }
+ 
+ /* Write-only message with current device setup */
+-static ssize_t
+-spidev_write(struct file *filp, const char __user *buf,
+-		size_t count, loff_t *f_pos)
++static ssize_t spidev_write(struct file *filp, const char __user *buf, size_t count, loff_t *f_pos)
+ {
+ 	struct spidev_data	*spidev;
+ 	ssize_t			status = 0;
+ 	unsigned long		missing;
+ 
++	pr_err("%s. ++++++\n", __func__);
++
+ 	/* chipselect only toggles at start or end of operation */
+ 	if (count > bufsiz)
+ 		return -EMSGSIZE;
+@@ -213,8 +213,7 @@ spidev_write(struct file *filp, const char __user *buf,
+ 	return status;
+ }
+ 
+-static int spidev_message(struct spidev_data *spidev,
+-		struct spi_ioc_transfer *u_xfers, unsigned n_xfers)
++static int spidev_message(struct spidev_data *spidev, struct spi_ioc_transfer *u_xfers, unsigned n_xfers)
+ {
+ 	struct spi_message	msg;
+ 	struct spi_transfer	*k_xfers;
+@@ -224,6 +223,8 @@ static int spidev_message(struct spidev_data *spidev,
+ 	u8			*buf;
+ 	int			status = -EFAULT;
+ 
++	pr_err("%s. ++++++\n", __func__);
++
+ 	spi_message_init(&msg);
+ 	k_xfers = kcalloc(n_xfers, sizeof(*k_tmp), GFP_KERNEL);
+ 	if (k_xfers == NULL)
+@@ -304,8 +305,7 @@ done:
+ 	return status;
+ }
+ 
+-static long
+-spidev_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
++static long spidev_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
+ {
+ 	int			err = 0;
+ 	int			retval = 0;
+@@ -315,6 +315,8 @@ spidev_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
+ 	unsigned		n_ioc;
+ 	struct spi_ioc_transfer	*ioc;
+ 
++	pr_err("%s. cmd=%d, arg=%ld ++++++\n", __func__, cmd, arg);
++
+ 	/* Check type and command number */
+ 	if (_IOC_TYPE(cmd) != SPI_IOC_MAGIC)
+ 		return -ENOTTY;
+@@ -487,6 +489,8 @@ static int spidev_open(struct inode *inode, struct file *filp)
+ 	struct spidev_data	*spidev;
+ 	int			status = -ENXIO;
+ 
++	pr_err("%s. ++++++\n", __func__);
++
+ 	mutex_lock(&device_list_lock);
+ 
+ 	list_for_each_entry(spidev, &device_list, device_entry) {
+@@ -520,6 +524,7 @@ static int spidev_release(struct inode *inode, struct file *filp)
+ 	struct spidev_data	*spidev;
+ 	int			status = 0;
+ 
++	pr_err("%s. ++++++\n", __func__);
+ 	mutex_lock(&device_list_lock);
+ 	spidev = filp->private_data;
+ 	filp->private_data = NULL;
+@@ -577,6 +582,7 @@ static int __devinit spidev_probe(struct spi_device *spi)
+ 	int			status;
+ 	unsigned long		minor;
+ 
++	pr_err("%s. ++++++\n", __func__);
+ 	/* Allocate driver data */
+ 	spidev = kzalloc(sizeof(*spidev), GFP_KERNEL);
+ 	if (!spidev)
+@@ -624,6 +630,7 @@ static int __devexit spidev_remove(struct spi_device *spi)
+ {
+ 	struct spidev_data	*spidev = spi_get_drvdata(spi);
+ 
++	pr_err("%s. ++++++\n", __func__);
+ 	/* make sure ops on existing fds can abort cleanly */
+ 	spin_lock_irq(&spidev->spi_lock);
+ 	spidev->spi = NULL;
+@@ -663,6 +670,7 @@ static int __init spidev_init(void)
+ {
+ 	int status;
+ 
++	pr_err("%s. ++++++\n", __func__);
+ 	/* Claim our 256 reserved device numbers.  Then register a class
+ 	 * that will key udev/mdev to add/remove /dev nodes.  Last, register
+ 	 * the driver which manages those device numbers.
+@@ -689,6 +697,7 @@ module_init(spidev_init);
+ 
+ static void __exit spidev_exit(void)
+ {
++	pr_err("%s. ++++++\n", __func__);
+ 	spi_unregister_driver(&spidev_spi_driver);
+ 	class_destroy(spidev_class);
+ 	unregister_chrdev(SPIDEV_MAJOR, spidev_spi_driver.driver.name);
+diff --git a/linux-3.0.1/include/sound/soc.h b/linux-3.0.1/include/sound/soc.h
+index 74921f2..981ed2d 100755
+--- a/linux-3.0.1/include/sound/soc.h
++++ b/linux-3.0.1/include/sound/soc.h
+@@ -463,14 +463,14 @@ struct snd_soc_codec {
+ 	/* runtime */
+ 	struct snd_ac97 *ac97;  /* for ad-hoc ac97 devices */
+ 	unsigned int active;
+-	unsigned int cache_only:1;  /* Suppress writes to hardware */
+-	unsigned int cache_sync:1; /* Cache needs to be synced to hardware */
+-	unsigned int suspended:1; /* Codec is in suspend PM state */
+-	unsigned int probed:1; /* Codec has been probed */
+-	unsigned int ac97_registered:1; /* Codec has been AC97 registered */
+-	unsigned int ac97_created:1; /* Codec has been created by SoC */
++	unsigned int cache_only:1;       /* Suppress writes to hardware */
++	unsigned int cache_sync:1;       /* Cache needs to be synced to hardware */
++	unsigned int suspended:1;        /* Codec is in suspend PM state */
++	unsigned int probed:1;           /* Codec has been probed */
++	unsigned int ac97_registered:1;  /* Codec has been AC97 registered */
++	unsigned int ac97_created:1;     /* Codec has been created by SoC */
+ 	unsigned int sysfs_registered:1; /* codec has been sysfs registered */
+-	unsigned int cache_init:1; /* codec cache has been initialized */
++	unsigned int cache_init:1;       /* codec cache has been initialized */
+ 
+ 	/* codec IO */
+ 	void *control_data; /* codec control (i2c/3wire) data */
+diff --git a/linux-3.0.1/lib/klist.c b/linux-3.0.1/lib/klist.c
+index 573d606..8bf8cdf 100755
+--- a/linux-3.0.1/lib/klist.c
++++ b/linux-3.0.1/lib/klist.c
+@@ -278,8 +278,7 @@ EXPORT_SYMBOL_GPL(klist_node_attached);
+  * Similar to klist_iter_init(), but starts the action off with @n,
+  * instead of with the list head.
+  */
+-void klist_iter_init_node(struct klist *k, struct klist_iter *i,
+-			  struct klist_node *n)
++void klist_iter_init_node(struct klist *k, struct klist_iter *i, struct klist_node *n)
+ {
+ 	i->i_klist = k;
+ 	i->i_cur = n;
+diff --git a/linux-3.0.1/lib/kobject.c b/linux-3.0.1/lib/kobject.c
+index 640bd98..7225401 100755
+--- a/linux-3.0.1/lib/kobject.c
++++ b/linux-3.0.1/lib/kobject.c
+@@ -221,12 +221,12 @@ int kobject_set_name_vargs(struct kobject *kobj, const char *fmt,
+ 	if (kobj->name && !fmt)
+ 		return 0;
+ 
+-	kobj->name = kvasprintf(GFP_KERNEL, fmt, vargs);
++	kobj->name = kvasprintf(GFP_KERNEL, fmt, vargs);  /* Æ´½Ó×Ö·û´®*/
+ 	if (!kobj->name)
+ 		return -ENOMEM;
+ 
+ 	/* ewww... some of these buggers have '/' in the name ... */
+-	while ((s = strchr(kobj->name, '/')))
++	while ((s = strchr(kobj->name, '/')))  /*²éÕÒ×Ö·û´®StrÖÐÊ×´Î³öÏÖ×Ö·ûValµÄÎ»ÖÃ*/
+ 		s[0] = '!';
+ 
+ 	kfree(old_name);
+diff --git a/linux-3.0.1/sound/core/pcm_native.c b/linux-3.0.1/sound/core/pcm_native.c
+index 4be45e7..3caafdb 100644
+--- a/linux-3.0.1/sound/core/pcm_native.c
++++ b/linux-3.0.1/sound/core/pcm_native.c
+@@ -1333,13 +1333,14 @@ static struct action_ops snd_pcm_action_prepare = {
+  * @substream: the PCM substream instance
+  * @file: file to refer f_flags
+  */
+-static int snd_pcm_prepare(struct snd_pcm_substream *substream,
+-			   struct file *file)
++static int snd_pcm_prepare(struct snd_pcm_substream *substream, struct file *file)
+ {
+ 	int res;
+ 	struct snd_card *card = substream->pcm->card;
+ 	int f_flags;
+ 
++	pr_err("Enter %s\n", __func__);
++
+ 	if (file)
+ 		f_flags = file->f_flags;
+ 	else
+@@ -1347,8 +1348,7 @@ static int snd_pcm_prepare(struct snd_pcm_substream *substream,
+ 
+ 	snd_power_lock(card);
+ 	if ((res = snd_power_wait(card, SNDRV_CTL_POWER_D0)) >= 0)
+-		res = snd_pcm_action_nonatomic(&snd_pcm_action_prepare,
+-					       substream, f_flags);
++		res = snd_pcm_action_nonatomic(&snd_pcm_action_prepare, substream, f_flags);
+ 	snd_power_unlock(card);
+ 	return res;
+ }
+diff --git a/linux-3.0.1/sound/soc/soc-core.c b/linux-3.0.1/sound/soc/soc-core.c
+index 99b9d9a..5523055 100644
+--- a/linux-3.0.1/sound/soc/soc-core.c
++++ b/linux-3.0.1/sound/soc/soc-core.c
+@@ -1282,7 +1282,7 @@ find_platform:
+ 	if (rtd->platform) {
+ 		goto out;
+ 	}
+-	/* no, then find CPU DAI from registered DAIs*/
++	/* no, then find platform from registered DAIs*/
+ 	list_for_each_entry(platform, &platform_list, list) {
+ 		pr_err("%s. ------- platform->name=%s, dai_link->platform_name=%s\n",__func__, platform->name, dai_link->platform_name);
+ 		if (!strcmp(platform->name, dai_link->platform_name)) {
+@@ -1806,8 +1806,7 @@ static void snd_soc_instantiate_card(struct snd_soc_card *card)
+ 	for (i = 0; i < card->num_links; i++) {
+ 		ret = soc_probe_dai_link(card, i);
+ 		if (ret < 0) {
+-			pr_err("asoc: failed to instantiate card %s: %d\n",
+-			       card->name, ret);
++			pr_err("asoc: failed to instantiate card %s: %d\n", card->name, ret);
+ 			goto probe_dai_err;
+ 		}
+ 	}
+@@ -1815,8 +1814,7 @@ static void snd_soc_instantiate_card(struct snd_soc_card *card)
+ 	for (i = 0; i < card->num_aux_devs; i++) {
+ 		ret = soc_probe_aux_dev(card, i);
+ 		if (ret < 0) {
+-			pr_err("asoc: failed to add auxiliary devices %s: %d\n",
+-			       card->name, ret);
++			pr_err("asoc: failed to add auxiliary devices %s: %d\n", card->name, ret);
+ 			goto probe_aux_dev_err;
+ 		}
+ 	}
+@@ -2129,9 +2127,10 @@ unsigned int snd_soc_read(struct snd_soc_codec *codec, unsigned int reg)
+ EXPORT_SYMBOL_GPL(snd_soc_read);
+ 
+ unsigned int snd_soc_write(struct snd_soc_codec *codec,
+-			   unsigned int reg, unsigned int val)
++			   unsigned int reg,
++			   unsigned int val)
+ {
+-	dev_dbg(codec->dev, "write %x = %x\n", reg, val);
++	pr_err("write %x = %x\n", reg, val);
+ 	trace_snd_soc_reg_write(codec, reg, val);
+ 	return codec->write(codec, reg, val);
+ }
+diff --git a/linux-3.0.1/sound/soc/soc-dapm.c b/linux-3.0.1/sound/soc/soc-dapm.c
+index abd551a..993fbdd 100644
+--- a/linux-3.0.1/sound/soc/soc-dapm.c
++++ b/linux-3.0.1/sound/soc/soc-dapm.c
+@@ -137,39 +137,29 @@ static int snd_soc_dapm_set_bias_level(struct snd_soc_card *card, struct snd_soc
+ 	int ret = 0;
+ 
+ 	switch (level) {
+-	case SND_SOC_BIAS_ON:
+-		dev_info(dapm->dev, "Setting full bias\n");
+-		break;
+-	case SND_SOC_BIAS_PREPARE:
+-		dev_info(dapm->dev, "Setting bias prepare\n");
+-		break;
+-	case SND_SOC_BIAS_STANDBY:
+-		dev_info(dapm->dev, "Setting standby bias\n");
+-		break;
+-	case SND_SOC_BIAS_OFF:
+-		dev_info(dapm->dev, "Setting bias off\n");
+-		break;
+-	default:
+-		dev_err(dapm->dev, "Setting invalid bias %d\n", level);
+-		return -EINVAL;
++	case SND_SOC_BIAS_ON:       pr_info("Setting full bias\n");             break;
++	case SND_SOC_BIAS_PREPARE:  pr_info("Setting bias prepare\n");          break;
++	case SND_SOC_BIAS_STANDBY:  pr_info("Setting standby bias\n");          break;
++	case SND_SOC_BIAS_OFF:      pr_info("Setting bias off\n");              break;
++	default:                    pr_err("Setting invalid bias %d\n", level); return -EINVAL;
+ 	}
+ 
+ 	trace_snd_soc_bias_level_start(card, level);
+ 
+ 	if (card && card->set_bias_level) {
+-		dev_info(dapm->dev, "level=%d, card->set_bias_level=>%p\n", level, card->set_bias_level);
++		pr_info("level=%d, card->set_bias_level=>%p\n", level, card->set_bias_level);
+ 		ret = card->set_bias_level(card, level);
+ 	}
+ 	if (ret == 0) {
+ 		if (dapm->codec && dapm->codec->driver->set_bias_level) {
+-			dev_info(dapm->dev, "dapm->codec->driver->set_bias_level=>%p\n", dapm->codec->driver->set_bias_level);
++			pr_info("dapm->codec->driver->set_bias_level=>%p\n", dapm->codec->driver->set_bias_level);
+ 			ret = dapm->codec->driver->set_bias_level(dapm->codec, level);
+ 		} else
+ 			dapm->bias_level = level;
+ 	}
+ 	if (ret == 0) {
+ 		if (card && card->set_bias_level_post) {
+-			dev_info(dapm->dev, "card->set_bias_level_post=>%p\n", card->set_bias_level_post);
++			pr_info("card->set_bias_level_post=>%p\n", card->set_bias_level_post);
+ 			ret = card->set_bias_level_post(card, level);
+ 		}
+ 	}
+@@ -736,20 +726,15 @@ static int dapm_seq_compare(struct snd_soc_dapm_widget *a,
+ 			    struct snd_soc_dapm_widget *b,
+ 			    int sort[])
+ {
+-	if (sort[a->id] != sort[b->id])
+-		return sort[a->id] - sort[b->id];
+-	if (a->reg != b->reg)
+-		return a->reg - b->reg;
+-	if (a->dapm != b->dapm)
+-		return (unsigned long)a->dapm - (unsigned long)b->dapm;
++	if (sort[a->id] != sort[b->id])  return sort[a->id] - sort[b->id];
++	if (a->reg != b->reg)            return a->reg - b->reg;
++	if (a->dapm != b->dapm)          return (unsigned long)a->dapm - (unsigned long)b->dapm;
+ 
+ 	return 0;
+ }
+ 
+ /* Insert a widget in order into a DAPM power sequence. */
+-static void dapm_seq_insert(struct snd_soc_dapm_widget *new_widget,
+-			    struct list_head *list,
+-			    int sort[])
++static void dapm_seq_insert(struct snd_soc_dapm_widget *new_widget, struct list_head *list, int sort[])
+ {
+ 	struct snd_soc_dapm_widget *w;
+ 
+@@ -864,8 +849,7 @@ static void dapm_seq_run_coalesced(struct snd_soc_dapm_context *dapm,
+  * Currently anything that requires more than a single write is not
+  * handled.
+  */
+-static void dapm_seq_run(struct snd_soc_dapm_context *dapm,
+-			 struct list_head *list, int event, int sort[])
++static void dapm_seq_run(struct snd_soc_dapm_context *dapm, struct list_head *list, int event, int sort[])
+ {
+ 	struct snd_soc_dapm_widget *w, *n;
+ 	LIST_HEAD(pending);
+@@ -892,28 +876,22 @@ static void dapm_seq_run(struct snd_soc_dapm_context *dapm,
+ 		switch (w->id) {
+ 		case snd_soc_dapm_pre:
+ 			if (!w->event)
+-				list_for_each_entry_safe_continue(w, n, list,
+-								  power_list);
++				list_for_each_entry_safe_continue(w, n, list, power_list);
+ 
+ 			if (event == SND_SOC_DAPM_STREAM_START)
+-				ret = w->event(w,
+-					       NULL, SND_SOC_DAPM_PRE_PMU);
++				ret = w->event(w, NULL, SND_SOC_DAPM_PRE_PMU);
+ 			else if (event == SND_SOC_DAPM_STREAM_STOP)
+-				ret = w->event(w,
+-					       NULL, SND_SOC_DAPM_PRE_PMD);
++				ret = w->event(w, NULL, SND_SOC_DAPM_PRE_PMD);
+ 			break;
+ 
+ 		case snd_soc_dapm_post:
+ 			if (!w->event)
+-				list_for_each_entry_safe_continue(w, n, list,
+-								  power_list);
++				list_for_each_entry_safe_continue(w, n, list, power_list);
+ 
+ 			if (event == SND_SOC_DAPM_STREAM_START)
+-				ret = w->event(w,
+-					       NULL, SND_SOC_DAPM_POST_PMU);
++				ret = w->event(w, NULL, SND_SOC_DAPM_POST_PMU);
+ 			else if (event == SND_SOC_DAPM_STREAM_STOP)
+-				ret = w->event(w,
+-					       NULL, SND_SOC_DAPM_POST_PMD);
++				ret = w->event(w, NULL, SND_SOC_DAPM_POST_PMD);
+ 			break;
+ 
+ 		case snd_soc_dapm_input:
+@@ -936,8 +914,7 @@ static void dapm_seq_run(struct snd_soc_dapm_context *dapm,
+ 		}
+ 
+ 		if (ret < 0)
+-			dev_err(w->dapm->dev,
+-				"Failed to apply widget power: %d\n", ret);
++			dev_err(w->dapm->dev, "Failed to apply widget power: %d\n", ret);
+ 	}
+ 
+ 	if (!list_empty(&pending))
+@@ -1010,7 +987,6 @@ static int dapm_power_widgets(struct snd_soc_dapm_context *dapm, int event)
+ 		switch (w->id) {
+ 		case snd_soc_dapm_pre:			dapm_seq_insert(w, &down_list, dapm_down_seq);	break;
+ 		case snd_soc_dapm_post:			dapm_seq_insert(w, &up_list, dapm_up_seq);	break;
+-
+ 		default:
+ 			if (!w->power_check)		continue;
+ 

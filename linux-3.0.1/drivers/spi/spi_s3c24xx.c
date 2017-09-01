@@ -121,8 +121,7 @@ static void s3c24xx_spi_chipsel(struct spi_device *spi, int value)
 	}
 }
 
-static int s3c24xx_spi_update_state(struct spi_device *spi,
-				    struct spi_transfer *t)
+static int s3c24xx_spi_update_state(struct spi_device *spi, struct spi_transfer *t)
 {
 	struct s3c24xx_spi *hw = to_hw(spi);
 	struct s3c24xx_spi_devstate *cs = spi->controller_state;
@@ -130,6 +129,8 @@ static int s3c24xx_spi_update_state(struct spi_device *spi,
 	unsigned int hz;
 	unsigned int div;
 	unsigned long clk;
+
+	pr_err("%s. ++++++\n", __func__);
 
 	bpw = t ? t->bits_per_word : spi->bits_per_word;
 	hz  = t ? t->speed_hz : spi->max_speed_hz;
@@ -182,6 +183,8 @@ static int s3c24xx_spi_setupxfer(struct spi_device *spi,
 	struct s3c24xx_spi *hw = to_hw(spi);
 	int ret;
 
+	pr_err("%s. ++++++\n", __func__);
+
 	ret = s3c24xx_spi_update_state(spi, t);
 	if (!ret)
 		writeb(cs->sppre, hw->regs + S3C2410_SPPRE);
@@ -189,7 +192,7 @@ static int s3c24xx_spi_setupxfer(struct spi_device *spi,
 	return ret;
 }
 
-static int s3c24xx_spi_setup(struct spi_device *spi)
+static int s3c24xx_spi_setup(struct spi_device *spi)  /* struct spi_device */
 {
 	struct s3c24xx_spi_devstate *cs = spi->controller_state;
 	struct s3c24xx_spi *hw = to_hw(spi);
@@ -215,7 +218,7 @@ static int s3c24xx_spi_setup(struct spi_device *spi)
 
 	spin_lock(&hw->bitbang.lock);
 	if (!hw->bitbang.busy) {
-		hw->bitbang.chipselect(spi, BITBANG_CS_INACTIVE);
+		hw->bitbang.chipselect(spi, BITBANG_CS_INACTIVE);  // spi_s3c24xx.c:556:	hw->bitbang.chipselect     = s3c24xx_spi_chipsel;
 		/* need to ndelay for 0.5 clocktick ? */
 	}
 	spin_unlock(&hw->bitbang.lock);
@@ -514,6 +517,8 @@ static int __init s3c24xx_spi_probe(struct platform_device *pdev)
 	struct resource *res;
 	int err = 0;
 
+	pr_err("%s() +++++\n", __func__);
+
 	master = spi_alloc_master(&pdev->dev, sizeof(struct s3c24xx_spi));
 	if (master == NULL) {
 		dev_err(&pdev->dev, "No memory for spi_master\n");
@@ -570,9 +575,7 @@ static int __init s3c24xx_spi_probe(struct platform_device *pdev)
 		goto err_no_iores;
 	}
 
-	hw->ioarea = request_mem_region(res->start, resource_size(res),
-					pdev->name);
-
+	hw->ioarea = request_mem_region(res->start, resource_size(res), pdev->name);
 	if (hw->ioarea == NULL) {
 		dev_err(&pdev->dev, "Cannot reserve region\n");
 		err = -ENXIO;
@@ -599,7 +602,7 @@ static int __init s3c24xx_spi_probe(struct platform_device *pdev)
 		goto err_no_irq;
 	}
 
-	hw->clk = clk_get(&pdev->dev, "spi");
+	hw->clk = clk_get(&pdev->dev, "spi");  // arch/arm/mach-s3c64xx/clock.c struct clk init_clocks_disable[] = {}
 	if (IS_ERR(hw->clk)) {
 		dev_err(&pdev->dev, "No clock for device\n");
 		err = PTR_ERR(hw->clk);
@@ -614,13 +617,13 @@ static int __init s3c24xx_spi_probe(struct platform_device *pdev)
 			goto err_register;
 		}
 
-		err = gpio_request(pdata->pin_cs, dev_name(&pdev->dev));
+		err = gpio_request(pdata->pin_cs, dev_name(&pdev->dev)); /* where is pin_cs ?? */
 		if (err) {
 			dev_err(&pdev->dev, "Failed to get gpio for cs\n");
 			goto err_register;
 		}
 
-		hw->set_cs = s3c24xx_spi_gpiocs;
+		hw->set_cs = s3c24xx_spi_gpiocs;  /* void s3c24xx_spi_gpiocs() ?? */
 		gpio_direction_output(pdata->pin_cs, 1);
 	} else
 		hw->set_cs = pdata->set_cs;
@@ -722,7 +725,7 @@ MODULE_ALIAS("platform:s3c2410-spi");
 static struct platform_driver s3c24xx_spi_driver = {
 	.remove		= __exit_p(s3c24xx_spi_remove),
 	.driver		= {
-		.name	= "s3c2410-spi",
+		.name	= "s3c2410-spi",   // same name as struct platform_device s3c_device_spix @arch/arm/plat-s3c24xx/devs.c
 		.owner	= THIS_MODULE,
 		.pm	= S3C24XX_SPI_PMOPS,
 	},

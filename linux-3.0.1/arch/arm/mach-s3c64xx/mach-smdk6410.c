@@ -203,7 +203,7 @@ static struct s3c64xx_spi_csinfo s3c64xx_spi1_csinfo = {
 
 static int mcp251x_ioSetup(struct spi_device *spi)
 {
-	printk(KERN_INFO "mcp251x: setup gpio pins CS and External Int\n");
+	printk(KERN_INFO "%s. mcp251x: setup gpio pins CS and External Int\n", __func__);
 	s3c_gpio_setpull(S3C64XX_GPL(8), S3C_GPIO_PULL_UP);		// External interrupt from CAN controller
 	s3c_gpio_cfgpin(S3C64XX_GPL(8), S3C_GPIO_SFN(3)); 		// External interrupt from CAN controller (hopefully external interrupt)
 	//s3c_gpio_cfgpin(S3C64XX_GPL(8), S3C_GPIO_INPUT);		// External interrupt from CAN controller
@@ -219,7 +219,7 @@ static struct mcp251x_platform_data mcp251x_info = {
 	.power_enable = NULL,
 };
 
-static struct spi_board_info __initdata forlinx6410_mc251x_info[]  = {
+static struct spi_board_info __initdata forlinx6410_mc251x_info[]  = {  /* drivers/net/can/mcp251x.c */
 	{
 		.modalias = "mcp2515",	
 		.platform_data = &mcp251x_info,
@@ -1039,6 +1039,8 @@ static void __init smdk6410_map_io(void)
 static void __init smdk6410_machine_init(void)
 {
 	u32 cs1;
+
+	printk(KERN_ERR "smdk6410_machine_init() @arch/arm/mach-s3c64xx/mach-smdk6410.c\n");
 
 	s3c_i2c0_set_platdata(NULL);
 	//s3c_i2c1_set_platdata(NULL);

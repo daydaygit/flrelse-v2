@@ -137,39 +137,29 @@ static int snd_soc_dapm_set_bias_level(struct snd_soc_card *card, struct snd_soc
 	int ret = 0;
 
 	switch (level) {
-	case SND_SOC_BIAS_ON:
-		dev_info(dapm->dev, "Setting full bias\n");
-		break;
-	case SND_SOC_BIAS_PREPARE:
-		dev_info(dapm->dev, "Setting bias prepare\n");
-		break;
-	case SND_SOC_BIAS_STANDBY:
-		dev_info(dapm->dev, "Setting standby bias\n");
-		break;
-	case SND_SOC_BIAS_OFF:
-		dev_info(dapm->dev, "Setting bias off\n");
-		break;
-	default:
-		dev_err(dapm->dev, "Setting invalid bias %d\n", level);
-		return -EINVAL;
+	case SND_SOC_BIAS_ON:       pr_info("Setting full bias\n");             break;
+	case SND_SOC_BIAS_PREPARE:  pr_info("Setting bias prepare\n");          break;
+	case SND_SOC_BIAS_STANDBY:  pr_info("Setting standby bias\n");          break;
+	case SND_SOC_BIAS_OFF:      pr_info("Setting bias off\n");              break;
+	default:                    pr_err("Setting invalid bias %d\n", level); return -EINVAL;
 	}
 
 	trace_snd_soc_bias_level_start(card, level);
 
 	if (card && card->set_bias_level) {
-		dev_info(dapm->dev, "level=%d, card->set_bias_level=>%p\n", level, card->set_bias_level);
+		pr_info("level=%d, card->set_bias_level=>%p\n", level, card->set_bias_level);
 		ret = card->set_bias_level(card, level);
 	}
 	if (ret == 0) {
 		if (dapm->codec && dapm->codec->driver->set_bias_level) {
-			dev_info(dapm->dev, "dapm->codec->driver->set_bias_level=>%p\n", dapm->codec->driver->set_bias_level);
+			pr_info("dapm->codec->driver->set_bias_level=>%p\n", dapm->codec->driver->set_bias_level);
 			ret = dapm->codec->driver->set_bias_level(dapm->codec, level);
 		} else
 			dapm->bias_level = level;
 	}
 	if (ret == 0) {
 		if (card && card->set_bias_level_post) {
-			dev_info(dapm->dev, "card->set_bias_level_post=>%p\n", card->set_bias_level_post);
+			pr_info("card->set_bias_level_post=>%p\n", card->set_bias_level_post);
 			ret = card->set_bias_level_post(card, level);
 		}
 	}
@@ -736,20 +726,15 @@ static int dapm_seq_compare(struct snd_soc_dapm_widget *a,
 			    struct snd_soc_dapm_widget *b,
 			    int sort[])
 {
-	if (sort[a->id] != sort[b->id])
-		return sort[a->id] - sort[b->id];
-	if (a->reg != b->reg)
-		return a->reg - b->reg;
-	if (a->dapm != b->dapm)
-		return (unsigned long)a->dapm - (unsigned long)b->dapm;
+	if (sort[a->id] != sort[b->id])  return sort[a->id] - sort[b->id];
+	if (a->reg != b->reg)            return a->reg - b->reg;
+	if (a->dapm != b->dapm)          return (unsigned long)a->dapm - (unsigned long)b->dapm;
 
 	return 0;
 }
 
 /* Insert a widget in order into a DAPM power sequence. */
-static void dapm_seq_insert(struct snd_soc_dapm_widget *new_widget,
-			    struct list_head *list,
-			    int sort[])
+static void dapm_seq_insert(struct snd_soc_dapm_widget *new_widget, struct list_head *list, int sort[])
 {
 	struct snd_soc_dapm_widget *w;
 
@@ -864,8 +849,7 @@ static void dapm_seq_run_coalesced(struct snd_soc_dapm_context *dapm,
  * Currently anything that requires more than a single write is not
  * handled.
  */
-static void dapm_seq_run(struct snd_soc_dapm_context *dapm,
-			 struct list_head *list, int event, int sort[])
+static void dapm_seq_run(struct snd_soc_dapm_context *dapm, struct list_head *list, int event, int sort[])
 {
 	struct snd_soc_dapm_widget *w, *n;
 	LIST_HEAD(pending);
@@ -892,28 +876,22 @@ static void dapm_seq_run(struct snd_soc_dapm_context *dapm,
 		switch (w->id) {
 		case snd_soc_dapm_pre:
 			if (!w->event)
-				list_for_each_entry_safe_continue(w, n, list,
-								  power_list);
+				list_for_each_entry_safe_continue(w, n, list, power_list);
 
 			if (event == SND_SOC_DAPM_STREAM_START)
-				ret = w->event(w,
-					       NULL, SND_SOC_DAPM_PRE_PMU);
+				ret = w->event(w, NULL, SND_SOC_DAPM_PRE_PMU);
 			else if (event == SND_SOC_DAPM_STREAM_STOP)
-				ret = w->event(w,
-					       NULL, SND_SOC_DAPM_PRE_PMD);
+				ret = w->event(w, NULL, SND_SOC_DAPM_PRE_PMD);
 			break;
 
 		case snd_soc_dapm_post:
 			if (!w->event)
-				list_for_each_entry_safe_continue(w, n, list,
-								  power_list);
+				list_for_each_entry_safe_continue(w, n, list, power_list);
 
 			if (event == SND_SOC_DAPM_STREAM_START)
-				ret = w->event(w,
-					       NULL, SND_SOC_DAPM_POST_PMU);
+				ret = w->event(w, NULL, SND_SOC_DAPM_POST_PMU);
 			else if (event == SND_SOC_DAPM_STREAM_STOP)
-				ret = w->event(w,
-					       NULL, SND_SOC_DAPM_POST_PMD);
+				ret = w->event(w, NULL, SND_SOC_DAPM_POST_PMD);
 			break;
 
 		case snd_soc_dapm_input:
@@ -936,8 +914,7 @@ static void dapm_seq_run(struct snd_soc_dapm_context *dapm,
 		}
 
 		if (ret < 0)
-			dev_err(w->dapm->dev,
-				"Failed to apply widget power: %d\n", ret);
+			dev_err(w->dapm->dev, "Failed to apply widget power: %d\n", ret);
 	}
 
 	if (!list_empty(&pending))
@@ -1010,7 +987,6 @@ static int dapm_power_widgets(struct snd_soc_dapm_context *dapm, int event)
 		switch (w->id) {
 		case snd_soc_dapm_pre:			dapm_seq_insert(w, &down_list, dapm_down_seq);	break;
 		case snd_soc_dapm_post:			dapm_seq_insert(w, &up_list, dapm_up_seq);	break;
-
 		default:
 			if (!w->power_check)		continue;
 

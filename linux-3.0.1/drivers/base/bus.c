@@ -317,8 +317,9 @@ EXPORT_SYMBOL_GPL(bus_for_each_dev);
  * return to the caller and not iterate over any more devices.
  */
 struct device *bus_find_device(struct bus_type *bus,
-			       struct device *start, void *data,
-			       int (*match)(struct device *dev, void *data))
+			           struct device *start,
+			           void *data,
+			           int (*match)(struct device *dev, void *data)) /* 函数指针,没有问题*/
 {
 	struct klist_iter i;
 	struct device *dev;
@@ -326,11 +327,14 @@ struct device *bus_find_device(struct bus_type *bus,
 	if (!bus)
 		return NULL;
 
-	klist_iter_init_node(&bus->p->klist_devices, &i,
-			     (start ? &start->p->knode_bus : NULL));
-	while ((dev = next_device(&i)))
-		if (match(dev, data) && get_device(dev))
+	pr_err("%s. match=>%p (match_name)++++\n", __func__, match);  /* c02444e4 = match_name */
+
+	klist_iter_init_node(&bus->p->klist_devices, &i, (start ? &start->p->knode_bus : NULL));
+	while ((dev = next_device(&i))) {
+		pr_err("%s. next_device=>%p ++++\n", __func__, next_device);
+		if (match(dev, data) && get_device(dev))  /* 寻找bus设备链表中的某个设备，使用指定的匹配函数 */
 			break;
+	}
 	klist_iter_exit(&i);
 	return dev;
 }
@@ -340,6 +344,7 @@ static int match_name(struct device *dev, void *data)
 {
 	const char *name = data;
 
+	pr_err("%s. name=%s, dev_name(dev)=%s ++++\n", __func__, name, dev_name(dev));
 	return sysfs_streq(name, dev_name(dev));
 }
 
@@ -353,9 +358,10 @@ static int match_name(struct device *dev, void *data)
  * searching by a name automatically, no need to write another strcmp matching
  * function.
  */
-struct device *bus_find_device_by_name(struct bus_type *bus,
-				       struct device *start, const char *name)
+struct device *bus_find_device_by_name(struct bus_type *bus, struct device *start, const char *name)
 {
+	pr_err("%s. bus->name=%s, dev_name(&spi->dev)=%s\n", __func__,bus->name, name);
+
 	return bus_find_device(bus, start, (void *)name, match_name);
 }
 EXPORT_SYMBOL_GPL(bus_find_device_by_name);

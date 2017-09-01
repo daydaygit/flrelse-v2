@@ -1333,12 +1333,13 @@ static struct action_ops snd_pcm_action_prepare = {
  * @substream: the PCM substream instance
  * @file: file to refer f_flags
  */
-static int snd_pcm_prepare(struct snd_pcm_substream *substream,
-			   struct file *file)
+static int snd_pcm_prepare(struct snd_pcm_substream *substream, struct file *file)
 {
 	int res;
 	struct snd_card *card = substream->pcm->card;
 	int f_flags;
+
+	pr_err("Enter %s\n", __func__);
 
 	if (file)
 		f_flags = file->f_flags;
@@ -1347,8 +1348,7 @@ static int snd_pcm_prepare(struct snd_pcm_substream *substream,
 
 	snd_power_lock(card);
 	if ((res = snd_power_wait(card, SNDRV_CTL_POWER_D0)) >= 0)
-		res = snd_pcm_action_nonatomic(&snd_pcm_action_prepare,
-					       substream, f_flags);
+		res = snd_pcm_action_nonatomic(&snd_pcm_action_prepare, substream, f_flags);
 	snd_power_unlock(card);
 	return res;
 }

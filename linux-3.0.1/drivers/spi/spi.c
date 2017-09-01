@@ -252,6 +252,7 @@ static void spi_drv_shutdown(struct device *dev)
  */
 int spi_register_driver(struct spi_driver *sdrv)
 {
+	pr_err("%s() +++++\n", __func__);
 	sdrv->driver.bus = &spi_bus_type;
 	if (sdrv->probe)
 		sdrv->driver.probe = spi_drv_probe;
@@ -307,6 +308,8 @@ struct spi_device *spi_alloc_device(struct spi_master *master)
 	struct spi_device	*spi;
 	struct device		*dev = master->dev.parent;
 
+        pr_err("%s. ++++++\n", __func__);
+
 	if (!spi_master_get(master))
 		return NULL;
 
@@ -342,6 +345,8 @@ int spi_add_device(struct spi_device *spi)
 	struct device *d;
 	int status;
 
+	pr_err("spi_add_device() +++++\n");
+
 	/* Chipselects are numbered 0..max; validate. */
 	if (spi->chip_select >= spi->master->num_chipselect) {
 		dev_err(dev, "cs%d >= max %d\n",
@@ -351,9 +356,9 @@ int spi_add_device(struct spi_device *spi)
 	}
 
 	/* Set the bus ID string */
-	dev_set_name(&spi->dev, "%s.%u", dev_name(&spi->master->dev),
-			spi->chip_select);
-
+	dev_set_name(&spi->dev, "%s.%u", dev_name(&spi->master->dev), spi->chip_select);
+	pr_err("%s(). &spi->master->dev=%s, spi->chip_select=%u ++++\n",
+		__func__, dev_name(&spi->master->dev), spi->chip_select);
 
 	/* We need to make sure there's no other device with this
 	 * chipselect **BEFORE** we call setup(), else we'll trash
@@ -363,8 +368,7 @@ int spi_add_device(struct spi_device *spi)
 
 	d = bus_find_device_by_name(&spi_bus_type, NULL, dev_name(&spi->dev));
 	if (d != NULL) {
-		dev_err(dev, "chipselect %d already in use\n",
-				spi->chip_select);
+ 		dev_err(dev, "chipselect %d already in use\n", spi->chip_select);
 		put_device(d);
 		status = -EBUSY;
 		goto done;
@@ -409,10 +413,9 @@ EXPORT_SYMBOL_GPL(spi_add_device);
  *
  * Returns the new device, or NULL.
  */
-struct spi_device *spi_new_device(struct spi_master *master,
-				  struct spi_board_info *chip)
+struct spi_device *spi_new_device(struct spi_master *master, struct spi_board_info *chip)
 {
-	struct spi_device	*proxy;
+	struct spi_device	*proxy;   /*spi_device ¾ÍÊÇ´ÓÕâÀïÃ°³öÀ´µÄå**/
 	int			status;
 
 	/* NOTE:  caller did any chip->bus_num checks necessary.
@@ -421,6 +424,8 @@ struct spi_device *spi_new_device(struct spi_master *master,
 	 * error-or-pointer (not NULL-or-pointer), troubleshootability
 	 * suggests syslogged diagnostics are best here (ugh).
 	 */
+
+        pr_err("%s. ++++++\n", __func__);
 
 	proxy = spi_alloc_device(master);
 	if (!proxy)
@@ -447,18 +452,18 @@ struct spi_device *spi_new_device(struct spi_master *master,
 }
 EXPORT_SYMBOL_GPL(spi_new_device);
 
-static void spi_match_master_to_boardinfo(struct spi_master *master,
-				struct spi_board_info *bi)
+static void spi_match_master_to_boardinfo(struct spi_master *master, struct spi_board_info *bi)
 {
 	struct spi_device *dev;
+
+        pr_err("%s. master->bus_num=%d, bi->bus_num=%d ++++++\n", __func__,master->bus_num, bi->bus_num);
 
 	if (master->bus_num != bi->bus_num)
 		return;
 
 	dev = spi_new_device(master, bi);
 	if (!dev)
-		dev_err(master->dev.parent, "can't create new device for %s\n",
-			bi->modalias);
+		dev_err(master->dev.parent, "can't create new device for %s\n", bi->modalias);
 }
 
 /**
@@ -480,11 +485,12 @@ static void spi_match_master_to_boardinfo(struct spi_master *master,
  * The board info passed can safely be __initdata ... but be careful of
  * any embedded pointers (platform_data, etc), they're copied as-is.
  */
-int __init
-spi_register_board_info(struct spi_board_info const *info, unsigned n)
+int __init spi_register_board_info(struct spi_board_info const *info, unsigned n)
 {
 	struct boardinfo *bi;
 	int i;
+
+        pr_err("spi.c %s. ++++++\n", __func__);
 
 	bi = kzalloc(n * sizeof(*bi), GFP_KERNEL);
 	if (!bi)
@@ -544,6 +550,8 @@ struct spi_master *spi_alloc_master(struct device *dev, unsigned size)
 {
 	struct spi_master	*master;
 
+        pr_err("%s. ++++++\n", __func__);
+
 	if (!dev)
 		return NULL;
 
@@ -554,7 +562,7 @@ struct spi_master *spi_alloc_master(struct device *dev, unsigned size)
 	device_initialize(&master->dev);
 	master->dev.class = &spi_master_class;
 	master->dev.parent = get_device(dev);
-	spi_master_set_devdata(master, &master[1]);
+	spi_master_set_devdata(master, &master[1]);  // (&master->dev)->p->driver_data = data;
 
 	return master;
 }
@@ -580,6 +588,9 @@ EXPORT_SYMBOL_GPL(spi_alloc_master);
  * After a successful return, the caller is responsible for calling
  * spi_unregister_master().
  */
+
+/* Since SPI does not directly support dynamic device identification, 
+ *  boards need configuration tables telling which chip is at which address.*/
 int spi_register_master(struct spi_master *master)
 {
 	static atomic_t		dyn_bus_id = ATOMIC_INIT((1<<15) - 1);
@@ -587,6 +598,8 @@ int spi_register_master(struct spi_master *master)
 	struct boardinfo	*bi;
 	int			status = -ENODEV;
 	int			dynamic = 0;
+
+        pr_err("%s. ++++++\n", __func__);
 
 	if (!dev)
 		return -ENODEV;
@@ -614,11 +627,12 @@ int spi_register_master(struct spi_master *master)
 	 * registration fails if the bus ID is in use.
 	 */
 	dev_set_name(&master->dev, "spi%u", master->bus_num);
+	pr_err("%s() create name=%s ++++\n", __func__, (&((&master->dev)->kobj))->name);
+
 	status = device_add(&master->dev);
 	if (status < 0)
 		goto done;
-	dev_dbg(dev, "registered master %s%s\n", dev_name(&master->dev),
-			dynamic ? " (dynamic)" : "");
+	pr_err("%s() registered master %s%s +++\n", __func__, dev_name(&master->dev), dynamic ? " (dynamic)" : "");
 
 	mutex_lock(&board_lock);
 	list_add_tail(&master->list, &spi_master_list);
@@ -689,8 +703,9 @@ struct spi_master *spi_busnum_to_master(u16 bus_num)
 	struct device		*dev;
 	struct spi_master	*master = NULL;
 
-	dev = class_find_device(&spi_master_class, NULL, &bus_num,
-				__spi_master_match);
+        pr_err("%s. ++++++\n", __func__);
+
+	dev = class_find_device(&spi_master_class, NULL, &bus_num, __spi_master_match);
 	if (dev)
 		master = container_of(dev, struct spi_master, dev);
 	/* reference got in class_find_device */
@@ -737,24 +752,30 @@ int spi_setup(struct spi_device *spi)
 			bad_bits);
 		return -EINVAL;
 	}
+	pr_err("%s(). spi->mode=0x%x, spi->master->mode_bits=0x%x, bad_bits=0x%x +++\n",
+	       __func__, spi->mode, spi->master->mode_bits, bad_bits);
+
 
 	if (!spi->bits_per_word)
 		spi->bits_per_word = 8;
+	pr_err("%s(). bits_per_word=%d +++\n", __func__, spi->bits_per_word);
 
+	pr_err("%s(). spi->master->setup=>%p +++\n", __func__, spi->master->setup); /* s3c64xx_spi_setup */
 	status = spi->master->setup(spi);
 
-	dev_dbg(&spi->dev, "setup mode %d, %s%s%s%s"
-				"%u bits/w, %u Hz max --> %d\n",
+	pr_err("%s(). setup modeALL=%d, %s%s%s%s%u bits/w, max_speed_hz=%u Hz max --> status=%d\n",
+		        __func__,
 			(int) (spi->mode & (SPI_CPOL | SPI_CPHA)),
 			(spi->mode & SPI_CS_HIGH) ? "cs_high, " : "",
 			(spi->mode & SPI_LSB_FIRST) ? "lsb, " : "",
 			(spi->mode & SPI_3WIRE) ? "3wire, " : "",
 			(spi->mode & SPI_LOOP) ? "loopback, " : "",
-			spi->bits_per_word, spi->max_speed_hz,
+			spi->bits_per_word,
+			spi->max_speed_hz,
 			status);
-	printk("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\n");
-	printk("setup status = %d",status);
-	printk("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\n");
+	pr_err("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\n");
+	pr_err("setup status = %d\n",status);
+	pr_err("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\n");
 	return status;
 }
 EXPORT_SYMBOL_GPL(spi_setup);
@@ -763,13 +784,14 @@ static int __spi_async(struct spi_device *spi, struct spi_message *message)
 {
 	struct spi_master *master = spi->master;
 
+	pr_err("%s. master->transfer=>%p ++++++\n", __func__, master->transfer); /* s3c64xx_spi_transfer */
+
 	/* Half-duplex links include original MicroWire, and ones with
 	 * only one data pin like SPI_3WIRE (switches direction) or where
 	 * either MOSI or MISO is missing.  They can also be caused by
 	 * software limitations.
 	 */
-	if ((master->flags & SPI_MASTER_HALF_DUPLEX)
-			|| (spi->mode & SPI_3WIRE)) {
+	if ((master->flags & SPI_MASTER_HALF_DUPLEX) || (spi->mode & SPI_3WIRE)) {
 		struct spi_transfer *xfer;
 		unsigned flags = master->flags;
 
@@ -785,7 +807,8 @@ static int __spi_async(struct spi_device *spi, struct spi_message *message)
 
 	message->spi = spi;
 	message->status = -EINPROGRESS;
-	return master->transfer(spi, message);
+	return master->transfer(spi, message); /* s3c64xx_spi_transfer */
+	                                       /* not: s3c24xx_spi_setupxfer + spi_bitbang_setup_transfer??*/
 }
 
 /**
@@ -822,6 +845,8 @@ int spi_async(struct spi_device *spi, struct spi_message *message)
 	struct spi_master *master = spi->master;
 	int ret;
 	unsigned long flags;
+
+        pr_err("%s. ++++++\n", __func__);
 
 	spin_lock_irqsave(&master->bus_lock_spinlock, flags);
 
@@ -895,12 +920,13 @@ static void spi_complete(void *arg)
 	complete(arg);
 }
 
-static int __spi_sync(struct spi_device *spi, struct spi_message *message,
-		      int bus_locked)
+static int __spi_sync(struct spi_device *spi, struct spi_message *message, int bus_locked)
 {
 	DECLARE_COMPLETION_ONSTACK(done);
 	int status;
 	struct spi_master *master = spi->master;
+
+        pr_err("%s. spi->modalias='%s'  ++++++\n", __func__, (spi->modalias != NULL ) ? spi->modalias : "");
 
 	message->complete = spi_complete;
 	message->context = &done;
@@ -908,7 +934,7 @@ static int __spi_sync(struct spi_device *spi, struct spi_message *message,
 	if (!bus_locked)
 		mutex_lock(&master->bus_lock_mutex);
 
-	status = spi_async_locked(spi, message);
+	status = spi_async_locked(spi, message);  /* !!! */
 
 	if (!bus_locked)
 		mutex_unlock(&master->bus_lock_mutex);
@@ -1059,6 +1085,7 @@ int spi_write_then_read(struct spi_device *spi,
 	struct spi_transfer	x[2];
 	u8			*local_buf;
 
+        pr_err("%s. n_tx=%d, n_rx=%d ++++++\n", __func__, n_tx, n_rx);
 	/* Use preallocated DMA-safe buffer.  We can't avoid copying here,
 	 * (as a pure convenience thing), but we can keep heap costs
 	 * out of the hot path ...
@@ -1109,6 +1136,7 @@ static int __init spi_init(void)
 {
 	int	status;
 
+        pr_err("spi.c %s. ++++++\n", __func__);
 	buf = kmalloc(SPI_BUFSIZ, GFP_KERNEL);
 	if (!buf) {
 		status = -ENOMEM;

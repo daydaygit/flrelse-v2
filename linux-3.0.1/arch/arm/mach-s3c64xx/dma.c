@@ -51,7 +51,7 @@ static unsigned char debug_show_buffs = 0;
 
 static void dbg_showchan(struct s3c2410_dma_chan *chan)
 {
-	pr_debug("DMA%d: %08x->%08x L %08x C %08x,%08x S %08x\n",
+	pr_err("dbg_showchan() DMA%d: %08x->%08x L %08x C %08x,%08x S %08x\n",
 		 chan->number,
 		 readl(chan->regs + PL080_CH_SRC_ADDR),
 		 readl(chan->regs + PL080_CH_DST_ADDR),
@@ -63,7 +63,7 @@ static void dbg_showchan(struct s3c2410_dma_chan *chan)
 
 static void show_lli(struct pl080s_lli *lli)
 {
-	pr_debug("LLI[%p] %08x->%08x, NL %08x C %08x,%08x\n",
+	pr_err("LLI[%p] %08x->%08x, NL %08x C %08x,%08x\n",
 		 lli, lli->src_addr, lli->dst_addr, lli->next_lli,
 		 lli->control0, lli->control1);
 }
@@ -102,6 +102,7 @@ static struct s3c2410_dma_chan *s3c64xx_dma_map_channel(unsigned int channel)
 
 	for (offs = 0; offs < 8; offs++) {
 		chan = &s3c2410_chans[start + offs];
+		pr_err("%s ch_num=%d, in_use=%d\n", __func__, chan->number, chan->in_use);
 		if (!chan->in_use)
 			goto found;
 	}
@@ -135,6 +136,8 @@ int s3c2410_dma_config(enum dma_ch channel, int xferunit)
 		return -EINVAL;
 	}
 
+	pr_err("%s() channel=%d, xferunit=%d, hw_width=%d +++++\n", __func__, channel, xferunit, chan->hw_width);
+
 	return 0;
 }
 EXPORT_SYMBOL(s3c2410_dma_config);
@@ -145,6 +148,8 @@ static void s3c64xx_dma_fill_lli(struct s3c2410_dma_chan *chan,
 {
 	dma_addr_t src, dst;
 	u32 control0, control1;
+
+	pr_err("%s() chan->source=%d +++++\n", __func__, chan->source);
 
 	switch (chan->source) {
 	case S3C2410_DMASRC_HW:
@@ -202,19 +207,19 @@ static int s3c64xx_dma_start(struct s3c2410_dma_chan *chan)
 
 	dbg_showchan(chan);
 
-	pr_debug("%s: clearing interrupts\n", __func__);
+	pr_err("%s: clearing interrupts\n", __func__);
 
 	/* clear interrupts */
 	writel(bit, dmac->regs + PL080_TC_CLEAR);
 	writel(bit, dmac->regs + PL080_ERR_CLEAR);
 
-	pr_debug("%s: starting channel\n", __func__);
+	pr_err("%s: starting channel\n", __func__);
 
 	config = readl(chan->regs + PL080S_CH_CONFIG);
 	config |= PL080_CONFIG_ENABLE;
 	config &= ~PL080_CONFIG_HALT;
 
-	pr_debug("%s: writing config %08x\n", __func__, config);
+	pr_err("%s: writing config %08x\n", __func__, config);
 	writel(config, chan->regs + PL080S_CH_CONFIG);
 
 	return 0;
@@ -341,6 +346,8 @@ int s3c2410_dma_enqueue(enum dma_ch channel, void *id,
 	unsigned long flags;
 	int ret;
 
+	pr_err("%s() channel=%d, chan->number=%d, size=%d +++++\n", __func__, channel, chan->number, size);
+
 	WARN_ON(!chan);
 	if (!chan)
 		return -EINVAL;
@@ -358,7 +365,7 @@ int s3c2410_dma_enqueue(enum dma_ch channel, void *id,
 		goto err_buff;
 	}
 
-	pr_debug("%s: buff %p, dp %08x lli (%p, %08x) %d\n",
+	pr_err("%s: buff %p, dp %08x lli (%p, %08x) %d\n",
 		 __func__, buff, data, lli, (u32)buff->lli_dma, size);
 
 	buff->lli = lli;
@@ -415,16 +422,15 @@ err_buff:
 EXPORT_SYMBOL(s3c2410_dma_enqueue);
 
 
-int s3c2410_dma_devconfig(enum dma_ch channel,
+int s3c2410_dma_devconfig(enum dma_ch  channel,
 			  enum s3c2410_dmasrc source,
-			  unsigned long devaddr)
+			  unsigned long       devaddr)
 {
 	struct s3c2410_dma_chan *chan = s3c_dma_lookup_channel(channel);
 	u32 peripheral;
 	u32 config = 0;
 
-	pr_debug("%s: channel %d, source %d, dev %08lx, chan %p\n",
-		 __func__, channel, source, devaddr, chan);
+	pr_err("%s: channel=%d, source=%d, dev=%08lx, chan=%p\n",__func__, channel, source, devaddr, chan);
 
 	WARN_ON(!chan);
 	if (!chan)
@@ -434,7 +440,7 @@ int s3c2410_dma_devconfig(enum dma_ch channel,
 	chan->source = source;
 	chan->dev_addr = devaddr;
 
-	pr_debug("%s: peripheral %d\n", __func__, peripheral);
+	pr_err("%s: peripheral %d\n", __func__, peripheral);
 
 	switch (source) {
 	case S3C2410_DMASRC_HW:
@@ -454,9 +460,9 @@ int s3c2410_dma_devconfig(enum dma_ch channel,
 	config |= PL080_CONFIG_TC_IRQ_MASK;
 	config |= PL080_CONFIG_ERR_IRQ_MASK;
 
-	pr_debug("%s: config %08x\n", __func__, config);
-
 	writel(config, chan->regs + PL080S_CH_CONFIG);
+
+	pr_err("%s: config=0x%08X, reg_addr=0x%08X\n", __func__, config, (u32)(chan->regs + PL080S_CH_CONFIG));
 
 	return 0;
 }
@@ -488,14 +494,14 @@ EXPORT_SYMBOL(s3c2410_dma_getposition);
 */
 
 int s3c2410_dma_request(enum dma_ch channel,
-			struct s3c2410_dma_client *client,
-			void *dev)
+			      struct s3c2410_dma_client *client,
+			      void *dev)
 {
 	struct s3c2410_dma_chan *chan;
 	unsigned long flags;
 
-	pr_debug("dma%d: s3c2410_request_dma: client=%s, dev=%p\n",
-		 channel, client->name, dev);
+	pr_err("%s. dma_chan=%d: s3c2410_request_dma: client='%s', dev=%p\n",
+		__func__,channel,client->name, dev ? dev : "NULL");
 
 	local_irq_save(flags);
 
@@ -514,12 +520,10 @@ int s3c2410_dma_request(enum dma_ch channel,
 	local_irq_restore(flags);
 
 	/* need to setup */
-
-	pr_debug("%s: channel initialised, %p\n", __func__, chan);
+	pr_err("%s: channel initialised, %p\n", __func__, chan);
 
 	return chan->number | DMACH_LOW_LEVEL;
 }
-
 EXPORT_SYMBOL(s3c2410_dma_request);
 
 /* s3c2410_dma_free

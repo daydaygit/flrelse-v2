@@ -942,6 +942,8 @@ int s3c2410_dma_set_buffdone_fn(enum dma_ch id, s3c2410_dma_cbfn_t rtn)
 	unsigned long flags;
 	int ret = 0;
 
+	pr_err("%s: id=%p, rtn=%p @plat-samsung/s3c-pl330.c +++\n", __func__, id, rtn);
+
 	spin_lock_irqsave(&res_lock, flags);
 
 	ch = id_to_chan(id);

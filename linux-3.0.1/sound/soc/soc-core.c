@@ -1282,7 +1282,7 @@ find_platform:
 	if (rtd->platform) {
 		goto out;
 	}
-	/* no, then find CPU DAI from registered DAIs*/
+	/* no, then find platform from registered DAIs*/
 	list_for_each_entry(platform, &platform_list, list) {
 		pr_err("%s. ------- platform->name=%s, dai_link->platform_name=%s\n",__func__, platform->name, dai_link->platform_name);
 		if (!strcmp(platform->name, dai_link->platform_name)) {
@@ -1806,8 +1806,7 @@ static void snd_soc_instantiate_card(struct snd_soc_card *card)
 	for (i = 0; i < card->num_links; i++) {
 		ret = soc_probe_dai_link(card, i);
 		if (ret < 0) {
-			pr_err("asoc: failed to instantiate card %s: %d\n",
-			       card->name, ret);
+			pr_err("asoc: failed to instantiate card %s: %d\n", card->name, ret);
 			goto probe_dai_err;
 		}
 	}
@@ -1815,8 +1814,7 @@ static void snd_soc_instantiate_card(struct snd_soc_card *card)
 	for (i = 0; i < card->num_aux_devs; i++) {
 		ret = soc_probe_aux_dev(card, i);
 		if (ret < 0) {
-			pr_err("asoc: failed to add auxiliary devices %s: %d\n",
-			       card->name, ret);
+			pr_err("asoc: failed to add auxiliary devices %s: %d\n", card->name, ret);
 			goto probe_aux_dev_err;
 		}
 	}
@@ -2129,9 +2127,10 @@ unsigned int snd_soc_read(struct snd_soc_codec *codec, unsigned int reg)
 EXPORT_SYMBOL_GPL(snd_soc_read);
 
 unsigned int snd_soc_write(struct snd_soc_codec *codec,
-			   unsigned int reg, unsigned int val)
+			   unsigned int reg,
+			   unsigned int val)
 {
-	dev_dbg(codec->dev, "write %x = %x\n", reg, val);
+	pr_err("write %x = %x\n", reg, val);
 	trace_snd_soc_reg_write(codec, reg, val);
 	return codec->write(codec, reg, val);
 }

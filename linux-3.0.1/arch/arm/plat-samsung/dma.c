@@ -31,6 +31,8 @@ struct s3c2410_dma_chan *s3c_dma_chan_map[DMACH_MAX];
 
 struct s3c2410_dma_chan *s3c_dma_lookup_channel(unsigned int channel)
 {
+	pr_err("%s: channel=%d @arch/arm/plat-samsung/dma.c ++++\n", __func__, channel);
+
 	if (channel & DMACH_LOW_LEVEL)
 		return &s3c2410_chans[channel & ~DMACH_LOW_LEVEL];
 	else
@@ -63,7 +65,7 @@ int s3c2410_dma_set_buffdone_fn(enum dma_ch channel, s3c2410_dma_cbfn_t rtn)
 	if (chan == NULL)
 		return -EINVAL;
 
-	pr_debug("%s: chan=%p, callback rtn=%p\n", __func__, chan, rtn);
+	pr_err("%s: channel=%d, chan=%p, callback rtn=%p @plat-samsung/dma.c +++\n", __func__, channel, chan, rtn);
 
 	chan->callback_fn = rtn;
 

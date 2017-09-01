@@ -144,6 +144,8 @@ int spi_bitbang_setup_transfer(struct spi_device *spi, struct spi_transfer *t)
 	u8			bits_per_word;
 	u32			hz;
 
+	pr_err("%s, i think will not run ????\n", __func__);
+
 	if (t) {
 		bits_per_word = t->bits_per_word;
 		hz = t->speed_hz;
@@ -186,6 +188,8 @@ int spi_bitbang_setup(struct spi_device *spi)
 	struct spi_bitbang	*bitbang;
 	int			retval;
 	unsigned long		flags;
+
+	pr_err("%s. will not run ????\n", __func__);
 
 	bitbang = spi_master_get_devdata(spi->master);
 
@@ -235,8 +239,11 @@ EXPORT_SYMBOL_GPL(spi_bitbang_cleanup);
 
 static int spi_bitbang_bufs(struct spi_device *spi, struct spi_transfer *t)
 {
+
 	struct spi_bitbang_cs	*cs = spi->controller_state;
 	unsigned		nsecs = cs->nsecs;
+
+	pr_err("%s. ++++\n", __func__);
 
 	return cs->txrx_bufs(spi, cs->txrx_word, nsecs, t);
 }
@@ -256,9 +263,10 @@ static int spi_bitbang_bufs(struct spi_device *spi, struct spi_transfer *t)
  */
 static void bitbang_work(struct work_struct *work)
 {
-	struct spi_bitbang	*bitbang =
-		container_of(work, struct spi_bitbang, work);
+	struct spi_bitbang	*bitbang = container_of(work, struct spi_bitbang, work);
 	unsigned long		flags;
+
+	pr_err("%s. ++++\n", __func__);
 
 	spin_lock_irqsave(&bitbang->lock, flags);
 	bitbang->busy = 1;
@@ -272,8 +280,7 @@ static void bitbang_work(struct work_struct *work)
 		int			status;
 		int			do_setup = -1;
 
-		m = container_of(bitbang->queue.next, struct spi_message,
-				queue);
+		m = container_of(bitbang->queue.next, struct spi_message, queue);
 		list_del_init(&m->queue);
 		spin_unlock_irqrestore(&bitbang->lock, flags);
 
@@ -284,9 +291,9 @@ static void bitbang_work(struct work_struct *work)
 		nsecs = 100;
 
 		spi = m->spi;
-		tmp = 0;
+		tmp       = 0;
 		cs_change = 1;
-		status = 0;
+		status    = 0;
 
 		list_for_each_entry (t, &m->transfers, transfer_list) {
 
@@ -386,6 +393,8 @@ int spi_bitbang_transfer(struct spi_device *spi, struct spi_message *m)
 	unsigned long		flags;
 	int			status = 0;
 
+	pr_err("%s. ++++\n", __func__);
+
 	m->actual_length = 0;
 	m->status = -EINPROGRESS;
 
@@ -433,10 +442,12 @@ int spi_bitbang_start(struct spi_bitbang *bitbang)
 {
 	int	status;
 
+	pr_err("%s. ++++\n", __func__);
+
 	if (!bitbang->master || !bitbang->chipselect)
 		return -EINVAL;
 
-	INIT_WORK(&bitbang->work, bitbang_work);
+	INIT_WORK(&bitbang->work, bitbang_work);  /* spi_bitbang_transfer(): queue_work(bitbang->workqueue, &bitbang->work); */
 	spin_lock_init(&bitbang->lock);
 	INIT_LIST_HEAD(&bitbang->queue);
 
@@ -449,22 +460,21 @@ int spi_bitbang_start(struct spi_bitbang *bitbang)
 		bitbang->use_dma = 0;
 		bitbang->txrx_bufs = spi_bitbang_bufs;
 		if (!bitbang->master->setup) {
+			pr_err("I think will not run ++++\n");
 			if (!bitbang->setup_transfer)
-				bitbang->setup_transfer =
-					 spi_bitbang_setup_transfer;
+				bitbang->setup_transfer = spi_bitbang_setup_transfer;
 			bitbang->master->setup = spi_bitbang_setup;
 			bitbang->master->cleanup = spi_bitbang_cleanup;
 		}
 	} else if (!bitbang->master->setup)
 		return -EINVAL;
-	if (bitbang->master->transfer == spi_bitbang_transfer &&
-			!bitbang->setup_transfer)
+
+	if (bitbang->master->transfer == spi_bitbang_transfer && !bitbang->setup_transfer)
 		return -EINVAL;
 
 	/* this task is the only thing to touch the SPI bits */
 	bitbang->busy = 0;
-	bitbang->workqueue = create_singlethread_workqueue(
-			dev_name(bitbang->master->dev.parent));
+	bitbang->workqueue = create_singlethread_workqueue(dev_name(bitbang->master->dev.parent));
 	if (bitbang->workqueue == NULL) {
 		status = -EBUSY;
 		goto err1;
@@ -491,6 +501,8 @@ EXPORT_SYMBOL_GPL(spi_bitbang_start);
  */
 int spi_bitbang_stop(struct spi_bitbang *bitbang)
 {
+        pr_err("%s. ++++++\n", __func__);
+
 	spi_unregister_master(bitbang->master);
 
 	WARN_ON(!list_empty(&bitbang->queue));
