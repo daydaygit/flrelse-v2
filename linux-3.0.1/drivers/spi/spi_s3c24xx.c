@@ -110,11 +110,11 @@ static void s3c24xx_spi_chipsel(struct spi_device *spi, int value)
 	switch (value) {
 	case BITBANG_CS_INACTIVE:
 		hw->set_cs(hw->pdata, spi->chip_select, cspol^1);
-		writeb(cs->spcon, hw->regs + S3C2410_SPCON);
+		writeb(cs->spcon, hw->regs + S3C2410_SPCON);  /* 0x59000000 :SPI 通道 0 控制寄存器 */
 		break;
 
 	case BITBANG_CS_ACTIVE:
-		writeb(cs->spcon | S3C2410_SPCON_ENSCK,
+		writeb(cs->spcon | S3C2410_SPCON_ENSCK,		/* SCK 使能*/
 		       hw->regs + S3C2410_SPCON);
 		hw->set_cs(hw->pdata, spi->chip_select, cspol);
 		break;
@@ -146,14 +146,17 @@ static int s3c24xx_spi_update_state(struct spi_device *spi, struct spi_transfer 
 		return -EINVAL;
 	}
 
+	/* 依据spi->mode设置spi->controller_state中mode和SPI spcon寄存器*/
 	if (spi->mode != cs->mode) {
-		u8 spcon = SPCON_DEFAULT | S3C2410_SPCON_ENSCK;
+		u8 spcon = SPCON_DEFAULT | S3C2410_SPCON_ENSCK; /*D3=1      : master,
+								    D6D5=01: 中断
+								    D4=1     : Enable SCK*/
 
 		if (spi->mode & SPI_CPHA)
-			spcon |= S3C2410_SPCON_CPHA_FMTB;
+			spcon |= S3C2410_SPCON_CPHA_FMTB;	/*D1=1:CPHA: Clock Phase Select*/
 
 		if (spi->mode & SPI_CPOL)
-			spcon |= S3C2410_SPCON_CPOL_HIGH;
+			spcon |= S3C2410_SPCON_CPOL_HIGH;	/*D2: CPOL: Clock polarity select*/
 
 		cs->mode = spi->mode;
 		cs->spcon = spcon;
@@ -176,8 +179,7 @@ static int s3c24xx_spi_update_state(struct spi_device *spi, struct spi_transfer 
 	return 0;
 }
 
-static int s3c24xx_spi_setupxfer(struct spi_device *spi,
-				 struct spi_transfer *t)
+static int s3c24xx_spi_setupxfer(struct spi_device *spi, struct spi_transfer *t)
 {
 	struct s3c24xx_spi_devstate *cs = spi->controller_state;
 	struct s3c24xx_spi *hw = to_hw(spi);
@@ -496,9 +498,12 @@ static void s3c24xx_spi_initialsetup(struct s3c24xx_spi *hw)
 
 	/* program defaults into the registers */
 
-	writeb(0xff, hw->regs + S3C2410_SPPRE);
-	writeb(SPPIN_DEFAULT, hw->regs + S3C2410_SPPIN);
-	writeb(SPCON_DEFAULT, hw->regs + S3C2410_SPCON);
+	/* SPPRE0 0x5900000C: R/W SPI 通道 0 波特率预分频寄存器 */
+	/* SPPIN0 0x59000008: R/W SPI 通道 0 引脚控制寄存器 */
+	/* SPCON0 0x59000000: R/W SPI 通道 0 控制寄存器 */
+	writeb(0xff, hw->regs + S3C2410_SPPRE); 	 /* SPPRE波特率预分频寄存器中写0xff */
+	writeb(SPPIN_DEFAULT, hw->regs + S3C2410_SPPIN); /* SPPIN寄存器的KEEP=1,驱动为之前电平*/
+	writeb(SPCON_DEFAULT, hw->regs + S3C2410_SPCON); /* SPCON寄存器设置成master+中断模式*/
 
 	if (hw->pdata) {
 		if (hw->set_cs == s3c24xx_spi_gpiocs)

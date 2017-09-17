@@ -77,24 +77,23 @@ static void dma_enqueue(struct snd_pcm_substream *substream)
 	unsigned int limit;
 	int ret;
 
-	pr_debug("Entered %s\n", __func__);
+	pr_info("Entered %s\n", __func__);
 
 	if (s3c_dma_has_circular())
 		limit = (prtd->dma_end - prtd->dma_start) / prtd->dma_period;
 	else
 		limit = prtd->dma_limit;
 
-	pr_debug("%s: loaded %d, limit %d\n",
-				__func__, prtd->dma_loaded, limit);
+	pr_info("%s: loaded %d, limit %d\n", __func__, prtd->dma_loaded, limit);
 
 	while (prtd->dma_loaded < limit) {
 		unsigned long len = prtd->dma_period;
 
-		pr_debug("dma_loaded: %d\n", prtd->dma_loaded);
+		pr_info("dma_loaded: %d\n", prtd->dma_loaded);
 
 		if ((pos + len) > prtd->dma_end) {
 			len  = prtd->dma_end - pos;
-			pr_debug("%s: corrected dma len %ld\n", __func__, len);
+			pr_info("%s: corrected dma len=%ld\n", __func__, len);
 		}
 
 		ret = s3c2410_dma_enqueue(prtd->params->channel,
@@ -138,8 +137,7 @@ static void audio_buffdone(struct s3c2410_dma_chan *channel,
 	spin_unlock(&prtd->lock);
 }
 
-static int dma_hw_params(struct snd_pcm_substream *substream,
-	struct snd_pcm_hw_params *params)
+static int dma_hw_params(struct snd_pcm_substream *substream, struct snd_pcm_hw_params *params)
 {
 	struct snd_pcm_runtime *runtime = substream->runtime;
 	struct runtime_data *prtd = runtime->private_data;
@@ -163,8 +161,7 @@ static int dma_hw_params(struct snd_pcm_substream *substream,
 		/* prepare DMA */
 		prtd->params = dma;
 
-		pr_debug("params %p, client %p, channel %d\n", prtd->params,
-			prtd->params->client, prtd->params->channel);
+		pr_info("%s. params %p, client %p, channel %d\n", __func__, prtd->params, prtd->params->client, prtd->params->channel);
 
 		ret = s3c2410_dma_request(prtd->params->channel,
 					  prtd->params->client, NULL);
@@ -266,21 +263,18 @@ static int dma_trigger(struct snd_pcm_substream *substream, int cmd)
 	switch (cmd) {
 	case SNDRV_PCM_TRIGGER_START:
 	case SNDRV_PCM_TRIGGER_RESUME:
-	case SNDRV_PCM_TRIGGER_PAUSE_RELEASE:
-		prtd->state |= ST_RUNNING;
-		s3c2410_dma_ctrl(prtd->params->channel, S3C2410_DMAOP_START);
-		break;
+	case SNDRV_PCM_TRIGGER_PAUSE_RELEASE: prtd->state |= ST_RUNNING;
+					      s3c2410_dma_ctrl(prtd->params->channel, S3C2410_DMAOP_START);
+					      break;
 
 	case SNDRV_PCM_TRIGGER_STOP:
 	case SNDRV_PCM_TRIGGER_SUSPEND:
-	case SNDRV_PCM_TRIGGER_PAUSE_PUSH:
-		prtd->state &= ~ST_RUNNING;
-		s3c2410_dma_ctrl(prtd->params->channel, S3C2410_DMAOP_STOP);
-		break;
+	case SNDRV_PCM_TRIGGER_PAUSE_PUSH:    prtd->state &= ~ST_RUNNING;
+					      s3c2410_dma_ctrl(prtd->params->channel, S3C2410_DMAOP_STOP);
+					      break;
 
-	default:
-		ret = -EINVAL;
-		break;
+	default:              ret = -EINVAL;
+					      break;
 	}
 
 	spin_unlock(&prtd->lock);
@@ -288,8 +282,7 @@ static int dma_trigger(struct snd_pcm_substream *substream, int cmd)
 	return ret;
 }
 
-static snd_pcm_uframes_t
-dma_pointer(struct snd_pcm_substream *substream)
+static snd_pcm_uframes_t dma_pointer(struct snd_pcm_substream *substream)
 {
 	struct snd_pcm_runtime *runtime = substream->runtime;
 	struct runtime_data *prtd = runtime->private_data;

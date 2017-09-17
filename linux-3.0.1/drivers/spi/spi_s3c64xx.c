@@ -187,18 +187,24 @@ static void flush_fifo(struct s3c64xx_spi_driver_data *sdd)
 
 	pr_err("%s() @spi_s3c64xx.c +++++\n", __func__);
 
-	writel(0, regs + S3C64XX_SPI_PACKET_CNT);
+	/*S3C64XX_SPI_PACKET_CNT: PACKET_CNT_REG(Ch0) 0x7F00B020 R/W Count how many data master gets */
+	/*S3C64XX_SPI_CH_CFG:        CH_CFG(Ch0) 0x7F00B000 R/W SPI configuration register 0x40 */
+	/*S3C64XX_SPI_STATUS:        SPI_STATUS(Ch0) 0x7F00B014 R SPI status register 0x0*/
+	/*S3C64XX_SPI_RX_DATA:      SPI_RX_DATA(Ch0) 0x7F00B01C R SPI RX DATA register 0x0*/
+	/*S3C64XX_SPI_MODE_CFG:   MODE_CFG(Ch0) 0x7F00B008 R/W SPI FIFO control register 0x0*/
 
-	val = readl(regs + S3C64XX_SPI_CH_CFG);
-	val |= S3C64XX_SPI_CH_SW_RST;
-	val &= ~S3C64XX_SPI_CH_HS_EN;
+	writel(0, regs + S3C64XX_SPI_PACKET_CNT); /* 将计数器清0*/
+
+	val = readl(regs + S3C64XX_SPI_CH_CFG);   /*读取SPI配置寄存器中原始值*/
+	val |= S3C64XX_SPI_CH_SW_RST;		  /*设置软件reset的配置*/
+	val &= ~S3C64XX_SPI_CH_HS_EN;		  /*不使用High speed */
 	writel(val, regs + S3C64XX_SPI_CH_CFG);
 
 	/* Flush TxFIFO*/
 	loops = msecs_to_loops(1);
 	do {
-		val = readl(regs + S3C64XX_SPI_STATUS);
-	} while (TX_FIFO_LVL(val, sci) && loops--);
+		val = readl(regs + S3C64XX_SPI_STATUS); /* 读取SPI状态寄存器中的值*/
+	} while (TX_FIFO_LVL(val, sci) && loops--);	/* while中怎么理解?? */
 
 	if (loops == 0)
 		dev_warn(&sdd->pdev->dev, "Timed out flushing TX FIFO\n");
@@ -206,9 +212,9 @@ static void flush_fifo(struct s3c64xx_spi_driver_data *sdd)
 	/* Flush RxFIFO*/
 	loops = msecs_to_loops(1);
 	do {
-		val = readl(regs + S3C64XX_SPI_STATUS);
+		val = readl(regs + S3C64XX_SPI_STATUS);    /* 读取SPI状态寄存器中的值*/
 		if (RX_FIFO_LVL(val, sci))
-			readl(regs + S3C64XX_SPI_RX_DATA);
+			readl(regs + S3C64XX_SPI_RX_DATA); /* 读取RX data 寄存器中数据(从FIFO中过来的)*/
 		else
 			break;
 	} while (loops--);
@@ -216,16 +222,16 @@ static void flush_fifo(struct s3c64xx_spi_driver_data *sdd)
 	if (loops == 0)
 		dev_warn(&sdd->pdev->dev, "Timed out flushing RX FIFO\n");
 
-	val = readl(regs + S3C64XX_SPI_CH_CFG);
-	val &= ~S3C64XX_SPI_CH_SW_RST;
+	val = readl(regs + S3C64XX_SPI_CH_CFG);    /*读取SPI配置寄存器中原始值*/
+	val &= ~S3C64XX_SPI_CH_SW_RST;		   /* 取消软件reset*/
 	writel(val, regs + S3C64XX_SPI_CH_CFG);
 
-	val = readl(regs + S3C64XX_SPI_MODE_CFG);
-	val &= ~(S3C64XX_SPI_MODE_TXDMA_ON | S3C64XX_SPI_MODE_RXDMA_ON);
+	val = readl(regs + S3C64XX_SPI_MODE_CFG);  /*读取SPI FIFO控制寄存器中的值*/
+	val &= ~(S3C64XX_SPI_MODE_TXDMA_ON | S3C64XX_SPI_MODE_RXDMA_ON); /*DMA mode off  + disable*/
 	writel(val, regs + S3C64XX_SPI_MODE_CFG);
 
-	val = readl(regs + S3C64XX_SPI_CH_CFG);
-	val &= ~(S3C64XX_SPI_CH_RXCH_ON | S3C64XX_SPI_CH_TXCH_ON);
+	val = readl(regs + S3C64XX_SPI_CH_CFG);    /*读取SPI配置寄存器中原始值*/
+	val &= ~(S3C64XX_SPI_CH_RXCH_ON | S3C64XX_SPI_CH_TXCH_ON); /*SPI Rx Channel off + Tx Channel off*/
 	writel(val, regs + S3C64XX_SPI_CH_CFG);
 }
 
@@ -586,15 +592,11 @@ static void s3c64xx_spi_unmap_mssg(struct s3c64xx_spi_driver_data *sdd,
 		if (xfer->len <= ((sci->fifo_lvl_mask >> 1) + 1))
 			continue;
 
-		if (xfer->rx_buf != NULL
-				&& xfer->rx_dma != XFER_DMAADDR_INVALID)
-			dma_unmap_single(dev, xfer->rx_dma,
-						xfer->len, DMA_FROM_DEVICE);
+		if (xfer->rx_buf != NULL && xfer->rx_dma != XFER_DMAADDR_INVALID)
+			dma_unmap_single(dev, xfer->rx_dma,xfer->len, DMA_FROM_DEVICE);
 
-		if (xfer->tx_buf != NULL
-				&& xfer->tx_dma != XFER_DMAADDR_INVALID)
-			dma_unmap_single(dev, xfer->tx_dma,
-						xfer->len, DMA_TO_DEVICE);
+		if (xfer->tx_buf != NULL && xfer->tx_dma != XFER_DMAADDR_INVALID)
+			dma_unmap_single(dev, xfer->tx_dma, xfer->len, DMA_TO_DEVICE);
 	}
 }
 

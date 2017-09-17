@@ -83,6 +83,8 @@ static int spi_match_device(struct device *dev, struct device_driver *drv)
 	const struct spi_device	*spi = to_spi_device(dev);
 	const struct spi_driver	*sdrv = to_spi_driver(drv);
 
+	pr_err("%s. spi->modalias=%s, drv->name=%s ++++\n", __func__, spi->modalias ? spi->modalias : "", drv->name ? drv->name : "");
+
 	/* Attempt an OF style match */
 	if (of_driver_match_device(dev, drv))
 		return 1;
@@ -490,7 +492,7 @@ int __init spi_register_board_info(struct spi_board_info const *info, unsigned n
 	struct boardinfo *bi;
 	int i;
 
-        pr_err("spi.c %s. ++++++\n", __func__);
+        pr_err("spi.c %s(). ++++++\n", __func__);
 
 	bi = kzalloc(n * sizeof(*bi), GFP_KERNEL);
 	if (!bi)
@@ -501,8 +503,10 @@ int __init spi_register_board_info(struct spi_board_info const *info, unsigned n
 
 		memcpy(&bi->board_info, info, sizeof(*info));
 		mutex_lock(&board_lock);
+
+                pr_err("spi.c %s. list_add_tail bi->list -----> &board_list  ++++++\n", __func__);
 		list_add_tail(&bi->list, &board_list);
-		list_for_each_entry(master, &spi_master_list, list)
+		list_for_each_entry(master, &spi_master_list, list)   /* 比spi_register_master中先运行*/
 			spi_match_master_to_boardinfo(master, &bi->board_info);
 		mutex_unlock(&board_lock);
 	}
@@ -635,9 +639,21 @@ int spi_register_master(struct spi_master *master)
 	pr_err("%s() registered master %s%s +++\n", __func__, dev_name(&master->dev), dynamic ? " (dynamic)" : "");
 
 	mutex_lock(&board_lock);
-	list_add_tail(&master->list, &spi_master_list);
-	list_for_each_entry(bi, &board_list, list)
+
+	list_add_tail(&master->list, &spi_master_list);   /* 比spi_register_board_info中后运行*/
+#if 1
+	list_for_each_entry(bi, &board_list, list) {
+		pr_err("%s. list_for_each_entry board_list-->bi ++++++\n", __func__);
 		spi_match_master_to_boardinfo(master, &bi->board_info);
+    }
+#else
+        for (bi = container_of((board_list)->next, typeof(*bi), list);
+             &bi->list != (board_list);
+             bi = container_of(bi->list.next, typeof(*bi), list)) {
+                spi_match_master_to_boardinfo(master, &bi->board_info);
+        }
+#endif
+
 	mutex_unlock(&board_lock);
 
 	status = 0;
@@ -1136,7 +1152,7 @@ static int __init spi_init(void)
 {
 	int	status;
 
-        pr_err("spi.c %s. ++++++\n", __func__);
+        pr_err("spi.c %s(). ++++++\n", __func__);
 	buf = kmalloc(SPI_BUFSIZ, GFP_KERNEL);
 	if (!buf) {
 		status = -ENOMEM;

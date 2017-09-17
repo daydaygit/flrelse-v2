@@ -122,15 +122,9 @@ int s3c2410_dma_config(enum dma_ch channel, int xferunit)
 		return -EINVAL;
 
 	switch (xferunit) {
-	case 1:
-		chan->hw_width = 0;
-		break;
-	case 2:
-		chan->hw_width = 1;
-		break;
-	case 4:
-		chan->hw_width = 2;
-		break;
+	case 1: chan->hw_width = 0; break;
+	case 2: chan->hw_width = 1; break;
+	case 4: chan->hw_width = 2; break;
 	default:
 		printk(KERN_ERR "%s: illegal width %d\n", __func__, xferunit);
 		return -EINVAL;
@@ -336,13 +330,12 @@ EXPORT_SYMBOL(s3c2410_dma_ctrl);
  *
  */
 
-int s3c2410_dma_enqueue(enum dma_ch channel, void *id,
-			dma_addr_t data, int size)
+int s3c2410_dma_enqueue(enum dma_ch channel, void *id, dma_addr_t data, int size)
 {
 	struct s3c2410_dma_chan *chan = s3c_dma_lookup_channel(channel);
 	struct s3c64xx_dma_buff *next;
 	struct s3c64xx_dma_buff *buff;
-	struct pl080s_lli *lli;
+	struct pl080s_lli *lli;			/* Linked List Item */
 	unsigned long flags;
 	int ret;
 
@@ -365,8 +358,7 @@ int s3c2410_dma_enqueue(enum dma_ch channel, void *id,
 		goto err_buff;
 	}
 
-	pr_err("%s: buff %p, dp %08x lli (%p, %08x) %d\n",
-		 __func__, buff, data, lli, (u32)buff->lli_dma, size);
+	pr_err("%s: buff %p, dp %08x lli (%p, %08x) %d\n", __func__, buff, data, lli, (u32)buff->lli_dma, size);
 
 	buff->lli = lli;
 	buff->pw = id;
@@ -460,6 +452,8 @@ int s3c2410_dma_devconfig(enum dma_ch  channel,
 	config |= PL080_CONFIG_TC_IRQ_MASK;
 	config |= PL080_CONFIG_ERR_IRQ_MASK;
 
+	pr_err("%s: config %08x\n", __func__, config);
+
 	writel(config, chan->regs + PL080S_CH_CONFIG);
 
 	pr_err("%s: config=0x%08X, reg_addr=0x%08X\n", __func__, config, (u32)(chan->regs + PL080S_CH_CONFIG));
@@ -493,9 +487,7 @@ EXPORT_SYMBOL(s3c2410_dma_getposition);
  * get control of an dma channel
 */
 
-int s3c2410_dma_request(enum dma_ch channel,
-			      struct s3c2410_dma_client *client,
-			      void *dev)
+int s3c2410_dma_request(enum dma_ch channel, struct s3c2410_dma_client *client, void *dev)
 {
 	struct s3c2410_dma_chan *chan;
 	unsigned long flags;
@@ -603,8 +595,7 @@ static irqreturn_t s3c64xx_dma_irq(int irq, void *pw)
 		 * when 'end' is the active buffer.
 		 */
 		buff = chan->curr;
-		while (buff && buff != chan->next
-				&& buff->next != chan->next)
+		while (buff && buff != chan->next && buff->next != chan->next)
 			buff = buff->next;
 
 		if (!buff)
@@ -695,8 +686,7 @@ static int s3c64xx_dma_init1(int chno, enum dma_ch chbase,
 	regptr = regs + PL080_Cx_BASE(0);
 
 	for (ch = 0; ch < 8; ch++, chptr++) {
-		pr_debug("%s: registering DMA %d (%p)\n",
-			 __func__, chno + ch, regptr);
+		pr_debug("%s: registering DMA %d (%p)\n", __func__, chno + ch, regptr);
 
 		chptr->bit = 1 << ch;
 		chptr->number = chno + ch;
@@ -708,8 +698,7 @@ static int s3c64xx_dma_init1(int chno, enum dma_ch chbase,
 	/* for the moment, permanently enable the controller */
 	writel(PL080_CONFIG_ENABLE, regs + PL080_CONFIG);
 
-	printk(KERN_INFO "PL080: IRQ %d, at %p, channels %d..%d\n",
-	       irq, regs, chno, chno+8);
+	printk(KERN_INFO "PL080: IRQ %d, at %p, channels %d..%d\n", irq, regs, chno, chno+8);
 
 	return 0;
 

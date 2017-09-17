@@ -918,7 +918,7 @@ int device_add(struct device *dev)
 		goto name_error;
 	}
 
-	pr_err("%s() dev_name='%s' @drivers/base/core.c +++\n", __func__, dev_name(dev));
+	pr_err("%s() dev_name='%s' @drivers/base/core.c\n", __func__, dev_name(dev));
 
 	parent = get_device(dev->parent);
 	setup_parent(dev, parent);

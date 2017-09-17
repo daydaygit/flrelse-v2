@@ -27,15 +27,15 @@ static struct snd_soc_card smdk6410;
 
 /*
  Playback (HeadPhone):-
-	$ amixer sset 'Headphone' unmute
+	$ amixer sset 'Headphone'                unmute
 	$ amixer sset 'Right Headphone Out Mux' 'Headphone'
-	$ amixer sset 'Left Headphone Out Mux' 'Headphone'
-	$ amixer sset 'Right HP Mixer PCM' unmute
-	$ amixer sset 'Left HP Mixer PCM' unmute
+	$ amixer sset 'Left Headphone Out Mux'  'Headphone'
+	$ amixer sset 'Right HP Mixer PCM'       unmute
+	$ amixer sset 'Left HP Mixer PCM'        unmute
 
  Capture (LineIn):-
-	$ amixer sset 'Right Capture Source' 'Line'
-	$ amixer sset 'Left Capture Source' 'Line'
+	$ amixer sset 'Right Capture Source'    'Line'
+	$ amixer sset 'Left Capture Source'     'Line'
 */
 
 /* Machine dapm widgets */
@@ -49,10 +49,13 @@ static struct snd_soc_dapm_route audio_map[] = {
 	{ "Mic Bias", NULL, "Mic (on-board)" },
 };
 
-static int smdk6410_ac97_init(struct snd_soc_pcm_runtime *rtd) {
+static int smdk6410_ac97_init(struct snd_soc_pcm_runtime *rtd)
+{
 	struct snd_soc_codec *codec = rtd->codec;
 	struct snd_soc_dapm_context *dapm = &codec->dapm;
 	unsigned short val;
+
+	pr_info("Enter %s\n", __func__);
 
 	/* add board specific widgets */
 	snd_soc_dapm_new_controls(dapm, ARRAY_AND_SIZE(smdk6410_dapm_widgets));
@@ -61,6 +64,7 @@ static int smdk6410_ac97_init(struct snd_soc_pcm_runtime *rtd) {
 	snd_soc_dapm_add_routes(dapm, ARRAY_AND_SIZE(audio_map));
 
 	/* Prepare MIC input */
+	pr_info("%s codec->driver->read=>%p, codec->driver->write=>%p\n", __func__, codec->driver->read, codec->driver->write);
 	val = codec->driver->read(codec, AC97_3D_CONTROL);
 	codec->driver->write(codec, AC97_3D_CONTROL, val | 0xc000);
 
